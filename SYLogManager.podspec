@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.license      = "MIT"
   spec.author       = { "herman" => "zhangsy757@163.com" }
   spec.platform     = :ios, "8.0"
-  spec.source       = { :git => "https://github.com/potato512/SYLogManager.git", :tag => spec.version }
+  spec.source       = { :git => "https://github.com/potato512/SYLogManager.git", :tag => "#{spec.version}" }
   spec.source_files = "SYLogManager/*.{h,m}"
   spec.frameworks   = "UIKit", "Foundation"
   spec.requires_arc = true
