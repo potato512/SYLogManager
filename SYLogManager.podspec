@@ -1,5 +1,4 @@
 Pod::Spec.new do |s|
-
   s.name         = "SYLogManager"
   s.version      = "1.0.1"
   s.summary      = "SYLogManager is used show log message."
@@ -7,9 +6,8 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "herman" => "zhangsy757@163.com" }
   s.platform     = :ios, "8.0"
-  s.source       = { :git => "https://github.com/potato512/SYLogManager.git", :tag => "#{s.version}" }
-  s.source_files  = "SYLogManager/*.{h,m}"
-  s.frameworks = 'UIKit', 'CoreFoundation'
+  s.source       = { :git => "https://github.com/potato512/SYLogManager.git", :tag => s.version.to_s }
+  s.source_files = 'SYLogManager/*.{h,m}'
   s.requires_arc = true
-
+  s.frameworks = 'UIKit', 'CoreFoundation'
 end
