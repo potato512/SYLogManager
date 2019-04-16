@@ -19,6 +19,11 @@ SYLogManagerSingle.showView = self.window;
 SYLogManagerSingle.show = YES;
 ~~~ 
 
+$ 待开发功能
+* 上传指定服务器
+* 发送指定邮箱
+* 显示对象信息
+
 # 修改完善
 * 20190416
   * 版本号：1.0.0

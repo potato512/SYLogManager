@@ -37,8 +37,11 @@
     NSArray *array = @[@"张三", @"李四", @"wangWu", @"小明"];
     NSLog(@"array: %@", array);
     
-    NSDictionary *dict = @{@"姓名":@"张三丰", @"职业":@"研发工程师", @"年龄":@(35), @"company":@"BYD Auto"};
+    NSDictionary *dict = @{@"姓名":@"张三", @"职业":@"农二代", @"年龄":@(30), @"company":@"个体"};
     NSLog(@"dict: %@", dict);
+    
+    NSArray *arrayDict = @[array, dict];
+    NSLog(@"arrayDict: %@", arrayDict);
     
     if (self.navigationController.viewControllers.count > 5) {
         NSLog(@"text: %@", [array objectAtIndex:20]);

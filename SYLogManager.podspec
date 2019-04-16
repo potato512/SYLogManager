@@ -9,7 +9,7 @@
 Pod::Spec.new do |spec|
 
   s.name         = "SYLogManager"
-  s.version      = "1.3.3"
+  s.version      = "1.0.1"
   s.summary      = "SYLogManager is used show log message."
   s.homepage     = "https://github.com/potato512/SYLogManager"
   s.license      = { :type => "MIT", :file => "LICENSE" }

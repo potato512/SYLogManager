@@ -12,11 +12,11 @@
 
 - (NSString *)descriptionWithLocale:(id)locale indent:(NSUInteger)level
 {
-    NSMutableString *str = [NSMutableString stringWithString:@"(\n"];
+    NSMutableString *str = [NSMutableString stringWithString:@"{\n"];
     [self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         [str appendFormat:@"\t%@ = %@;\n", key, obj];
     }];
-    [str appendString:@")"];
+    [str appendString:@"}"];
     return str;
 }
 
