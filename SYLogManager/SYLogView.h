@@ -1,6 +1,6 @@
 //
 //  SYLogView.h
-//  DemoLog
+//  zhangshaoyu
 //
 //  Created by zhangshaoyu on 2019/4/15.
 //  Copyright © 2019年 zhangshaoyu. All rights reserved.
@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *baseView;
 @property (nonatomic, assign) BOOL showlogView;
 @property (nonatomic, copy) void (^showClick)(void);
+@property (nonatomic, copy) void (^sendClick)(void);
+@property (nonatomic, assign) BOOL showSendEmail;
 
 - (void)showMessage:(NSString *)message;
 

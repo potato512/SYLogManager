@@ -1,6 +1,6 @@
 //
 //  NSArray+SYLogCategory.m
-//  DemoLog
+//  zhangshaoyu
 //
 //  Created by zhangshaoyu on 2019/4/15.
 //  Copyright © 2019年 zhangshaoyu. All rights reserved.

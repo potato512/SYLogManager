@@ -1,6 +1,6 @@
 //
 //  SYLogManager.m
-//  DemoLog
+//  zhangshaoyu
 //
 //  Created by zhangshaoyu on 2018/10/12.
 //  Copyright © 2018年 zhangshaoyu. All rights reserved.
@@ -9,11 +9,15 @@
 #import "SYLogManager.h"
 #import "SYLogFile.h"
 #import "SYLogView.h"
+#import "SYLogEmail.h"
 
 @interface SYLogManager ()
 
 @property (nonatomic, strong) SYLogFile *logFile;
 @property (nonatomic, strong) SYLogView *logView;
+@property (nonatomic, strong) SYLogEmail *logEmail;
+
+@property (nonatomic, strong) NSString *message;
 
 @end
 
@@ -35,7 +39,7 @@
 {
     self = [super init];
     if (self) {
-        
+        NSLog(@"\n---------初始化log日志管理 %@------------", NSDate.date);
     }
     return self;
 }
@@ -47,7 +51,6 @@
     if (self.autoClear) {
         [self.logFile deleteLogMessage];
     }
-    NSLog(@"\n---------初始化log日志管理 %@------------", NSDate.date);
     [self.logFile saveLogMessage];
 }
 
@@ -89,11 +92,28 @@
         SYLogManager __weak *weakLog = self;
         _logView.showClick = ^ {
             [weakLog.logFile readLogMessage:^(NSString * _Nonnull message) {
+                weakLog.message = message;
                 [weakLog.logView showMessage:message];
+            }];
+        };
+        _logView.sendClick = ^{
+            weakLog.logEmail.emailSend = weakLog.emailSend;
+            weakLog.logEmail.emailReceive = weakLog.emailReceive;
+            weakLog.logEmail.emailMessage = weakLog.message;
+            [weakLog.logEmail sendEmailWithTarget:weakLog.target complete:^(NSInteger state) {
+                
             }];
         };
     }
     return _logView;
+}
+
+- (SYLogEmail *)logEmail
+{
+    if (_logEmail == nil) {
+        _logEmail = [[SYLogEmail alloc] init];
+    }
+    return _logEmail;
 }
 
 - (NSString *)filePath
@@ -112,6 +132,12 @@
     } else {
         self.logView.showlogView = NO;
     }
+}
+
+- (void)setShowSendEmail:(BOOL)showSendEmail
+{
+    _showSendEmail = showSendEmail;
+    self.logView.showSendEmail = _showSendEmail;
 }
 
 @end

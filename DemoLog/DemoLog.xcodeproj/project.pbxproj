@@ -12,6 +12,9 @@
 		A703505E2265A8DD00085D43 /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350572265A8DD00085D43 /* SYLogFile.m */; };
 		A703505F2265A8DD00085D43 /* SYLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350592265A8DD00085D43 /* SYLogManager.m */; };
 		A70350602265A8DD00085D43 /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A703505B2265A8DD00085D43 /* SYLogView.m */; };
+		A76CC2FC2266D11700FD0A0F /* SYLogEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = A76CC2FB2266D11700FD0A0F /* SYLogEmail.m */; };
+		A76CC2FF2266DDAA00FD0A0F /* NSObject+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */; };
+		A76CC3022266DEC100FD0A0F /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = A76CC3012266DEC100FD0A0F /* Person.m */; };
 		A7BD85AB21709D2600C54BDB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7BD85AA21709D2600C54BDB /* AppDelegate.m */; };
 		A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7BD85AD21709D2600C54BDB /* ViewController.m */; };
 		A7BD85B121709D2600C54BDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7BD85AF21709D2600C54BDB /* Main.storyboard */; };
@@ -50,6 +53,12 @@
 		A70350592265A8DD00085D43 /* SYLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogManager.m; sourceTree = "<group>"; };
 		A703505A2265A8DD00085D43 /* SYLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogView.h; sourceTree = "<group>"; };
 		A703505B2265A8DD00085D43 /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
+		A76CC2FA2266D11700FD0A0F /* SYLogEmail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYLogEmail.h; sourceTree = "<group>"; };
+		A76CC2FB2266D11700FD0A0F /* SYLogEmail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYLogEmail.m; sourceTree = "<group>"; };
+		A76CC2FD2266DDAA00FD0A0F /* NSObject+SYLogCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+SYLogCategory.h"; sourceTree = "<group>"; };
+		A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SYLogCategory.m"; sourceTree = "<group>"; };
+		A76CC3002266DEC100FD0A0F /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		A76CC3012266DEC100FD0A0F /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		A7BD85A621709D2600C54BDB /* DemoLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7BD85A921709D2600C54BDB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A7BD85AA21709D2600C54BDB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -100,12 +109,16 @@
 				A70350532265A8DD00085D43 /* NSArray+SYLogCategory.m */,
 				A70350542265A8DD00085D43 /* NSDictionary+SYLogCategory.h */,
 				A70350552265A8DD00085D43 /* NSDictionary+SYLogCategory.m */,
+				A76CC2FD2266DDAA00FD0A0F /* NSObject+SYLogCategory.h */,
+				A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */,
 				A70350562265A8DD00085D43 /* SYLogFile.h */,
 				A70350572265A8DD00085D43 /* SYLogFile.m */,
 				A70350582265A8DD00085D43 /* SYLogManager.h */,
 				A70350592265A8DD00085D43 /* SYLogManager.m */,
 				A703505A2265A8DD00085D43 /* SYLogView.h */,
 				A703505B2265A8DD00085D43 /* SYLogView.m */,
+				A76CC2FA2266D11700FD0A0F /* SYLogEmail.h */,
+				A76CC2FB2266D11700FD0A0F /* SYLogEmail.m */,
 			);
 			name = SYLogManager;
 			path = ../../SYLogManager;
@@ -138,6 +151,8 @@
 				A7BD85AA21709D2600C54BDB /* AppDelegate.m */,
 				A7BD85AC21709D2600C54BDB /* ViewController.h */,
 				A7BD85AD21709D2600C54BDB /* ViewController.m */,
+				A76CC3002266DEC100FD0A0F /* Person.h */,
+				A76CC3012266DEC100FD0A0F /* Person.m */,
 				A70350512265A8DD00085D43 /* SYLogManager */,
 				A7BD85DB21709D3600C54BDB /* Supporting Files */,
 			);
@@ -306,11 +321,14 @@
 			files = (
 				A703505D2265A8DD00085D43 /* NSDictionary+SYLogCategory.m in Sources */,
 				A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */,
+				A76CC3022266DEC100FD0A0F /* Person.m in Sources */,
+				A76CC2FC2266D11700FD0A0F /* SYLogEmail.m in Sources */,
 				A703505E2265A8DD00085D43 /* SYLogFile.m in Sources */,
 				A703505C2265A8DD00085D43 /* NSArray+SYLogCategory.m in Sources */,
 				A7BD85B921709D2800C54BDB /* main.m in Sources */,
 				A703505F2265A8DD00085D43 /* SYLogManager.m in Sources */,
 				A7BD85AB21709D2600C54BDB /* AppDelegate.m in Sources */,
+				A76CC2FF2266DDAA00FD0A0F /* NSObject+SYLogCategory.m in Sources */,
 				A70350602265A8DD00085D43 /* SYLogView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

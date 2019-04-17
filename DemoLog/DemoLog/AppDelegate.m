@@ -20,18 +20,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    SYLogManagerSingle.autoClear = YES;
-    [SYLogManagerSingle initializeLog];
-    SYLogManagerSingle.showView = self.window;
-    
-    
     ViewController *rootVC = [[ViewController alloc] init];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
     self.window.rootViewController = rootNav;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    SYLogManagerSingle.show = YES;
+//    SYLogManagerSingle.autoClear = YES;
+//    [SYLogManagerSingle initializeLog];
+//    SYLogManagerSingle.showView = self.window;
+//    SYLogManagerSingle.showSendEmail = YES;
+//    SYLogManagerSingle.target = self.window.rootViewController;
+//    SYLogManagerSingle.show = YES;
     
     return YES;
 }

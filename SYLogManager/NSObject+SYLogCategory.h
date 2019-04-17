@@ -1,8 +1,8 @@
 //
-//  NSArray+SYLogCategory.h
+//  NSObject+SYLogCategory.h
 //  zhangshaoyu
 //
-//  Created by zhangshaoyu on 2019/4/15.
+//  Created by zhangshaoyu on 2019/4/17.
 //  Copyright © 2019年 zhangshaoyu. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSArray (SYLogCategory)
+@interface NSObject (SYLogCategory)
 
 @end
 

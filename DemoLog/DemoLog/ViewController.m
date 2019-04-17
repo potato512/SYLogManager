@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SYLogManager.h"
+#import "Person.h"
 
 @interface ViewController ()
 
@@ -47,7 +48,16 @@
         NSLog(@"text: %@", [array objectAtIndex:20]);
     }
     
-    NSLog(@"123");
+    Person *person = [[Person alloc] init];
+    person.name = @"小明";
+    person.job = @"研发工程师";
+    person.age = @"28";
+    person.company = @"BYD Auto";
+    person.project = @[@"project1", @"王者荣耀", @"跑跑卡丁车", @"逃离神庙", @"吃鸡"];
+    person.learn = @{@"开发":@"Objective-C", @"project":@(10), @"team":@[@"张三", @"李四", @"wangWu", @"小明"]};
+    NSLog(@"person: %@", person);
+    
+    
 }
 
 - (void)nextClick

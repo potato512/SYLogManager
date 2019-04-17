@@ -1,6 +1,6 @@
 //
 //  SYLogView.m
-//  DemoLog
+//  zhangshaoyu
 //
 //  Created by zhangshaoyu on 2019/4/15.
 //  Copyright © 2019年 zhangshaoyu. All rights reserved.
@@ -17,6 +17,9 @@ static CGFloat const heightClose = 40.0;
 @property (nonatomic, strong) UIView *view;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UILabel *label;
+
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIButton *emailButton;
 
 @end
 
@@ -110,14 +113,9 @@ static CGFloat const heightClose = 40.0;
         _view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.3];
         _view.frame = self.baseView.bounds;
         //
-        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.0, (_view.frame.size.height - heightClose), _view.frame.size.width, heightClose)];
-        [_view addSubview:button];
+        self.closeButton.frame = CGRectMake(0.0, (_view.frame.size.height - heightClose), _view.frame.size.width, heightClose);
+        [_view addSubview:self.closeButton];
         _view.userInteractionEnabled = YES;
-        button.backgroundColor = UIColor.yellowColor;
-        [button setTitle:@"关闭" forState:UIControlStateNormal];
-        [button setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-        [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-        [button addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
         //
         _view.hidden = YES;
     }
@@ -135,12 +133,6 @@ static CGFloat const heightClose = 40.0;
     return _scrollView;
 }
 
-- (void)closeClick
-{
-    self.logButton.hidden = NO;
-    self.view.hidden = YES;
-}
-
 - (UILabel *)label
 {
     if (_label == nil) {
@@ -150,6 +142,48 @@ static CGFloat const heightClose = 40.0;
         _label.numberOfLines = 0;
     }
     return _label;
+}
+
+#pragma mark -
+
+- (UIButton *)closeButton
+{
+    if (_closeButton == nil) {
+        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _closeButton.backgroundColor = UIColor.yellowColor;
+        [_closeButton setTitle:@"关闭" forState:UIControlStateNormal];
+        [_closeButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [_closeButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+        [_closeButton addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _closeButton;
+}
+
+- (void)closeClick
+{
+    self.logButton.hidden = NO;
+    self.view.hidden = YES;
+}
+
+- (UIButton *)emailButton
+{
+    if (_emailButton == nil) {
+        _emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _emailButton.backgroundColor = UIColor.brownColor;
+        [self.view addSubview:_emailButton];
+        [_emailButton setTitle:@"提交" forState:UIControlStateNormal];
+        [_emailButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [_emailButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+        [_emailButton addTarget:self action:@selector(emailClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _emailButton;
+}
+
+- (void)emailClick
+{
+    if (self.sendClick) {
+        self.sendClick();
+    }
 }
 
 #pragma mark - setter
@@ -179,6 +213,18 @@ static CGFloat const heightClose = 40.0;
     // 显示最新信息
     if (self.scrollView.contentSize.height > self.scrollView.frame.size.height) {
         [self.scrollView setContentOffset:CGPointMake(0.0, self.scrollView.contentSize.height - self.scrollView.frame.size.height)];
+    }
+}
+
+- (void)setShowSendEmail:(BOOL)showSendEmail
+{
+    _showSendEmail = showSendEmail;
+    if (_showSendEmail) {
+        self.closeButton.frame = CGRectMake(0.0, (self.view.frame.size.height - heightClose), self.view.frame.size.width / 3 * 2, heightClose);
+        self.emailButton.frame = CGRectMake((self.closeButton.frame.origin.x + self.closeButton.frame.size.width), self.closeButton.frame.origin.y, self.view.frame.size.width / 3, heightClose);
+    } else {
+        self.closeButton.frame = CGRectMake(0.0, (self.view.frame.size.height - heightClose), self.view.frame.size.width, heightClose);
+        self.emailButton.frame = CGRectZero;
     }
 }
 
