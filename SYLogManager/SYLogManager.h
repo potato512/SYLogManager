@@ -27,11 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 父视图
 @property (nonatomic, strong) UIView *showView;
 
-// 初始化
+/// 初始化
 - (void)initializeLog;
-// 清除
+/// 清除
 - (void)clearLog;
-// 上传（待开发）
+/// 上传（待开发）
 - (void)uploadLogWithUrl:(NSString *)url parameter:(NSDictionary *)dict complete:(void (^)(BOOL success, NSString *message))complete;
 
 @end

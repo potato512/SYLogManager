@@ -17,10 +17,9 @@ static CGFloat const heightClose = 50.0;
 @property (nonatomic, strong) UIButton *logButton;
 
 @property (nonatomic, strong) UIView *view;
+@property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UILabel *label;
-
-@property (nonatomic, strong) UIButton *closeButton;
 
 @property (nonatomic, assign) BOOL hasSafeArea;
 
