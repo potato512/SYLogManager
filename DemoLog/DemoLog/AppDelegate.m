@@ -28,8 +28,6 @@
     
     [SYLogManagerSingle initializeLog];
     SYLogManagerSingle.showView = self.window;
-    SYLogManagerSingle.showSendEmail = YES;
-    SYLogManagerSingle.target = self.window.rootViewController;
     SYLogManagerSingle.show = YES;
     
     return YES;

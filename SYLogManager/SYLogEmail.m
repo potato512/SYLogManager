@@ -36,7 +36,10 @@
             //
             MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
             mailVC.mailComposeDelegate = self;
-            [mailVC setToRecipients:@[self.emailReceive]];
+            if (self.emailReceive && [self.emailReceive isKindOfClass:NSString.class]) {
+                [mailVC setToRecipients:@[self.emailReceive]];
+            }
+            
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             NSString *dateStr = [formatter stringFromDate:NSDate.date];

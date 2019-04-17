@@ -134,7 +134,7 @@
 - (void)setShowSendEmail:(BOOL)showSendEmail
 {
     _showSendEmail = showSendEmail;
-    self.logView.showSendEmail = _showSendEmail;
+//    self.logView.showSendEmail = _showSendEmail;
 }
 
 @end

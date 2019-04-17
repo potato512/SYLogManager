@@ -8,7 +8,9 @@
 
 #import "SYLogView.h"
 
-static CGFloat const heightClose = 40.0;
+static CGFloat const heightClose = 50.0;
+
+#define safeTop (self.hasSafeArea ? 34.0 : 0.0)
 
 @interface SYLogView ()
 
@@ -21,6 +23,8 @@ static CGFloat const heightClose = 40.0;
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIButton *emailButton;
 
+@property (nonatomic, assign) BOOL hasSafeArea;
+
 @end
 
 @implementation SYLogView
@@ -30,6 +34,7 @@ static CGFloat const heightClose = 40.0;
     self = [super init];
     if (self) {
         self.showlogView = NO;
+        self.showSendEmail = NO;
     }
     return self;
 }
@@ -128,7 +133,7 @@ static CGFloat const heightClose = 40.0;
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
         // 父视图
         [self.view addSubview:_scrollView];
-        _scrollView.frame = CGRectMake(0.0, 34.0, self.view.frame.size.width, (self.view.frame.size.height - 34.0 - heightClose));
+        _scrollView.frame = CGRectMake(0.0, (safeTop + heightClose), self.view.frame.size.width, (self.view.frame.size.height - safeTop - heightClose));
     }
     return _scrollView;
 }
@@ -155,6 +160,7 @@ static CGFloat const heightClose = 40.0;
         [_closeButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
         [_closeButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
         [_closeButton addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
+        _closeButton.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
     }
     return _closeButton;
 }
@@ -184,6 +190,18 @@ static CGFloat const heightClose = 40.0;
     if (self.sendClick) {
         self.sendClick();
     }
+}
+
+- (BOOL)hasSafeArea
+{
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = [UIApplication sharedApplication].delegate.window;
+        if (window.safeAreaInsets.bottom > 0.0) {
+            // 是机型iPhoneX/iPhoneXR/iPhoneXS/iPhoneXSMax
+            return YES;
+        }
+    }
+    return NO;
 }
 
 #pragma mark - setter
@@ -220,10 +238,10 @@ static CGFloat const heightClose = 40.0;
 {
     _showSendEmail = showSendEmail;
     if (_showSendEmail) {
-        self.closeButton.frame = CGRectMake(0.0, (self.view.frame.size.height - heightClose), self.view.frame.size.width / 3 * 2, heightClose);
-        self.emailButton.frame = CGRectMake((self.closeButton.frame.origin.x + self.closeButton.frame.size.width), self.closeButton.frame.origin.y, self.view.frame.size.width / 3, heightClose);
+        self.closeButton.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width / 3 * 2, (heightClose + safeTop));
+        self.emailButton.frame = CGRectMake((self.closeButton.frame.origin.x + self.closeButton.frame.size.width), self.closeButton.frame.origin.y, self.view.frame.size.width / 3, self.closeButton.frame.size.height);
     } else {
-        self.closeButton.frame = CGRectMake(0.0, (self.view.frame.size.height - heightClose), self.view.frame.size.width, heightClose);
+        self.closeButton.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, (heightClose + safeTop));
         self.emailButton.frame = CGRectZero;
     }
 }
