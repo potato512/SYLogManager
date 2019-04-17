@@ -39,7 +39,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"\n---------初始化log日志管理 %@------------", NSDate.date);
+        NSLog(@"\n---------log日志管理 %@------------", NSDate.date);
     }
     return self;
 }
@@ -48,9 +48,6 @@
 
 - (void)initializeLog
 {
-    if (self.autoClear) {
-        [self.logFile deleteLogMessage];
-    }
     [self.logFile saveLogMessage];
 }
 

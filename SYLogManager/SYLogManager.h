@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 日志记录路径
 @property (nonatomic, strong, readonly) NSString *filePath;
-/// 是否自动清除日志（默认不清除）
-@property (nonatomic, assign) BOOL autoClear;
 /// 显示日志信息（默认不显示）
 @property (nonatomic, assign) BOOL show;
 /// 父视图

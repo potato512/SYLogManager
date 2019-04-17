@@ -26,12 +26,11 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-//    SYLogManagerSingle.autoClear = YES;
-//    [SYLogManagerSingle initializeLog];
-//    SYLogManagerSingle.showView = self.window;
-//    SYLogManagerSingle.showSendEmail = YES;
-//    SYLogManagerSingle.target = self.window.rootViewController;
-//    SYLogManagerSingle.show = YES;
+    [SYLogManagerSingle initializeLog];
+    SYLogManagerSingle.showView = self.window;
+    SYLogManagerSingle.showSendEmail = YES;
+    SYLogManagerSingle.target = self.window.rootViewController;
+    SYLogManagerSingle.show = YES;
     
     return YES;
 }
