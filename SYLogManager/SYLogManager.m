@@ -9,14 +9,11 @@
 #import "SYLogManager.h"
 #import "SYLogFile.h"
 #import "SYLogView.h"
-#import "SYLogEmail.h"
 
 @interface SYLogManager ()
 
 @property (nonatomic, strong) SYLogFile *logFile;
 @property (nonatomic, strong) SYLogView *logView;
-@property (nonatomic, strong) SYLogEmail *logEmail;
-
 @property (nonatomic, strong) NSString *message;
 
 @end
@@ -88,29 +85,15 @@
         //
         SYLogManager __weak *weakLog = self;
         _logView.showClick = ^ {
+            [weakLog.logView.activityView startAnimating];
             [weakLog.logFile readLogMessage:^(NSString * _Nonnull message) {
+                [weakLog.logView.activityView stopAnimating];
                 weakLog.message = message;
                 [weakLog.logView showMessage:message];
             }];
         };
-        _logView.sendClick = ^{
-            weakLog.logEmail.emailSend = weakLog.emailSend;
-            weakLog.logEmail.emailReceive = weakLog.emailReceive;
-            weakLog.logEmail.emailMessage = weakLog.message;
-            [weakLog.logEmail sendEmailWithTarget:weakLog.target complete:^(NSInteger state) {
-                
-            }];
-        };
     }
     return _logView;
-}
-
-- (SYLogEmail *)logEmail
-{
-    if (_logEmail == nil) {
-        _logEmail = [[SYLogEmail alloc] init];
-    }
-    return _logEmail;
 }
 
 - (NSString *)filePath
@@ -129,12 +112,6 @@
     } else {
         self.logView.showlogView = NO;
     }
-}
-
-- (void)setShowSendEmail:(BOOL)showSendEmail
-{
-    _showSendEmail = showSendEmail;
-//    self.logView.showSendEmail = _showSendEmail;
 }
 
 @end

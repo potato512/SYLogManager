@@ -25,7 +25,10 @@
             //获取NSString类型的property名字
             NSString *prop = [NSString stringWithCString:propName encoding:[NSString defaultCStringEncoding]];
             //获取property对应的值
-            id obj = [self valueForKey:prop];
+            id obj = prop;
+            if ([self respondsToSelector:@selector(valueForKey:)]) {
+                obj = [self valueForKey:prop];
+            }
             //将属性名和属性值拼接起来
             desc = [desc stringByAppendingFormat:@"%@: %@,\n",prop,obj];
         }

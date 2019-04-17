@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "NSArray+SYLogCategory.h"
 #import "NSDictionary+SYLogCategory.h"
+#import "NSObject+SYLogCategory.h"
 
 #define SYLogManagerSingle ([SYLogManager shareLog])
 
@@ -32,15 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearLog;
 // 上传（待开发）
 - (void)uploadLogWithUrl:(NSString *)url parameter:(NSDictionary *)dict complete:(void (^)(BOOL success, NSString *message))complete;
-
-// 是否发送邮件
-@property (nonatomic, assign) BOOL showSendEmail;
-// 邮箱-接收
-@property (nonatomic, strong) NSString *emailReceive;
-// 邮箱-发送
-@property (nonatomic, strong) NSString *emailSend;
-// 邮箱
-@property (nonatomic, strong) id target;
 
 @end
 

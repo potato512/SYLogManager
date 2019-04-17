@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *baseView;
 @property (nonatomic, assign) BOOL showlogView;
 @property (nonatomic, copy) void (^showClick)(void);
-@property (nonatomic, copy) void (^sendClick)(void);
-@property (nonatomic, assign) BOOL showSendEmail;
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityView;
 
 - (void)showMessage:(NSString *)message;
 

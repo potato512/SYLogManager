@@ -43,7 +43,7 @@ static NSString *const logFile = @"SYLog.txt";
     // log信息
     freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stdout);
     // 错误信息
-    freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr); // 错误信息
+    freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr); 
 }
 
 - (void)readLogMessage:(void (^)(NSString *message))complete

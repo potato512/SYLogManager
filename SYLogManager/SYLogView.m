@@ -21,7 +21,6 @@ static CGFloat const heightClose = 50.0;
 @property (nonatomic, strong) UILabel *label;
 
 @property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIButton *emailButton;
 
 @property (nonatomic, assign) BOOL hasSafeArea;
 
@@ -34,7 +33,6 @@ static CGFloat const heightClose = 50.0;
     self = [super init];
     if (self) {
         self.showlogView = NO;
-        self.showSendEmail = NO;
     }
     return self;
 }
@@ -118,7 +116,7 @@ static CGFloat const heightClose = 50.0;
         _view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.3];
         _view.frame = self.baseView.bounds;
         //
-        self.closeButton.frame = CGRectMake(0.0, (_view.frame.size.height - heightClose), _view.frame.size.width, heightClose);
+        self.closeButton.frame = CGRectMake(0.0, 0.0, _view.frame.size.width, (safeTop + heightClose));
         [_view addSubview:self.closeButton];
         _view.userInteractionEnabled = YES;
         //
@@ -149,6 +147,20 @@ static CGFloat const heightClose = 50.0;
     return _label;
 }
 
+- (UIActivityIndicatorView *)activityView
+{
+    if (_activityView == nil) {
+        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        _activityView.color = UIColor.redColor;
+        _activityView.hidesWhenStopped = YES;
+        //
+        [self.view addSubview:_activityView];
+        _activityView.center = self.view.center;
+        [_activityView stopAnimating];
+    }
+    return _activityView;
+}
+
 #pragma mark -
 
 - (UIButton *)closeButton
@@ -169,27 +181,6 @@ static CGFloat const heightClose = 50.0;
 {
     self.logButton.hidden = NO;
     self.view.hidden = YES;
-}
-
-- (UIButton *)emailButton
-{
-    if (_emailButton == nil) {
-        _emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _emailButton.backgroundColor = UIColor.brownColor;
-        [self.view addSubview:_emailButton];
-        [_emailButton setTitle:@"提交" forState:UIControlStateNormal];
-        [_emailButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-        [_emailButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-        [_emailButton addTarget:self action:@selector(emailClick) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _emailButton;
-}
-
-- (void)emailClick
-{
-    if (self.sendClick) {
-        self.sendClick();
-    }
 }
 
 - (BOOL)hasSafeArea
@@ -231,18 +222,6 @@ static CGFloat const heightClose = 50.0;
     // 显示最新信息
     if (self.scrollView.contentSize.height > self.scrollView.frame.size.height) {
         [self.scrollView setContentOffset:CGPointMake(0.0, self.scrollView.contentSize.height - self.scrollView.frame.size.height)];
-    }
-}
-
-- (void)setShowSendEmail:(BOOL)showSendEmail
-{
-    _showSendEmail = showSendEmail;
-    if (_showSendEmail) {
-        self.closeButton.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width / 3 * 2, (heightClose + safeTop));
-        self.emailButton.frame = CGRectMake((self.closeButton.frame.origin.x + self.closeButton.frame.size.width), self.closeButton.frame.origin.y, self.view.frame.size.width / 3, self.closeButton.frame.size.height);
-    } else {
-        self.closeButton.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, (heightClose + safeTop));
-        self.emailButton.frame = CGRectZero;
     }
 }
 
