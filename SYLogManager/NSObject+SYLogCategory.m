@@ -11,7 +11,7 @@
 
 @implementation NSObject (SYLogCategory)
 
-- (NSString *)description
+- (NSString *)objectDescription
 {
     NSString *desc = @"\n{";
     //
@@ -35,7 +35,7 @@
     }
     desc = [desc stringByAppendingFormat:@"}\n"];
     free(properties);
-    
+
     return desc;
 }
 

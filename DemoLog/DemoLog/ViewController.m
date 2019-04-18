@@ -55,7 +55,7 @@
     person.company = @"BYD Auto";
     person.project = @[@"project1", @"王者荣耀", @"跑跑卡丁车", @"逃离神庙", @"吃鸡"];
     person.learn = @{@"开发":@"Objective-C", @"project":@(10), @"team":@[@"张三", @"李四", @"wangWu", @"小明"]};
-    NSLog(@"person: %@", person);
+    NSLog(@"person: %@", person.objectDescription);
     
     
 }

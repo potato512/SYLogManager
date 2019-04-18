@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (SYLogCategory)
 
+/// 对象信息（需要主动调用）
+- (NSString *)objectDescription;
+
 @end
 
 NS_ASSUME_NONNULL_END

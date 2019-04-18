@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showlogView;
 /// 显示回调
 @property (nonatomic, copy) void (^showClick)(void);
+/// 清除回调
+@property (nonatomic, copy) void (^clearClick)(void);
 /// 状态
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
 /// 显示

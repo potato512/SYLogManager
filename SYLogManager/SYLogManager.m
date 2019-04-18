@@ -91,6 +91,10 @@
                 weakLog.message = message;
                 [weakLog.logView showMessage:message];
             }];
+            weakLog.logView.clearClick = ^{
+                [weakLog.logFile deleteLogMessage];
+                [weakLog.logFile saveLogMessage];
+            };
         };
     }
     return _logView;

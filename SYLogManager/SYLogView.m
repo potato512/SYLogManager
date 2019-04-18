@@ -17,9 +17,10 @@ static CGFloat const heightClose = 50.0;
 @property (nonatomic, strong) UIButton *logButton;
 
 @property (nonatomic, strong) UIView *view;
+@property (nonatomic, strong) UIView *buttonView;
 @property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UIButton *clearButton;
+@property (nonatomic, strong) UITextView *textView;
 
 @property (nonatomic, assign) BOOL hasSafeArea;
 
@@ -42,8 +43,18 @@ static CGFloat const heightClose = 50.0;
     if (self.baseView == nil) {
         self.baseView = UIApplication.sharedApplication.delegate.window;
     }
-    [self.baseView addSubview:self.logButton];
-    [self.baseView addSubview:self.view];
+    if (self.logButton.superview == nil) {
+        [self.baseView addSubview:self.logButton];
+    }
+    if (self.view.superview == nil) {
+        [self.baseView addSubview:self.view];
+        [self.view addSubview:self.buttonView];
+        [self.buttonView addSubview:self.closeButton];
+        [self.buttonView addSubview:self.clearButton];
+    }
+    if (self.view.superview == nil) {
+        [self.baseView addSubview:self.view];
+    }
     [self.baseView bringSubviewToFront:self.logButton];
 }
 
@@ -56,12 +67,12 @@ static CGFloat const heightClose = 50.0;
         _logButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, size, size)];
         _logButton.layer.cornerRadius = _logButton.frame.size.width / 2;
         _logButton.layer.masksToBounds = YES;
-        _logButton.layer.borderColor = UIColor.brownColor.CGColor;
+        _logButton.layer.borderColor = UIColor.redColor.CGColor;
         _logButton.layer.borderWidth = 3.0;
-        _logButton.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.3];
+        _logButton.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.3];
         [_logButton setTitle:@"log日志" forState:UIControlStateNormal];
-        [_logButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
-        [_logButton setTitleColor:UIColor.redColor forState:UIControlStateHighlighted];
+        [_logButton setTitleColor:UIColor.yellowColor forState:UIControlStateNormal];
+        [_logButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
         [_logButton addTarget:self action:@selector(showMessage) forControlEvents:UIControlEventTouchUpInside];
         // 添加拖动手势
         UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panRecognizerAction:)];
@@ -106,17 +117,14 @@ static CGFloat const heightClose = 50.0;
     [recognizer setTranslation:CGPointZero inView:view];
 }
 
-#pragma mark - 显示
+#pragma mark - getter
 
 - (UIView *)view
 {
     if (_view == nil) {
-        _view = [[UIView alloc] initWithFrame:CGRectZero];
-        _view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.3];
-        _view.frame = self.baseView.bounds;
+        _view = [[UIView alloc] initWithFrame:self.baseView.bounds];
+        _view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.8];
         //
-        self.closeButton.frame = CGRectMake(0.0, 0.0, _view.frame.size.width, (safeTop + heightClose));
-        [_view addSubview:self.closeButton];
         _view.userInteractionEnabled = YES;
         //
         _view.hidden = YES;
@@ -124,26 +132,16 @@ static CGFloat const heightClose = 50.0;
     return _view;
 }
 
-- (UIScrollView *)scrollView
+- (UITextView *)textView
 {
-    if (_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
-        // 父视图
-        [self.view addSubview:_scrollView];
-        _scrollView.frame = CGRectMake(0.0, (safeTop + heightClose), self.view.frame.size.width, (self.view.frame.size.height - safeTop - heightClose));
+    if (_textView == nil) {
+        _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, (safeTop + heightClose), self.view.frame.size.width, (self.view.frame.size.height - safeTop - heightClose))];
+        _textView.textColor = UIColor.blackColor;
+        _textView.editable = NO;
+        _textView.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.2];
+        [self.view addSubview:_textView];
     }
-    return _scrollView;
-}
-
-- (UILabel *)label
-{
-    if (_label == nil) {
-        _label = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, (self.scrollView.frame.size.width - 40.0), self.scrollView.frame.size.height)];
-        [self.scrollView addSubview:_label];
-        _label.textColor = UIColor.blackColor;
-        _label.numberOfLines = 0;
-    }
-    return _label;
+    return _textView;
 }
 
 - (UIActivityIndicatorView *)activityView
@@ -160,7 +158,14 @@ static CGFloat const heightClose = 50.0;
     return _activityView;
 }
 
-#pragma mark -
+- (UIView *)buttonView
+{
+    if (_buttonView == nil) {
+        _buttonView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, (safeTop + heightClose))];
+        _buttonView.backgroundColor = [UIColor yellowColor];
+    }
+    return _buttonView;
+}
 
 - (UIButton *)closeButton
 {
@@ -171,7 +176,8 @@ static CGFloat const heightClose = 50.0;
         [_closeButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
         [_closeButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
         [_closeButton addTarget:self action:@selector(closeClick) forControlEvents:UIControlEventTouchUpInside];
-        _closeButton.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+        //
+        _closeButton.frame = CGRectMake(0.0, safeTop, self.buttonView.frame.size.width / 3 * 2, heightClose);
     }
     return _closeButton;
 }
@@ -180,6 +186,29 @@ static CGFloat const heightClose = 50.0;
 {
     self.logButton.hidden = NO;
     self.view.hidden = YES;
+}
+
+- (UIButton *)clearButton
+{
+    if (_clearButton == nil) {
+        _clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _clearButton.backgroundColor = UIColor.brownColor;
+        [_clearButton setTitle:@"清除" forState:UIControlStateNormal];
+        [_clearButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [_clearButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+        [_clearButton addTarget:self action:@selector(clearButtonClick) forControlEvents:UIControlEventTouchUpInside];
+        //
+        _clearButton.frame = CGRectMake(self.buttonView.frame.size.width / 3 * 2, safeTop, self.buttonView.frame.size.width / 3, heightClose);
+    }
+    return _clearButton;
+}
+
+- (void)clearButtonClick
+{
+    [self showMessage:@""];
+    if (self.clearClick) {
+        self.clearClick();
+    }
 }
 
 - (BOOL)hasSafeArea
@@ -205,23 +234,7 @@ static CGFloat const heightClose = 50.0;
 
 - (void)showMessage:(NSString *)message
 {
-    self.label.text = message;
-    CGSize size = self.label.frame.size;
-    if (7.0 <= [UIDevice currentDevice].systemVersion.floatValue)
-    {
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        NSDictionary *dict = @{NSFontAttributeName:self.label.font, NSParagraphStyleAttributeName:paragraphStyle.copy};
-        size = [self.label.text boundingRectWithSize:CGSizeMake(self.label.frame.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
-    }
-    CGRect rect = self.label.frame;
-    rect.size.height = size.height;
-    self.label.frame = rect;
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, (rect.size.height + rect.origin.y));
-    // 显示最新信息
-    if (self.scrollView.contentSize.height > self.scrollView.frame.size.height) {
-        [self.scrollView setContentOffset:CGPointMake(0.0, self.scrollView.contentSize.height - self.scrollView.frame.size.height)];
-    }
+    self.textView.text = message;
 }
 
 @end

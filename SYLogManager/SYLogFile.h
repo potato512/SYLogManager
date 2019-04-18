@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYLogFile : NSObject
 
 @property (nonatomic, strong) NSString *filePath;
+
 /// 保存
 - (void)saveLogMessage;
 /// 删除
