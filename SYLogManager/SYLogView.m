@@ -10,7 +10,7 @@
 
 static CGFloat const heightClose = 50.0;
 
-#define safeTop (self.hasSafeArea ? 34.0 : 0.0)
+#define safeTop (self.hasSafeArea ? 44.0 : 0.0)
 
 @interface SYLogView ()
 
@@ -206,6 +206,7 @@ static CGFloat const heightClose = 50.0;
 - (void)clearButtonClick
 {
     [self showMessage:@""];
+    [self closeClick];
     if (self.clearClick) {
         self.clearClick();
     }
