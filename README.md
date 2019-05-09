@@ -13,7 +13,6 @@ log日志查看。
 ~~~
 
 ~~~ javascript
-SYLogManagerSingle.autoClear = YES;
 [SYLogManagerSingle initializeLog];
 SYLogManagerSingle.showView = self.window;
 SYLogManagerSingle.show = YES;
@@ -25,6 +24,12 @@ $ 待开发功能
 * 显示对象信息
 
 # 修改完善
+* 20190509
+  * 版本号：1.0.7
+  * 功能完善
+    * 发送邮件
+    * 删除时，弹窗提示
+    
 * 20190425
   * 版本号：1.0.6
   * 功能完善

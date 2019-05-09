@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL show;
 /// 父视图
 @property (nonatomic, strong) UIView *showView;
+/// 控制器
+@property (nonatomic, strong) UIViewController *target;
 
 /// 初始化
 - (void)initializeLog;

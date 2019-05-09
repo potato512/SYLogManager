@@ -28,6 +28,7 @@
     
     [SYLogManagerSingle initializeLog];
     SYLogManagerSingle.showView = self.window;
+    SYLogManagerSingle.target = self.window.rootViewController;
     SYLogManagerSingle.show = YES;
     
     return YES;

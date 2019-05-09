@@ -92,8 +92,19 @@
                 [weakLog.logView showMessage:message];
             }];
             weakLog.logView.clearClick = ^{
-                [weakLog.logFile deleteLogMessage];
-                [weakLog.logFile saveLogMessage];
+                if (self.target && [self.target isKindOfClass:UIViewController.class]) {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"是否清除缓存？" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertController addAction:cancelAction];
+                    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [weakLog.logFile deleteLogMessage];
+                        [weakLog.logFile saveLogMessage];
+                    }];
+                    [alertController addAction:confirmAction];
+                    [weakLog.target presentViewController:alertController animated:YES completion:NULL];
+                }
             };
         };
     }
