@@ -91,20 +91,15 @@
                 weakLog.message = message;
                 [weakLog.logView showMessage:message];
             }];
-            weakLog.logView.clearClick = ^{
-                if (self.target && [self.target isKindOfClass:UIViewController.class]) {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"是否清除缓存？" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                        
-                    }];
-                    [alertController addAction:cancelAction];
-                    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [weakLog.logFile deleteLogMessage];
-                        [weakLog.logFile saveLogMessage];
-                    }];
-                    [alertController addAction:confirmAction];
-                    [weakLog.target presentViewController:alertController animated:YES completion:NULL];
+            weakLog.logView.shotScreenClick = ^(UIImage * _Nonnull image) {
+                if (image) {
+//                    UIImageWriteToSavedPhotosAlbum(image, weakLog, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+                    weakLog.shotImage = image;
                 }
+            };
+            weakLog.logView.clearClick = ^{
+                [weakLog.logFile deleteLogMessage];
+                [weakLog.logFile saveLogMessage];
             };
         };
     }
@@ -114,6 +109,12 @@
 - (NSString *)filePath
 {
     return self.logFile.filePath;
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    BOOL isResult = (error == nil ? YES : NO);
+    NSLog(@"log截图保存到相册状态：%@", (isResult ? @"成功" : @"失败"));
 }
 
 #pragma mark - setter

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogView : UIView
 
-/// u父视图
+/// 父视图
 @property (nonatomic, strong) UIView *baseView;
 /// 是否显示
 @property (nonatomic, assign) BOOL showlogView;
@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^showClick)(void);
 /// 清除回调
 @property (nonatomic, copy) void (^clearClick)(void);
+/// 截图回调
+@property (nonatomic, copy) void (^shotScreenClick)(UIImage *image);
 /// 状态
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;
 /// 显示

@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL show;
 /// 父视图
 @property (nonatomic, strong) UIView *showView;
-/// 控制器
-@property (nonatomic, strong) UIViewController *target;
+/// 截图
+@property (nonatomic, strong) UIImage *shotImage;
 
 /// 初始化
 - (void)initializeLog;
@@ -48,5 +48,7 @@ NS_ASSUME_NONNULL_END
  2、继承NSObject的对象需要打印时，通过属性objectDescription，如：
  NSObject *object = [NSObject new]; NSLog("object = %@", object.objectDescription);
  3、SYLogManagerSingle.show = YES;属性的设置在[self.window makeKeyAndVisible];方法之后
+ 
+ 注意：截图是保存到相册，因此需要设置相册隐私权限。
  
  */
