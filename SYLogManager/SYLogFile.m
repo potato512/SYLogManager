@@ -30,14 +30,14 @@ static NSString *const logFile = @"SYLog.txt";
 
 - (void)saveLogMessage
 {
-//    // 联调调试不保存
-//    if (isatty(STDOUT_FILENO)) {
-//        return;
-//    }
-//    // 模拟器不保存
-//    if ([UIDevice.currentDevice.model hasPrefix:@"Simulator"]) {
-//        return;
-//    }
+    // 联调调试不保存
+    if (isatty(STDOUT_FILENO)) {
+        return;
+    }
+    // 模拟器不保存
+    if ([UIDevice.currentDevice.model hasPrefix:@"Simulator"]) {
+        return;
+    }
     
     // 输入到文件
     // log信息

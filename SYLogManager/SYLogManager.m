@@ -127,9 +127,9 @@
         // 设置收件人
         [emailVC setToRecipients:@[@"3378459350@qq.com"]];
         // 设置抄送人
-        // [_emailVC setCcRecipients:@[@"1622849369@qq.com"]];
+        // [emailVC setCcRecipients:@[@"1622849369@qq.com"]];
         // 设置密送人
-        // [_emailVC setBccRecipients:@[@"15690725786@163.com"]];
+        // [emailVC setBccRecipients:@[@"15690725786@163.com"]];
         // 设置邮件主题
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
