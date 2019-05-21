@@ -10,6 +10,8 @@
 
 static CGFloat const originXY = 5.0;
 static CGFloat const heightClose = 50.0;
+static NSInteger const tagSendEmail = 0;
+static NSInteger const tagClearLog = 1;
 
 #define safeTop (self.hasSafeArea ? 44.0 : 0.0)
 
@@ -20,10 +22,8 @@ static CGFloat const heightClose = 50.0;
 @property (nonatomic, strong) UIView *view;
 @property (nonatomic, strong) UIView *buttonView;
 @property (nonatomic, strong) UIButton *closeButton;
-//@property (nonatomic, strong) UIButton *clearButton;
 @property (nonatomic, strong) UISegmentedControl *segmentControl;
 @property (nonatomic, strong) UITextView *textView;
-@property (nonatomic, strong) UITextView *textViewShot;
 
 @property (nonatomic, assign) BOOL hasSafeArea;
 
@@ -36,6 +36,9 @@ static CGFloat const heightClose = 50.0;
     self = [super init];
     if (self) {
         self.showlogView = NO;
+        //
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotificationShow) name:NotificationShowLogView object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotificationHide) name:NotificationHideLogView object:nil];
     }
     return self;
 }
@@ -53,7 +56,6 @@ static CGFloat const heightClose = 50.0;
         [self.baseView addSubview:self.view];
         [self.view addSubview:self.buttonView];
         [self.buttonView addSubview:self.closeButton];
-//        [self.buttonView addSubview:self.clearButton];
         [self.buttonView addSubview:self.segmentControl];
     }
     if (self.view.superview == nil) {
@@ -148,17 +150,6 @@ static CGFloat const heightClose = 50.0;
     return _textView;
 }
 
-- (UITextView *)textViewShot
-{
-    if (_textViewShot == nil) {
-        _textViewShot = [[UITextView alloc] initWithFrame:CGRectZero];
-        _textViewShot.textColor = UIColor.blackColor;
-        _textViewShot.editable = NO;
-        _textViewShot.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.2];
-    }
-    return _textViewShot;
-}
-
 - (UIActivityIndicatorView *)activityView
 {
     if (_activityView == nil) {
@@ -203,34 +194,10 @@ static CGFloat const heightClose = 50.0;
     self.view.hidden = YES;
 }
 
-//- (UIButton *)clearButton
-//{
-//    if (_clearButton == nil) {
-//        _clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        _clearButton.backgroundColor = UIColor.brownColor;
-//        [_clearButton setTitle:@"清除" forState:UIControlStateNormal];
-//        [_clearButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-//        [_clearButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-//        [_clearButton addTarget:self action:@selector(clearButtonClick) forControlEvents:UIControlEventTouchUpInside];
-//        //
-//        _clearButton.frame = CGRectMake(self.buttonView.frame.size.width / 3 * 2, safeTop, self.buttonView.frame.size.width / 3, heightClose);
-//    }
-//    return _clearButton;
-//}
-//
-//- (void)clearButtonClick
-//{
-//    [self showMessage:@""];
-//    [self closeClick];
-//    if (self.clearClick) {
-//        self.clearClick();
-//    }
-//}
-
 - (UISegmentedControl *)segmentControl
 {
     if (_segmentControl == nil) {
-        _segmentControl = [[UISegmentedControl alloc] initWithItems:@[@"截图", @"清空"]];
+        _segmentControl = [[UISegmentedControl alloc] initWithItems:@[@"发送", @"清空"]];
         _segmentControl.frame = CGRectMake((self.buttonView.frame.size.width - originXY * 2 - 120.0), (safeTop + originXY), 120.0, (heightClose - originXY * 2));
         _segmentControl.momentary = YES;
         [_segmentControl addTarget:self action:@selector(segmentControlClick:) forControlEvents:UIControlEventValueChanged];
@@ -241,13 +208,12 @@ static CGFloat const heightClose = 50.0;
 - (void)segmentControlClick:(UISegmentedControl *)control
 {
     NSInteger tag = control.selectedSegmentIndex;
-    if (tag == 0) {
+    if (tag == tagSendEmail) {
         // 截图
-        if (self.shotScreenClick) {
-            UIImage *image = [SYLogView screenImageWithView:self.textViewShot];
-            self.shotScreenClick(image);
+        if (self.sendEmailClick) {
+            self.sendEmailClick();
         }
-    } else if (tag == 1) {
+    } else if (tag == tagClearLog) {
         // 清空
         [self showMessage:@""];
         [self closeClick];
@@ -255,16 +221,6 @@ static CGFloat const heightClose = 50.0;
             self.clearClick();
         }
     }
-}
-
-/// 屏幕截图（指定视图）
-+ (UIImage *)screenImageWithView:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
 }
 
 - (BOOL)hasSafeArea
@@ -291,11 +247,20 @@ static CGFloat const heightClose = 50.0;
 - (void)showMessage:(NSString *)message
 {
     self.textView.text = message;
-    //
-    self.textViewShot.text = message;
-    self.textViewShot.frame = CGRectMake(0.0, 0.0, self.textView.frame.size.width, self.textView.contentSize.height);
-    
-    NSLog(@"%@, %@", NSStringFromCGSize(self.textView.contentSize), NSStringFromCGSize(self.textViewShot.frame.size));
+}
+
+#pragma mark - 通知
+
+- (void)addNotificationShow
+{
+    self.logButton.hidden = NO;
+    self.view.hidden = YES;
+}
+
+- (void)addNotificationHide
+{
+    self.logButton.hidden = YES;
+    self.view.hidden = YES;
 }
 
 @end
