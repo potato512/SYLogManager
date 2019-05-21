@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *showView;
 /// log信息
 @property (nonatomic, strong) NSString *logMessage;
-/// 响应者
+/// 响应者（设置后才能使用邮件发送功能）
 @property (nonatomic, strong) UIViewController *target;
 
 /// 初始化

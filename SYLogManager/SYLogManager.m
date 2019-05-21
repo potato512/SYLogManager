@@ -94,7 +94,6 @@
                 [weakLog.logView showMessage:message];
             }];
             weakLog.logView.sendEmailClick = ^() {
-                [NSNotificationCenter.defaultCenter postNotificationName:NotificationHideLogView object:nil];
                 [weakLog sentEmail];
             };
             weakLog.logView.clearClick = ^{
@@ -116,10 +115,13 @@
 - (void)sentEmail
 {
     if (self.target == nil || ![self.target isKindOfClass:UIViewController.class]) {
+        ShowMessage(@"温馨提示", @"请设置【target】属性，以便发送邮件", @"知道了");
         return;
     }
     // 判断用户是否已设置邮件账户
     if ([MFMailComposeViewController canSendMail]) {
+        [NSNotificationCenter.defaultCenter postNotificationName:NotificationHideLogView object:nil];
+        
         // 弹出邮件发送视图
         MFMailComposeViewController *emailVC = [[MFMailComposeViewController alloc] init];
         // 设置邮件代理
