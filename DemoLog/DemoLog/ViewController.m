@@ -70,7 +70,7 @@
 
 - (void)showClick
 {
-//    SYLogManagerSingle.show = YES;
+    SYLogManagerSingle.show = YES;
     
 //    if (self.imageView == nil) {
 //        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];

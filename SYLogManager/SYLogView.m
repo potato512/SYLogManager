@@ -12,6 +12,7 @@ static CGFloat const originXY = 5.0;
 static CGFloat const heightClose = 50.0;
 static NSInteger const tagSendEmail = 0;
 static NSInteger const tagClearLog = 1;
+#define sizeHide (self.baseView.frame.size.width / 2 * 1.5)
 
 #define safeTop (self.hasSafeArea ? 44.0 : 0.0)
 
@@ -24,6 +25,8 @@ static NSInteger const tagClearLog = 1;
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UISegmentedControl *segmentControl;
 @property (nonatomic, strong) UITextView *textView;
+
+@property (nonatomic, strong) UIView *hideView;
 
 @property (nonatomic, assign) BOOL hasSafeArea;
 
@@ -39,6 +42,7 @@ static NSInteger const tagClearLog = 1;
         //
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotificationShow) name:NotificationShowLogView object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addNotificationHide) name:NotificationHideLogView object:nil];
+        [self receiveNotificationHidePanView];
     }
     return self;
 }
@@ -61,6 +65,9 @@ static NSInteger const tagClearLog = 1;
     if (self.view.superview == nil) {
         [self.baseView addSubview:self.view];
     }
+    CGRect rectlog = self.logButton.frame;
+    rectlog.origin = CGPointMake(20.0, 20.0);
+    self.logButton.frame = rectlog;
     [self.baseView bringSubviewToFront:self.logButton];
 }
 
@@ -103,24 +110,46 @@ static NSInteger const tagClearLog = 1;
 // 拖动手势方法
 - (void)panRecognizerAction:(UIPanGestureRecognizer *)recognizer
 {
-    // 拖动视图
-    UIView *view = (UIView *)recognizer.view;
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self postNotificationHidePanView];
+        
+        // 停止拖动时隐藏
+        [self showHideView:NO];
+    } else {
+        // 拖动时显示
+        [self showHideView:YES];
+        
+        // 拖动视图
+        UIView *view = (UIView *)recognizer.view;
+        [self.baseView bringSubviewToFront:view];
+        
+        CGPoint translation = [recognizer translationInView:view.superview];
+        CGFloat centerX = view.center.x + translation.x;
+        if (centerX < view.frame.size.width / 2) {
+            centerX = view.frame.size.width / 2;
+        } else if (centerX > view.superview.frame.size.width - view.frame.size.width / 2) {
+            centerX = view.superview.frame.size.width - view.frame.size.width / 2;
+        }
+        CGFloat centerY = view.center.y + translation.y;
+        if (centerY < (view.frame.size.height / 2)) {
+            centerY = (view.frame.size.height / 2);
+        } else if (centerY > view.superview.frame.size.height - view.frame.size.height / 2) {
+            centerY = view.superview.frame.size.height - view.frame.size.height / 2;
+        }
+        view.center = CGPointMake(centerX, centerY);
+        [recognizer setTranslation:CGPointZero inView:view];
+        
+        if (CGRectContainsRect(self.hideView.frame, view.frame)) {
+            self.hideView.backgroundColor = UIColor.yellowColor;
+            self.hideView.layer.borderColor = UIColor.redColor.CGColor;
+            self.hideView.layer.borderWidth = 3.0;
+        } else {
+            self.hideView.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.6];
+            self.hideView.layer.borderColor = UIColor.clearColor.CGColor;
+        }
+    }
     
-    CGPoint translation = [recognizer translationInView:view.superview];
-    CGFloat centerX = view.center.x + translation.x;
-    if (centerX < view.frame.size.width / 2) {
-        centerX = view.frame.size.width / 2;
-    } else if (centerX > view.superview.frame.size.width - view.frame.size.width / 2) {
-        centerX = view.superview.frame.size.width - view.frame.size.width / 2;
-    }
-    CGFloat centerY = view.center.y + translation.y;
-    if (centerY < (view.frame.size.height / 2)) {
-        centerY = (view.frame.size.height / 2);
-    } else if (centerY > view.superview.frame.size.height - view.frame.size.height / 2) {
-        centerY = view.superview.frame.size.height - view.frame.size.height / 2;
-    }
-    view.center = CGPointMake(centerX, centerY);
-    [recognizer setTranslation:CGPointZero inView:view];
+    NSLog(@"pan state = %ld", recognizer.state);
 }
 
 #pragma mark - getter
@@ -235,6 +264,49 @@ static NSInteger const tagClearLog = 1;
     return NO;
 }
 
+- (UIView *)hideView
+{
+    if (_hideView == nil) {
+        _hideView = [[UIView alloc] initWithFrame:CGRectMake((self.baseView.frame.size.width + sizeHide), (self.baseView.frame.size.height + sizeHide), sizeHide, sizeHide)];
+        _hideView.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.6];
+        _hideView.layer.cornerRadius = sizeHide / 2;
+        _hideView.layer.masksToBounds = YES;
+        _hideView.layer.borderColor = UIColor.clearColor.CGColor;
+        _hideView.layer.borderWidth = 3.0;
+        
+        [self.baseView addSubview:_hideView];
+        //
+        CGFloat sizelabel = _hideView.frame.size.width / 2;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, sizelabel, sizelabel)];
+        label.backgroundColor = UIColor.clearColor;
+        label.textColor = UIColor.blackColor;
+        label.text = @"取消悬浮";
+        label.textAlignment = NSTextAlignmentCenter;
+        [_hideView addSubview:label];
+    }
+    return _hideView;
+}
+
+- (void)showHideView:(BOOL)show
+{
+    if (show) {
+        if (CGRectEqualToRect(self.hideView.frame, CGRectMake((self.baseView.frame.size.width - sizeHide / 2), (self.baseView.frame.size.height - sizeHide / 2), sizeHide, sizeHide))) {
+            return;
+        }
+        [UIView animateWithDuration:0.3 animations:^{
+            self.hideView.frame = CGRectMake((self.baseView.frame.size.width - sizeHide / 2), (self.baseView.frame.size.height - sizeHide / 2), sizeHide, sizeHide);
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.hideView.frame = CGRectMake((self.baseView.frame.size.width + sizeHide), (self.baseView.frame.size.height + sizeHide), sizeHide, sizeHide);
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
 #pragma mark - setter
 
 - (void)setShowlogView:(BOOL)showlogView
@@ -261,6 +333,23 @@ static NSInteger const tagClearLog = 1;
 {
     self.logButton.hidden = YES;
     self.view.hidden = YES;
+}
+
+- (void)postNotificationHidePanView
+{
+    [NSNotificationCenter.defaultCenter postNotificationName:@"hidePanView" object:nil];
+}
+
+- (void)receiveNotificationHidePanView
+{
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hidePanView) name:@"hidePanView" object:nil];
+}
+
+- (void)hidePanView
+{
+    if (CGRectContainsRect(self.hideView.frame, self.logButton.frame)) {
+        [self addNotificationHide];
+    }
 }
 
 @end
