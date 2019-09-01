@@ -15,6 +15,8 @@ log日志查看。
 ~~~ javascript
 [SYLogManagerSingle initializeLog];
 SYLogManagerSingle.showView = self.window;
+SYLogManagerSingle.target = self.window.rootViewController;
+SYLogManagerSingle.email = @"151311301@qq.com";
 SYLogManagerSingle.show = YES;
 ~~~ 
 
@@ -24,6 +26,11 @@ $ 待开发功能
 * 显示对象信息
 
 # 修改完善
+* 20190901
+  * 版本号：1.1.1
+  * 修改优化
+    * 初始化log接收邮件地址
+
 * 20190725
   * 版本号：1.1.0
   * 功能完善

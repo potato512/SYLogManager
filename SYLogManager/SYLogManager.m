@@ -118,6 +118,12 @@
         ShowMessage(@"温馨提示", @"请设置【target】属性，以便发送邮件", @"知道了");
         return;
     }
+    
+    if (self.email == nil || ![self.email isKindOfClass:NSString.class] || self.email.length <= 0) {
+        ShowMessage(@"温馨提示", @"请设置邮件接收地址，以便发送邮件", @"知道了");
+        return;
+    }
+    
     // 判断用户是否已设置邮件账户
     if ([MFMailComposeViewController canSendMail]) {
         [NSNotificationCenter.defaultCenter postNotificationName:NotificationHideLogView object:nil];
@@ -127,7 +133,7 @@
         // 设置邮件代理
         [emailVC setMailComposeDelegate:self];
         // 设置收件人
-        [emailVC setToRecipients:@[@"3378459350@qq.com"]];
+        [emailVC setToRecipients:@[self.email]];
         // 设置抄送人
         // [emailVC setCcRecipients:@[@"1622849369@qq.com"]];
         // 设置密送人
