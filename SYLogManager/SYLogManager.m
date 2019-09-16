@@ -37,7 +37,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"\n---------log日志管理 %@------------", NSDate.date);
+        
     }
     return self;
 }
@@ -169,19 +169,19 @@
     switch (result) {
         case MFMailComposeResultCancelled: {
             NSLog(@"Mail send canceled: 用户取消编辑");
-//            ShowMessage(nil, @"用户已取消发送并删除草稿", @"知道了");
+            ShowMessage(nil, @"Mail send canceled: 用户取消编辑", @"知道了");
         } break;
         case MFMailComposeResultSaved: {
-            NSLog(@"Mail saved: 用户保存邮件");
-//            ShowMessage(nil, @"用户已取消发送并保存邮件", @"知道了");
+            NSLog(@"Mail saved: 邮件保存成功");
+            ShowMessage(nil, @"Mail saved: 邮件保存成功", @"知道了");
         } break;
         case MFMailComposeResultSent: {
-            NSLog(@"Mail sent: 用户点击发送");
-//            ShowMessage(nil, @"发送成功", @"知道了");
+            NSLog(@"Mail sent: 邮件发送成功");
+            ShowMessage(nil, @"Mail sent: 邮件发送成功", @"知道了");
         } break;
         case MFMailComposeResultFailed: {
             NSLog(@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]);
-//            ShowMessage(nil, @"用户尝试保存或发送邮件失败", @"知道了");
+            ShowMessage(nil, [NSString stringWithFormat:@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]], @"知道了");
         } break;
     }
     // 关闭邮件发送视图

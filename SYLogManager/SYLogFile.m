@@ -39,6 +39,7 @@ static NSString *const logFile = @"SYLog.txt";
         return;
     }
     
+    NSLog(@"\n---------log日志管理 %@------------", NSDate.date);
     // 输入到文件
     // log信息
     freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stdout);

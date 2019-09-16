@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)shareLog;
 
-/// 日志记录路径
+/// 日志记录路径（默认：）
 @property (nonatomic, strong, readonly) NSString *filePath;
 /// 显示日志信息（默认不显示）
 @property (nonatomic, assign) BOOL show;

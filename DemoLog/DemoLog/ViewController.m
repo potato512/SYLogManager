@@ -12,8 +12,6 @@
 
 @interface ViewController ()
 
-@property (nonatomic, strong) UIImageView *imageView;
-
 @end
 
 @implementation ViewController
@@ -71,25 +69,11 @@
 - (void)showClick
 {
     SYLogManagerSingle.show = YES;
-    
-//    if (self.imageView == nil) {
-//        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-//        [self.view addSubview:scrollView];
-//        self.imageView = [[UIImageView alloc] init];
-//        [scrollView addSubview:self.imageView];
-//    }
-//    self.imageView.image = SYLogManagerSingle.shotImage;
-//    self.imageView.frame = CGRectMake(0.0, 0.0, self.imageView.image.size.width, self.imageView.image.size.height);
-//    ((UIScrollView *)self.imageView.superview).contentSize = CGSizeMake(self.view.frame.size.width, self.imageView.frame.size.height);
 }
 
 - (void)clearClick
 {
-//    [SYLogManagerSingle clearLog];
-    
-    if (self.imageView) {
-        self.imageView.image = nil;
-    }
+    [SYLogManagerSingle clearLog];
 }
 
 @end

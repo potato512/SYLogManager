@@ -14,7 +14,7 @@ static NSInteger const tagSendEmail = 0;
 static NSInteger const tagClearLog = 1;
 #define sizeHide (self.baseView.frame.size.width / 2 * 1.5)
 
-#define safeTop (self.hasSafeArea ? 44.0 : 0.0)
+#define safeTop (self.hasSafeArea ? 44.0 : 20.0)
 
 @interface SYLogView ()
 
