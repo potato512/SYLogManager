@@ -148,8 +148,6 @@ static NSInteger const tagClearLog = 1;
             self.hideView.layer.borderColor = UIColor.clearColor.CGColor;
         }
     }
-    
-    NSLog(@"pan state = %ld", recognizer.state);
 }
 
 #pragma mark - getter
@@ -174,6 +172,7 @@ static NSInteger const tagClearLog = 1;
         _textView.textColor = UIColor.blackColor;
         _textView.editable = NO;
         _textView.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.2];
+        _textView.layoutManager.allowsNonContiguousLayout = NO;
         [self.view addSubview:_textView];
     }
     return _textView;

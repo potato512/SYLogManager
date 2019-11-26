@@ -12,7 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogFile : NSObject
 
-/// log存储文件（默认）
+/// 是否允许联调或模拟器模式（默认NO不允许）
+@property (nonatomic, assign) BOOL isEnable;
+
+/// log存储文件（默认caches缓存目录）
 @property (nonatomic, strong) NSString *filePath;
 
 /// 保存

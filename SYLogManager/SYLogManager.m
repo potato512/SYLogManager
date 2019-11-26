@@ -37,7 +37,7 @@
 {
     self = [super init];
     if (self) {
-        
+        self.isEnable = NO;
     }
     return self;
 }
@@ -205,6 +205,12 @@ void ShowMessage(NSString *title, NSString *message, NSString *button)
     } else {
         self.logView.showlogView = NO;
     }
+}
+
+- (void)setIsEnable:(BOOL)isEnable
+{
+    _isEnable = isEnable;
+    self.logFile.isEnable = _isEnable;
 }
 
 @end

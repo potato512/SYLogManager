@@ -29,6 +29,7 @@
     SYLogManagerSingle.showView = self.window;
     SYLogManagerSingle.target = self.window.rootViewController;
     SYLogManagerSingle.email = @"151311301@qq.com";
+    SYLogManagerSingle.isEnable = YES;
     SYLogManagerSingle.show = YES;
     
     return YES;

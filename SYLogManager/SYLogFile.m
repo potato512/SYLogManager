@@ -30,13 +30,17 @@ static NSString *const logFile = @"SYLog.txt";
 
 - (void)saveLogMessage
 {
-    // 联调调试不保存
-    if (isatty(STDOUT_FILENO)) {
-        return;
-    }
-    // 模拟器不保存
-    if ([UIDevice.currentDevice.model hasPrefix:@"Simulator"]) {
-        return;
+    if (self.isEnable) {
+        
+    } else {
+        // 联调调试不保存
+        if (isatty(STDOUT_FILENO)) {
+            return;
+        }
+        // 模拟器不保存
+        if ([UIDevice.currentDevice.model hasPrefix:@"Simulator"]) {
+            return;
+        }
     }
     
     NSLog(@"\n---------log日志管理 %@------------", NSDate.date);
@@ -79,7 +83,7 @@ static NSString *const logFile = @"SYLog.txt";
 - (NSString *)filePath
 {
     if (_filePath == nil) {
-        NSArray *array = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSArray *array = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *string = array.firstObject;
         string = [string stringByAppendingPathComponent:logFile];
         _filePath = [NSString stringWithString:string];
