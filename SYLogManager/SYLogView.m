@@ -320,6 +320,20 @@ static NSInteger const tagClearLog = 1;
     self.textView.text = message;
 }
 
+
+
+
+- (void)showLog:(NSAttributedString *)message
+{
+    self.textView.attributedText = message;
+    
+    // scroll to bottom
+    if (message.length > 0) {
+        NSRange bottom = NSMakeRange((message.length - 1), 1);
+        [self.textView scrollRangeToVisible:bottom];
+    }
+}
+
 #pragma mark - 通知
 
 - (void)addNotificationShow

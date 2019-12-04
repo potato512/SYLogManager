@@ -46,12 +46,15 @@
 
 - (void)initializeLog
 {
-    [self.logFile saveLogMessage];
+//    [self.logFile saveLogMessage];
+    [self.logFile save:@"初始化使用"];
 }
 
 - (void)clearLog
 {
-    [self.logFile deleteLogMessage];
+//    [self.logFile deleteLogMessage];
+    
+    [self.logFile clear];
 }
 
 - (void)uploadLogWithUrl:(NSString *)url parameter:(NSDictionary *)dict complete:(void (^)(BOOL, NSString * _Nonnull))complete
@@ -87,18 +90,27 @@
         SYLogManager __weak *weakLog = self;
         _logView.showClick = ^ {
             [weakLog.logView.activityView startAnimating];
-            [weakLog.logFile readLogMessage:^(NSString * _Nonnull message) {
+//            [weakLog.logFile readLogMessage:^(NSString * _Nonnull message) {
+//                [weakLog.logView.activityView stopAnimating];
+//                weakLog.message = message;
+//                weakLog.logMessage = message;
+//                [weakLog.logView showMessage:message];
+//            }];
+            [weakLog.logFile read:^(NSAttributedString * _Nonnull text) {
                 [weakLog.logView.activityView stopAnimating];
-                weakLog.message = message;
-                weakLog.logMessage = message;
-                [weakLog.logView showMessage:message];
+                weakLog.message = text.string;
+                weakLog.logMessage = text.string;
+                [weakLog.logView showLog:text];
             }];
+            
             weakLog.logView.sendEmailClick = ^() {
                 [weakLog sentEmail];
             };
             weakLog.logView.clearClick = ^{
-                [weakLog.logFile deleteLogMessage];
-                [weakLog.logFile saveLogMessage];
+//                [weakLog.logFile deleteLogMessage];
+//                [weakLog.logFile saveLogMessage];
+                
+                [weakLog.logFile clear];
             };
         };
     }

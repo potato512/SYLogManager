@@ -62,8 +62,10 @@
 
 - (void)nextClick
 {
-    ViewController *next = [[ViewController alloc] init];
-    [self.navigationController pushViewController:next animated:YES];
+//    ViewController *next = [[ViewController alloc] init];
+//    [self.navigationController pushViewController:next animated:YES];
+    
+    [self saveFile];
 }
 
 - (void)showClick
@@ -74,6 +76,32 @@
 - (void)clearClick
 {
     [SYLogManagerSingle clearLog];
+}
+
+- (void)saveFile
+{
+    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *filePath = pathArray.firstObject;
+    filePath = [filePath stringByAppendingPathComponent:@"file.txt"];
+    NSLog(@"filePath = %@", filePath);
+    
+//    NSArray *array = @[@"张三", @"李四", @"wangWu", @"小明"];
+    //
+    Person *person = [[Person alloc] init];
+    person.name = @"小明";
+    person.job = @"研发工程师";
+    person.age = @"28";
+    person.company = @"BYD Auto";
+    person.project = @[@"project1", @"王者荣耀", @"跑跑卡丁车", @"逃离神庙", @"吃鸡"];
+    person.learn = @{@"开发":@"Objective-C", @"project":@(10), @"team":@[@"张三", @"李四", @"wangWu", @"小明"]};
+    NSArray *array = @[person];
+    //
+    BOOL result = [array writeToFile:filePath atomically:NO];
+    NSLog(@"保存情况：%d", result);
+    
+    NSArray *temps = [NSArray arrayWithContentsOfFile:filePath];
+    NSLog(@"%@", temps);
+    
 }
 
 @end

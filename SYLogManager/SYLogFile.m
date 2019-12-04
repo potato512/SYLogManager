@@ -11,7 +11,59 @@
 
 static NSString *const logFile = @"SYLog.txt";
 
+#pragma mark - 数据格式
+
+@interface SYLogText : NSObject
+
+@property (nonatomic, assign) NSString *logTime;
+@property (nonatomic, strong) NSString *logText;
+@property (nonatomic, strong) NSString *logKey;
+
+@end
+
+@implementation SYLogText
+
++ (instancetype)logText:(NSString *)text key:(NSString *)key
+{
+    SYLogText *log = [SYLogText new];
+    log.logText = text;
+    log.logKey = (key.length > 0 ? key : @"未设置");
+    //
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
+    NSString *time = [formatter stringFromDate:NSDate.date];
+    log.logTime = time;
+    //
+    return log;
+}
+
+// 属性编码 向coder中写入数据
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.logTime forKey:@"logTime"];
+    [aCoder encodeObject:self.logText forKey:@"logText"];
+    [aCoder encodeObject:self.logKey forKey:@"logKey"];
+}
+
+// 属性解码 读取coder中的数据
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        self.logTime = [aDecoder decodeObjectForKey:@"logTime"];
+        self.logText = [aDecoder decodeObjectForKey:@"logText"];
+        self.logKey = [aDecoder decodeObjectForKey:@"logKey"];
+    }
+    return self;
+}
+
+@end
+
+#pragma mark - 文件管理
+
 @interface SYLogFile ()
+
+@property (nonatomic, strong) NSMutableArray *logArray;
 
 @end
 
@@ -89,6 +141,74 @@ static NSString *const logFile = @"SYLog.txt";
         _filePath = [NSString stringWithString:string];
     }
     return _filePath;
+}
+
+
+
+
+- (void)save:(NSString *)text
+{
+    [self save:text key:@""];
+}
+
+- (void)save:(NSString *)text key:(NSString *)key
+{
+    @synchronized (self) {
+        SYLogText *model = [SYLogText logText:text key:key];
+        [self.logArray addObject:model];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            BOOL result = [self.logArray writeToFile:self.filePath atomically:NO];
+            NSLog(@"log日志保存：%@", (result ? @"成功" : @"失败"));
+        });
+    };
+}
+
+- (void)read:(void (^)(NSAttributedString *text))complete
+{
+    @synchronized (self) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+            for (SYLogText *model in self.logArray) {
+                NSString *string = [NSString stringWithFormat:@"%@ -- %@\n%@", model.logTime, model.logKey, model.logText];
+                NSMutableAttributedString *logString = [[NSMutableAttributedString alloc] initWithString:string];
+                NSRange rang = [string rangeOfString:model.logKey];
+                [logString addAttribute:NSForegroundColorAttributeName value:(self.colorTime ? : UIColor.yellowColor) range:NSMakeRange(0, (rang.location + rang.length))];
+                [attributedText appendAttributedString:logString];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (complete) {
+                    complete(attributedText);
+                }
+            });
+        });
+    };
+}
+
+- (void)clear
+{
+    @synchronized (self) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.logArray removeAllObjects];
+            if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
+                BOOL result = [NSFileManager.defaultManager removeItemAtPath:self.filePath error:nil];
+                NSLog(@"log日志删除：%@", (result ? @"成功" : @"失败"));
+            }
+        });
+    };
+}
+
+- (NSMutableArray *)logArray
+{
+    if (_logArray == nil) {
+        _logArray = [[NSMutableArray alloc] init];
+        // 默认加载本地
+        if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
+            NSArray *array = [NSArray arrayWithContentsOfFile:self.filePath];
+            [_logArray addObjectsFromArray:array];
+        }
+    }
+    return _logArray;
 }
 
 @end

@@ -43,6 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 上传（待开发）
 - (void)uploadLogWithUrl:(NSString *)url parameter:(NSDictionary *)dict complete:(void (^)(BOOL success, NSString *message))complete;
 
+
+- (void)logText:(NSString *)text;
+- (void)logText:(NSString *)text key:(NSString *)key;
+
 @end
 
 NS_ASSUME_NONNULL_END

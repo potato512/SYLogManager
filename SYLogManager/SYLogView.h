@@ -30,6 +30,10 @@ static NSString *const NotificationHideLogView = @"NotificationHideLogView";
 /// 显示
 - (void)showMessage:(NSString *)message;
 
+
+
+- (void)showLog:(NSAttributedString *)message;
+
 @end
 
 NS_ASSUME_NONNULL_END

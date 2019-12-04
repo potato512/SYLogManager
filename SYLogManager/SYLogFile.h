@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,12 +19,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// log存储文件（默认caches缓存目录）
 @property (nonatomic, strong) NSString *filePath;
 
+
 /// 保存
 - (void)saveLogMessage;
 /// 删除
 - (void)deleteLogMessage;
 /// 读取
 - (void)readLogMessage:(void (^)(NSString *message))complete;
+
+/// 默认黄色
+@property (nonatomic, strong) UIColor *colorTime;
+
+
+
+- (void)save:(NSString *)text;
+- (void)save:(NSString *)text key:(NSString *)key;
+- (void)read:(void (^)(NSAttributedString *text))complete;
+- (void)clear;
 
 @end
 
