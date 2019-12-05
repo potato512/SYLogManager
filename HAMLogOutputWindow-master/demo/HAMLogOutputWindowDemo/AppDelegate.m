@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "HAMLogOutputWindow.h"
+#import "ViewController1.h"
 
 @interface AppDelegate ()
 
@@ -20,8 +21,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
 #if DEBUG && SHOW_STATISTICS_DEBUG
-    [[HAMLogOutputWindow sharedInstance] setHidden:NO];
+//    [[HAMLogOutputWindow sharedInstance] setHidden:NO];
 #endif
+    
+    SYLogManager.shareLog.colorLog = UIColor.greenColor;
+    [SYLogManager show];
+    [SYLogManager logText:@"app启动"];
+    
+    ViewController1 *rootVC = [ViewController1 new];
+    UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
+    self.window.rootViewController = rootNav;
+    self.window.backgroundColor = UIColor.whiteColor;
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

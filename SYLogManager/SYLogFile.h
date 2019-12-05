@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 读取
 - (void)readLogMessage:(void (^)(NSString *message))complete;
 
+
 /// 默认黄色
 @property (nonatomic, strong) UIColor *colorTime;
 

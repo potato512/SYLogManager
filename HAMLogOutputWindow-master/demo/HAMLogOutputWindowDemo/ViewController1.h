@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYLogManager/SYLogManager.h"
 
 @interface ViewController1 : UIViewController
 

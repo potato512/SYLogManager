@@ -19,6 +19,12 @@
 		35196FE91DD2FCE300DD8A3C /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 35196FE81DD2FCE300DD8A3C /* ViewController2.m */; };
 		353AADF01DE4295A007B3A63 /* UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 353AADEF1DE4295A007B3A63 /* UnitTests.m */; };
 		35A1CB6B1DE4303500EDA439 /* UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A1CB6A1DE4303500EDA439 /* UITests.m */; };
+		8042D9D32398B7F8009E05B8 /* SYLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9CA2398B7F8009E05B8 /* SYLogManager.m */; };
+		8042D9D42398B7F8009E05B8 /* NSObject+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9CD2398B7F8009E05B8 /* NSObject+SYLogCategory.m */; };
+		8042D9D52398B7F8009E05B8 /* NSArray+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9CE2398B7F8009E05B8 /* NSArray+SYLogCategory.m */; };
+		8042D9D62398B7F9009E05B8 /* NSDictionary+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */; };
+		8042D9D72398B7F9009E05B8 /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D12398B7F8009E05B8 /* SYLogFile.m */; };
+		8042D9D82398B7F9009E05B8 /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D22398B7F8009E05B8 /* SYLogView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +69,18 @@
 		35A1CB681DE4303500EDA439 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35A1CB6A1DE4303500EDA439 /* UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITests.m; sourceTree = "<group>"; };
 		35A1CB6C1DE4303500EDA439 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8042D9C72398B7F8009E05B8 /* NSArray+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+SYLogCategory.h"; sourceTree = "<group>"; };
+		8042D9C82398B7F8009E05B8 /* NSObject+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SYLogCategory.h"; sourceTree = "<group>"; };
+		8042D9C92398B7F8009E05B8 /* SYLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogFile.h; sourceTree = "<group>"; };
+		8042D9CA2398B7F8009E05B8 /* SYLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogManager.m; sourceTree = "<group>"; };
+		8042D9CB2398B7F8009E05B8 /* NSDictionary+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SYLogCategory.h"; sourceTree = "<group>"; };
+		8042D9CC2398B7F8009E05B8 /* SYLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogView.h; sourceTree = "<group>"; };
+		8042D9CD2398B7F8009E05B8 /* NSObject+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SYLogCategory.m"; sourceTree = "<group>"; };
+		8042D9CE2398B7F8009E05B8 /* NSArray+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+SYLogCategory.m"; sourceTree = "<group>"; };
+		8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SYLogCategory.m"; sourceTree = "<group>"; };
+		8042D9D02398B7F8009E05B8 /* SYLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogManager.h; sourceTree = "<group>"; };
+		8042D9D12398B7F8009E05B8 /* SYLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogFile.m; sourceTree = "<group>"; };
+		8042D9D22398B7F8009E05B8 /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +135,7 @@
 				35196FDC1DD2C30E00DD8A3C /* LogOutputWindow */,
 				35196FC81DD2C2F700DD8A3C /* AppDelegate.h */,
 				35196FC91DD2C2F700DD8A3C /* AppDelegate.m */,
+				8042D9C62398B7F8009E05B8 /* SYLogManager */,
 				35196FE41DD2FB9900DD8A3C /* TabBarViewController.h */,
 				35196FE51DD2FB9900DD8A3C /* TabBarViewController.m */,
 				35196FCB1DD2C2F700DD8A3C /* ViewController1.h */,
@@ -174,6 +193,25 @@
 				35A1CB6C1DE4303500EDA439 /* Info.plist */,
 			);
 			path = UITests;
+			sourceTree = "<group>";
+		};
+		8042D9C62398B7F8009E05B8 /* SYLogManager */ = {
+			isa = PBXGroup;
+			children = (
+				8042D9C72398B7F8009E05B8 /* NSArray+SYLogCategory.h */,
+				8042D9C82398B7F8009E05B8 /* NSObject+SYLogCategory.h */,
+				8042D9C92398B7F8009E05B8 /* SYLogFile.h */,
+				8042D9D12398B7F8009E05B8 /* SYLogFile.m */,
+				8042D9D02398B7F8009E05B8 /* SYLogManager.h */,
+				8042D9CA2398B7F8009E05B8 /* SYLogManager.m */,
+				8042D9CB2398B7F8009E05B8 /* NSDictionary+SYLogCategory.h */,
+				8042D9CC2398B7F8009E05B8 /* SYLogView.h */,
+				8042D9D22398B7F8009E05B8 /* SYLogView.m */,
+				8042D9CD2398B7F8009E05B8 /* NSObject+SYLogCategory.m */,
+				8042D9CE2398B7F8009E05B8 /* NSArray+SYLogCategory.m */,
+				8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */,
+			);
+			path = SYLogManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,12 +350,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				35196FE91DD2FCE300DD8A3C /* ViewController2.m in Sources */,
+				8042D9D52398B7F8009E05B8 /* NSArray+SYLogCategory.m in Sources */,
 				35196FDF1DD2C35200DD8A3C /* HAMLogOutputWindow.m in Sources */,
+				8042D9D32398B7F8009E05B8 /* SYLogManager.m in Sources */,
+				8042D9D42398B7F8009E05B8 /* NSObject+SYLogCategory.m in Sources */,
 				35196FCD1DD2C2F700DD8A3C /* ViewController1.m in Sources */,
 				35196FE21DD2F12400DD8A3C /* HAMStatisticsManager.m in Sources */,
 				35196FCA1DD2C2F700DD8A3C /* AppDelegate.m in Sources */,
+				8042D9D72398B7F9009E05B8 /* SYLogFile.m in Sources */,
+				8042D9D82398B7F9009E05B8 /* SYLogView.m in Sources */,
 				35196FE61DD2FB9900DD8A3C /* TabBarViewController.m in Sources */,
 				35196FC71DD2C2F700DD8A3C /* main.m in Sources */,
+				8042D9D62398B7F9009E05B8 /* NSDictionary+SYLogCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

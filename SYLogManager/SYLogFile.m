@@ -157,8 +157,12 @@ static NSString *const logFile = @"SYLog.txt";
         SYLogText *model = [SYLogText logText:text key:key];
         [self.logArray addObject:model];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            BOOL result = [self.logArray writeToFile:self.filePath atomically:NO];
-            NSLog(@"log日志保存：%@", (result ? @"成功" : @"失败"));
+//            BOOL result = [self.logArray writeToFile:self.filePath atomically:NO];
+//            NSLog(@"log日志保存：%@", (result ? @"成功" : @"失败"));
+            
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.logArray];
+            [NSUserDefaults.standardUserDefaults setObject:data forKey:NSStringFromClass(self.class)];
+            [NSUserDefaults.standardUserDefaults synchronize];
         });
     };
 }
@@ -190,10 +194,12 @@ static NSString *const logFile = @"SYLog.txt";
     @synchronized (self) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self.logArray removeAllObjects];
-            if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
-                BOOL result = [NSFileManager.defaultManager removeItemAtPath:self.filePath error:nil];
-                NSLog(@"log日志删除：%@", (result ? @"成功" : @"失败"));
-            }
+//            if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
+//                BOOL result = [NSFileManager.defaultManager removeItemAtPath:self.filePath error:nil];
+//                NSLog(@"log日志删除：%@", (result ? @"成功" : @"失败"));
+//            }
+            [NSUserDefaults.standardUserDefaults removeObjectForKey:NSStringFromClass(self.class)];
+            [NSUserDefaults.standardUserDefaults synchronize];
         });
     };
 }
@@ -203,8 +209,13 @@ static NSString *const logFile = @"SYLog.txt";
     if (_logArray == nil) {
         _logArray = [[NSMutableArray alloc] init];
         // 默认加载本地
-        if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
-            NSArray *array = [NSArray arrayWithContentsOfFile:self.filePath];
+//        if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
+//            NSArray *array = [NSArray arrayWithContentsOfFile:self.filePath];
+//            [_logArray addObjectsFromArray:array];
+//        }
+        NSData *data = [NSUserDefaults.standardUserDefaults objectForKey:NSStringFromClass(self.class)];
+        if (data.length > 0) {
+            NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:data];
             [_logArray addObjectsFromArray:array];
         }
     }
