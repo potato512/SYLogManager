@@ -59,12 +59,32 @@
         self.backgroundColor = UIColor.clearColor;
         self.tableFooterView = [UIView new];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.scrollEnabled = YES;
         [self registerClass:SYLogCell.class forCellReuseIdentifier:NSStringFromClass(SYLogCell.class)];
         self.delegate = self;
         self.dataSource = self;
     }
     return self;
 }
+
+#pragma mark - 交互
+
+- (void)scrollToBottom
+{
+    NSInteger count = self.array.count;
+    if (count > 1) {
+        [self scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
+}
+
+///
+- (void)logModel:(SYLogModel *)model
+{
+    [self.array addObject:model];
+    [self insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:(self.array.count - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+#pragma mark - delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -98,11 +118,8 @@
 {
     _array = array;
     [self reloadData];
-    if (self.contentSize.height > self.frame.size.height) {
-        [self setContentOffset:CGPointMake(0, (self.contentSize.height - self.frame.size.height)) animated:YES];
-    }
+    [self scrollToBottom];
 }
-
 
 @end
 

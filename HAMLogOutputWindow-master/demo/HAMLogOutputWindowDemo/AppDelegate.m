@@ -24,9 +24,9 @@
 //    [[HAMLogOutputWindow sharedInstance] setHidden:NO];
 #endif
     
+    [SYLogManager.shareLog configLog];
     SYLogManager.shareLog.colorLog = UIColor.greenColor;
-    [SYLogManager show];
-    [SYLogManager logText:@"app启动"];
+    [SYLogManager.shareLog logText:@"app启动"];
     
     ViewController1 *rootVC = [ViewController1 new];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];

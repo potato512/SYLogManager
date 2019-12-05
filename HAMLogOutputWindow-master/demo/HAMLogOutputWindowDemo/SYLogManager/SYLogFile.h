@@ -28,7 +28,8 @@ static CGFloat const heightText = (25 + 25);
 
 @property (nonatomic, strong) NSMutableArray *logArray;
 
-- (void)printLog:(NSString *)text key:(NSString *)key;
+- (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;
+- (void)read;
 - (void)clear;
 
 @end

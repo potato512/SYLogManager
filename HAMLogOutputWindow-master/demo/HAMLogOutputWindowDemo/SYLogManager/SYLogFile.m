@@ -40,23 +40,6 @@ static NSString *const logFile = @"SYLogFile.plist";
         self.attributeString = attribute;
     }
     return self;
-    
-//    SYLogModel *log = [SYLogModel new];
-//    log.logText = text;
-//    log.logKey = (key.length > 0 ? key : @"");
-//    //
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
-//    NSString *time = [formatter stringFromDate:NSDate.date];
-//    log.logTime = time;
-//    //
-//    CGFloat height = [self heightWithText:text];
-//    log.height = height;
-//    //
-//    NSAttributedString *attribute = [self attributeStringWithModel:log];
-//    log.attributeString = attribute;
-//
-//    return log;
 }
 
 - (CGFloat)heightWithText:(NSString *)text
@@ -113,16 +96,13 @@ static NSString *const keyStyle = @"--";
     return self;
 }
 
-- (void)printLog:(NSString *)text
-{
-    [self printLog:text key:@""];
-}
-
-- (void)printLog:(NSString *)text key:(NSString *)key
+- (SYLogModel *)logWith:(NSString *)text key:(NSString *)key
 {
     @synchronized (self) {
         SYLogModel *model = [[SYLogModel alloc] initWithlog:text key:key];
         [self.logArray addObject:model];
+        [self saveLog:model];
+        return model;
     };
 }
 
@@ -131,6 +111,7 @@ static NSString *const keyStyle = @"--";
     @synchronized (self) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self.logArray removeAllObjects];
+            [self deleteLog];
         });
     };
 }
@@ -141,6 +122,23 @@ static NSString *const keyStyle = @"--";
         _logArray = [[NSMutableArray alloc] init];
     }
     return _logArray;
+}
+
+#pragma mark - 存储
+
+- (void)saveLog:(SYLogModel *)model
+{
+    
+}
+
+- (void)deleteLog
+{
+    
+}
+
+- (void)read
+{
+    
 }
 
 @end
