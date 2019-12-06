@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYLogView : UITableView
 
 @property (nonatomic, strong) NSMutableArray *array;
-/// 时间颜色（默认红色）
+/// 时间颜色（默认深灰色）
 @property (nonatomic, strong) UIColor *colorLog;
+///
+- (void)logModel:(SYLogModel *)model;
 
 @end
 

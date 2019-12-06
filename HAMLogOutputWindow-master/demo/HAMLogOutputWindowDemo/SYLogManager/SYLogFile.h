@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString *const keyCrash = @"crash闪退";
+
 static CGFloat const originXY = 10;
 static CGFloat const heightText = (25 + 25);
 #define widthText (UIScreen.mainScreen.bounds.size.width - 10 * 2)
@@ -28,7 +30,8 @@ static CGFloat const heightText = (25 + 25);
 
 @property (nonatomic, strong) NSMutableArray *logArray;
 
-- (void)printLog:(NSString *)text key:(NSString *)key;
+- (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;
+- (void)read;
 - (void)clear;
 
 @end

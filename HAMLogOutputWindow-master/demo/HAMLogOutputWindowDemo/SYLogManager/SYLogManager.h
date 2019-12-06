@@ -14,19 +14,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYLogManager : UIWindow
+@interface SYLogManager : NSObject
 
 + (instancetype)shareLog;
 
 /// 时间颜色（默认红色）
 @property (nonatomic, strong) UIColor *colorLog;
+@property (nonatomic, assign) BOOL show;
 
-+ (void)show;
-+ (void)hide;
+- (void)configLog;
 //
-+ (void)logText:(NSString *)text;
-+ (void)logText:(NSString *)text key:(NSString *)key;
-+ (void)logClear;
+- (void)logText:(NSString *)text;
+- (void)logText:(NSString *)text key:(NSString *)key;
+- (void)logClear;
 
 @end
 

@@ -26,6 +26,7 @@
 		8042D9D72398B7F9009E05B8 /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D12398B7F8009E05B8 /* SYLogFile.m */; };
 		8042D9D82398B7F9009E05B8 /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D22398B7F8009E05B8 /* SYLogView.m */; };
 		80DF825E2399D71100F88D15 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DF825D2399D71100F88D15 /* libsqlite3.tbd */; };
+		80DF82612399FCF300F88D15 /* SYLogSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DF82602399FCF300F88D15 /* SYLogSQLite.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,8 @@
 		8042D9D12398B7F8009E05B8 /* SYLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogFile.m; sourceTree = "<group>"; };
 		8042D9D22398B7F8009E05B8 /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
 		80DF825D2399D71100F88D15 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		80DF825F2399FCF300F88D15 /* SYLogSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogSQLite.h; sourceTree = "<group>"; };
+		80DF82602399FCF300F88D15 /* SYLogSQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogSQLite.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,17 +205,19 @@
 		8042D9C62398B7F8009E05B8 /* SYLogManager */ = {
 			isa = PBXGroup;
 			children = (
-				8042D9C72398B7F8009E05B8 /* NSArray+SYLogCategory.h */,
-				8042D9C82398B7F8009E05B8 /* NSObject+SYLogCategory.h */,
 				8042D9C92398B7F8009E05B8 /* SYLogFile.h */,
 				8042D9D12398B7F8009E05B8 /* SYLogFile.m */,
+				80DF825F2399FCF300F88D15 /* SYLogSQLite.h */,
+				80DF82602399FCF300F88D15 /* SYLogSQLite.m */,
 				8042D9D02398B7F8009E05B8 /* SYLogManager.h */,
 				8042D9CA2398B7F8009E05B8 /* SYLogManager.m */,
-				8042D9CB2398B7F8009E05B8 /* NSDictionary+SYLogCategory.h */,
 				8042D9CC2398B7F8009E05B8 /* SYLogView.h */,
 				8042D9D22398B7F8009E05B8 /* SYLogView.m */,
+				8042D9C82398B7F8009E05B8 /* NSObject+SYLogCategory.h */,
 				8042D9CD2398B7F8009E05B8 /* NSObject+SYLogCategory.m */,
+				8042D9C72398B7F8009E05B8 /* NSArray+SYLogCategory.h */,
 				8042D9CE2398B7F8009E05B8 /* NSArray+SYLogCategory.m */,
+				8042D9CB2398B7F8009E05B8 /* NSDictionary+SYLogCategory.h */,
 				8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */,
 			);
 			path = SYLogManager;
@@ -369,6 +374,7 @@
 				35196FCD1DD2C2F700DD8A3C /* ViewController1.m in Sources */,
 				35196FE21DD2F12400DD8A3C /* HAMStatisticsManager.m in Sources */,
 				35196FCA1DD2C2F700DD8A3C /* AppDelegate.m in Sources */,
+				80DF82612399FCF300F88D15 /* SYLogSQLite.m in Sources */,
 				8042D9D72398B7F9009E05B8 /* SYLogFile.m in Sources */,
 				8042D9D82398B7F9009E05B8 /* SYLogView.m in Sources */,
 				35196FE61DD2FB9900DD8A3C /* TabBarViewController.m in Sources */,
