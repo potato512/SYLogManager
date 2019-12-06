@@ -13,14 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYLogSQLite : NSObject
 
 - (BOOL)executeSQLite:(NSString *)sqlString;
-//
-- (void)createSQLiteTable:(NSString *)sqlString;
-- (void)dropSQLiteTable:(NSString *)sqlString;
-//
-- (void)insertSQLite:(NSString *)sqlString;
-- (void)updateSQLite:(NSString *)sqlString;
-- (void)deleteSQLite:(NSString *)sqlString;
-- (void)selectSQLite:(NSString *)sqlString;
+- (NSArray *)selectSQLite:(NSString *)sqlString;
 
 @end
 

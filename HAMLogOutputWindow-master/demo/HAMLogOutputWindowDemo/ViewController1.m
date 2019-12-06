@@ -36,10 +36,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [HAMStatisticsManager event:@"leftViewController_visited"];
     
-//    NSInteger count = self.navigationController.viewControllers.count;
-//    if (count == 10) {
-//        NSLog(@"%s-%d", __func__, self.navigationController.viewControllers[1000]);
-//    }
+    NSInteger count = self.navigationController.viewControllers.count;
+    if (count == 10) {
+        NSLog(@"%s-%d", __func__, self.navigationController.viewControllers[1000]);
+    }
 }
 
  - (void)loadView
