@@ -11,11 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *const keyCrash = @"crash闪退";
-
 static CGFloat const originXY = 10;
 static CGFloat const heightText = (25 + 25);
-#define widthText (UIScreen.mainScreen.bounds.size.width - 10 * 2)
+#define widthText (UIScreen.mainScreen.bounds.size.width - originXY * 2)
 
 @interface SYLogModel : NSObject
 

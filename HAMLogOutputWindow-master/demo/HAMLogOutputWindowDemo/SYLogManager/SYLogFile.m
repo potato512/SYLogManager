@@ -91,7 +91,7 @@ static NSString *const keyStyle = @"--";
     if (rang.location == NSNotFound) {
         rang = [string rangeOfString:keyStyle];
     }
-    [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:keyCrash] ? UIColor.redColor : UIColor.yellowColor) range:NSMakeRange(0, (rang.location + rang.length))];
+    [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:@"crash闪退"] ? UIColor.redColor : ([key isEqualToString:@"打开应用"] ? UIColor.greenColor : UIColor.yellowColor)) range:NSMakeRange(0, (rang.location + rang.length))];
     return logString;
 }
 
@@ -102,7 +102,6 @@ static NSString *const keyStyle = @"--";
 
 @interface SYLogFile ()
 
-//@property (nonatomic, strong) NSString *logPath;
 @property (nonatomic, strong) SYLogSQLite *sqlite;
 
 @end
@@ -132,8 +131,10 @@ static NSString *const keyStyle = @"--";
 {
     @synchronized (self) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.logArray removeAllObjects];
-            [self deleteLog];
+            if (self.logArray.count > 0) {
+                [self.logArray removeAllObjects];
+                [self deleteLog];
+            }
         });
     };
 }

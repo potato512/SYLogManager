@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *array;
 /// 时间颜色（默认深灰色）
 @property (nonatomic, strong) UIColor *colorLog;
-///
-- (void)logModel:(SYLogModel *)model;
 
 @end
 

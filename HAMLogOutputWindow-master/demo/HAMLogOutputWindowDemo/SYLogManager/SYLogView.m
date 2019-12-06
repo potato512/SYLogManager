@@ -77,17 +77,6 @@
     }
 }
 
-///
-- (void)logModel:(SYLogModel *)model
-{
-    @synchronized (self) {
-        [self.array addObject:model];
-        //    [self insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:(self.array.count - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-        [self reloadData];
-        [self scrollToBottom];
-    }
-}
-
 #pragma mark - delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

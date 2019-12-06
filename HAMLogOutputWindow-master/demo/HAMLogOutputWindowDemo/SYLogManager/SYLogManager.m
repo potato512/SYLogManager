@@ -11,6 +11,10 @@
 #import "SYLogView.h"
 #import <MessageUI/MessageUI.h>
 
+static CGFloat const originButton = 20.0;
+static CGFloat const sizeButton = 60.0;
+#define widthButton (self.logButton.frame.size.height * 3 + originButton)
+
 @interface SYLogManager () <MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) SYLogFile *logFile;
@@ -51,6 +55,8 @@
     NSSetUncaughtExceptionHandler(&readException);
     [self.logFile read];
     self.logView.array = self.logFile.logArray;
+    //
+    [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
 }
 
 #pragma mark - 菜单视图
@@ -58,15 +64,15 @@
 - (UIButton *)logButton
 {
     if (_logButton == nil) {
-        CGFloat size = 60.0;
-        _logButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, size, size)];
+        _logButton = [[UIButton alloc] initWithFrame:CGRectMake(originButton, originButton, sizeButton, sizeButton)];
         _logButton.layer.cornerRadius = _logButton.frame.size.width / 2;
         _logButton.layer.masksToBounds = YES;
         _logButton.layer.borderColor = UIColor.redColor.CGColor;
         _logButton.layer.borderWidth = 3.0;
         _logButton.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.3];
-        [_logButton setTitle:@"log日志" forState:UIControlStateNormal];
-        _logButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+        [_logButton setTitle:@"查看\n日志" forState:UIControlStateNormal];
+        _logButton.titleLabel.numberOfLines = 2;
+        _logButton.titleLabel.font = [UIFont systemFontOfSize:15];
         [_logButton setTitleColor:UIColor.yellowColor forState:UIControlStateNormal];
         [_logButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
         [_logButton addTarget:self action:@selector(showMenu:) forControlEvents:UIControlEventTouchUpInside];
@@ -85,42 +91,96 @@
 {
     button.selected = !button.selected;
     if (button.selected) {
-        self.logButtonView.hidden = NO;
-        [self.baseView bringSubviewToFront:self.logButtonView];
+        [self showLogButtonView];
     } else {
-        self.logButtonView.hidden = YES;
-        [self.baseView sendSubviewToBack:self.logButtonView];
+        [self hideLogButtonView];
     }
 }
+
+- (void)showLogButtonView
+{
+    CGFloat originX = (self.logButton.frame.origin.x + self.logButton.frame.size.width);
+    __block CGRect rect = self.logButtonView.frame;
+    rect.origin.x = originX;
+    if ((originX + widthButton) > self.baseView.frame.size.width) {
+        rect.origin.x = (self.logButton.frame.origin.x - widthButton);
+    }
+    rect.origin.y = self.logButton.frame.origin.y;
+    self.logButtonView.frame = rect;
+    //
+    self.logButtonView.hidden = NO;
+    [self.baseView bringSubviewToFront:self.logButtonView];
+    // 动画
+    self.logButtonView.alpha = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.logButtonView.alpha = 1;
+    }];
+}
+- (void)hideLogButtonView
+{
+    if (self.logButtonView.hidden) {
+        return;
+    }
+    // 动画
+    [UIView animateWithDuration:0.3 animations:^{
+        self.logButtonView.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.logButtonView.hidden = YES;
+        [self.baseView sendSubviewToBack:self.logButtonView];
+    }];
+}
+
 
 - (UIView *)logButtonView
 {
     if (_logButtonView == nil) {
-        _logButtonView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, (self.logButton.frame.size.height * 2 + 20 * 2), self.logButton.frame.size.height)];
+        _logButtonView = [[UIView alloc] initWithFrame:CGRectMake(originButton, originButton, widthButton, sizeButton)];
         _logButtonView.layer.cornerRadius = _logButton.frame.size.width / 2;
         _logButtonView.layer.masksToBounds = YES;
-        _logButtonView.layer.borderColor = UIColor.redColor.CGColor;
+        _logButtonView.layer.borderColor = UIColor.yellowColor.CGColor;
         _logButtonView.layer.borderWidth = 3.0;
         _logButtonView.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.3];
         [self.baseView addSubview:_logButtonView];
         _logButtonView.hidden = YES;
         //
-        UIButton *hideButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, _logButtonView.frame.size.height, _logButtonView.frame.size.height)];
+        UIButton *hideButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, sizeButton, sizeButton)];
         [_logButtonView addSubview:hideButton];
         hideButton.layer.cornerRadius = hideButton.frame.size.width / 2;
         hideButton.layer.masksToBounds = YES;
-        [hideButton setTitle:@"显示" forState:UIControlStateNormal];
-        [hideButton setTitle:@"隐藏" forState:UIControlStateSelected];
-        [hideButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        hideButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
+        hideButton.titleLabel.numberOfLines = 2;
+        hideButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        hideButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [hideButton setTitle:@"显示\nlog" forState:UIControlStateNormal];
+        [hideButton setTitle:@"隐藏\nlog" forState:UIControlStateSelected];
+        [hideButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [hideButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateSelected];
         [hideButton addTarget:self action:@selector(hideButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        UIButton *enableButton = [[UIButton alloc] initWithFrame:CGRectMake((hideButton.frame.origin.x + hideButton.frame.size.width + 20), 0, _logButtonView.frame.size.height, _logButtonView.frame.size.height)];
+        UIButton *enableButton = [[UIButton alloc] initWithFrame:CGRectMake((hideButton.frame.origin.x + hideButton.frame.size.width + originButton / 2), 0, sizeButton, sizeButton)];
         [_logButtonView addSubview:enableButton];
         enableButton.layer.cornerRadius = hideButton.frame.size.width / 2;
         enableButton.layer.masksToBounds = YES;
-        [enableButton setTitle:@"允许" forState:UIControlStateNormal];
-        [enableButton setTitle:@"禁止" forState:UIControlStateSelected];
-        [enableButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        enableButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
+        enableButton.titleLabel.numberOfLines = 2;
+        enableButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        enableButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [enableButton setTitle:@"开启\n滚动" forState:UIControlStateNormal];
+        [enableButton setTitle:@"关闭\n滚动" forState:UIControlStateSelected];
+        [enableButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [enableButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateSelected];
         [enableButton addTarget:self action:@selector(enableButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        UIButton *clearButton = [[UIButton alloc] initWithFrame:CGRectMake((enableButton.frame.origin.x + enableButton.frame.size.width + originButton / 2), 0, sizeButton, sizeButton)];
+        [_logButtonView addSubview:clearButton];
+        clearButton.layer.cornerRadius = clearButton.frame.size.width / 2;
+        clearButton.layer.masksToBounds = YES;
+        clearButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
+        clearButton.titleLabel.numberOfLines = 2;
+        clearButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        clearButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [clearButton setTitle:@"清除\nlog" forState:UIControlStateNormal];
+        [clearButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [clearButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateHighlighted];
+        [clearButton addTarget:self action:@selector(clearButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _logButtonView;
 }
@@ -149,11 +209,18 @@
     }
 }
 
+- (void)clearButtonClick:(UIButton *)button
+{
+    [self logClear];
+}
+
 // 拖动手势方法
 - (void)panRecognizerAction:(UIPanGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateEnded) {
-
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self hideLogButtonView];
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        
     } else {
         // 拖动视图
         UIView *view = (UIView *)recognizer.view;
@@ -186,8 +253,7 @@
 
 - (void)logText:(NSString *)text key:(NSString *)key
 {
-    SYLogModel *model = [self.logFile logWith:text key:key];
-//    [self.logView logModel:model];
+    [self.logFile logWith:text key:key];
     self.logView.array = self.logFile.logArray;
 }
 
@@ -240,7 +306,7 @@ void readException(NSException *exception)
         [crashString appendString:@"\n"];
     }
     NSLog(@"%@", crashString);
-    [SYLogManager.shareLog logText:crashString key:keyCrash];
+    [SYLogManager.shareLog logText:crashString key:@"crash闪退"];
 }
 
 #pragma mark - getter
@@ -277,16 +343,11 @@ void readException(NSException *exception)
 - (void)setShow:(BOOL)show
 {
     _show = show;
-//    self.buttonView.hidden = !_show;
-//    if (self.buttonView.hidden) {
-//        [self.baseView sendSubviewToBack:self.buttonView];
-//    } else {
-//        [self.baseView bringSubviewToFront:self.buttonView];
-//    }
-    
+    //
     self.logButton.hidden = !_show;
     if (self.logButton.hidden) {
         [self.baseView sendSubviewToBack:self.logButton];
+        [self hideLogButtonView];
     } else {
         [self.baseView bringSubviewToFront:self.logButton];
     }

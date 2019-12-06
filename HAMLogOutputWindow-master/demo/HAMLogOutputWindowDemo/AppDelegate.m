@@ -25,7 +25,6 @@
 #endif
     
     [SYLogManager.shareLog configLog];
-    [SYLogManager.shareLog logText:@"app启动"];
     
     ViewController1 *rootVC = [ViewController1 new];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
