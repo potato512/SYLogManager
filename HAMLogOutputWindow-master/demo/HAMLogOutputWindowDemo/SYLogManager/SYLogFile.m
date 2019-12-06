@@ -8,8 +8,9 @@
 
 #import "SYLogFile.h"
 #import <UIKit/UIKit.h>
+#import <sqlite3.h>
 
-static NSString *const logFile = @"SYLogFile.plist";
+static NSString *const logFile = @"SYLogFile.db";
 
 @interface SYLogModel ()
 

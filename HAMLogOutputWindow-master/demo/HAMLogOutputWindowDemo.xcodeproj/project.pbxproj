@@ -25,6 +25,7 @@
 		8042D9D62398B7F9009E05B8 /* NSDictionary+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */; };
 		8042D9D72398B7F9009E05B8 /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D12398B7F8009E05B8 /* SYLogFile.m */; };
 		8042D9D82398B7F9009E05B8 /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8042D9D22398B7F8009E05B8 /* SYLogView.m */; };
+		80DF825E2399D71100F88D15 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DF825D2399D71100F88D15 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		8042D9D02398B7F8009E05B8 /* SYLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogManager.h; sourceTree = "<group>"; };
 		8042D9D12398B7F8009E05B8 /* SYLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogFile.m; sourceTree = "<group>"; };
 		8042D9D22398B7F8009E05B8 /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
+		80DF825D2399D71100F88D15 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80DF825E2399D71100F88D15 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +118,7 @@
 				353AADEE1DE4295A007B3A63 /* UnitTests */,
 				35A1CB691DE4303500EDA439 /* UITests */,
 				35196FC31DD2C2F700DD8A3C /* Products */,
+				80DF825C2399D71000F88D15 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +216,14 @@
 				8042D9CF2398B7F8009E05B8 /* NSDictionary+SYLogCategory.m */,
 			);
 			path = SYLogManager;
+			sourceTree = "<group>";
+		};
+		80DF825C2399D71000F88D15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				80DF825D2399D71100F88D15 /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
