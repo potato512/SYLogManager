@@ -17,6 +17,7 @@ static CGFloat const heightText = (25 + 25);
 
 @interface SYLogModel : NSObject
 
+//
 @property (nonatomic, strong) NSAttributedString *attributeString;
 @property (nonatomic, assign) CGFloat height;
 
@@ -26,6 +27,7 @@ static CGFloat const heightText = (25 + 25);
 
 @interface SYLogFile : NSObject
 
+/// 默认保存5000条记录，超过则自动删除
 @property (nonatomic, strong) NSMutableArray *logArray;
 
 - (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;

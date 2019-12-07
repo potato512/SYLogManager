@@ -11,31 +11,27 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static CGFloat const originXY = 10;
+static CGFloat const heightText = (25 + 25);
+#define widthText (UIScreen.mainScreen.bounds.size.width - originXY * 2)
+
+@interface SYLogModel : NSObject
+
+//
+@property (nonatomic, strong) NSAttributedString *attributeString;
+@property (nonatomic, assign) CGFloat height;
+
+- (instancetype)initWithlog:(NSString *)text key:(NSString *)key;
+
+@end
+
 @interface SYLogFile : NSObject
 
-/// 是否允许联调或模拟器模式（默认NO不允许）
-@property (nonatomic, assign) BOOL isEnable;
+/// 默认保存5000条记录，超过则自动删除
+@property (nonatomic, strong) NSMutableArray *logArray;
 
-/// log存储文件（默认caches缓存目录）
-@property (nonatomic, strong) NSString *filePath;
-
-
-/// 保存
-- (void)saveLogMessage;
-/// 删除
-- (void)deleteLogMessage;
-/// 读取
-- (void)readLogMessage:(void (^)(NSString *message))complete;
-
-
-/// 默认黄色
-@property (nonatomic, strong) UIColor *colorTime;
-
-
-
-- (void)save:(NSString *)text;
-- (void)save:(NSString *)text key:(NSString *)key;
-- (void)read:(void (^)(NSAttributedString *text))complete;
+- (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;
+- (void)read;
 - (void)clear;
 
 @end

@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A703505C2265A8DD00085D43 /* NSArray+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350532265A8DD00085D43 /* NSArray+SYLogCategory.m */; };
-		A703505D2265A8DD00085D43 /* NSDictionary+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350552265A8DD00085D43 /* NSDictionary+SYLogCategory.m */; };
-		A703505E2265A8DD00085D43 /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350572265A8DD00085D43 /* SYLogFile.m */; };
-		A703505F2265A8DD00085D43 /* SYLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70350592265A8DD00085D43 /* SYLogManager.m */; };
-		A70350602265A8DD00085D43 /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = A703505B2265A8DD00085D43 /* SYLogView.m */; };
-		A76CC2FF2266DDAA00FD0A0F /* NSObject+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */; };
+		80B73C44239B9C2A00FEAC2A /* SYLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C39239B9C2A00FEAC2A /* SYLogManager.m */; };
+		80B73C45239B9C2A00FEAC2A /* SYLogPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3C239B9C2A00FEAC2A /* SYLogPopoverView.m */; };
+		80B73C46239B9C2A00FEAC2A /* NSObject+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3D239B9C2A00FEAC2A /* NSObject+SYLogCategory.m */; };
+		80B73C47239B9C2A00FEAC2A /* SYLogSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3E239B9C2A00FEAC2A /* SYLogSQLite.m */; };
+		80B73C48239B9C2A00FEAC2A /* NSArray+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3F239B9C2A00FEAC2A /* NSArray+SYLogCategory.m */; };
+		80B73C49239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C40239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.m */; };
+		80B73C4A239B9C2A00FEAC2A /* SYLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C42239B9C2A00FEAC2A /* SYLogFile.m */; };
+		80B73C4B239B9C2A00FEAC2A /* SYLogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C43239B9C2A00FEAC2A /* SYLogView.m */; };
+		80B73C4E239B9EE300FEAC2A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80B73C4D239B9EE300FEAC2A /* UIKit.framework */; };
+		80B73C50239B9EEA00FEAC2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80B73C4F239B9EEA00FEAC2A /* Foundation.framework */; };
+		80B73C52239B9EF000FEAC2A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 80B73C51239B9EF000FEAC2A /* libsqlite3.tbd */; };
 		A76CC3022266DEC100FD0A0F /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = A76CC3012266DEC100FD0A0F /* Person.m */; };
 		A7BD85AB21709D2600C54BDB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7BD85AA21709D2600C54BDB /* AppDelegate.m */; };
 		A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7BD85AD21709D2600C54BDB /* ViewController.m */; };
@@ -42,18 +47,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A70350522265A8DD00085D43 /* NSArray+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+SYLogCategory.h"; sourceTree = "<group>"; };
-		A70350532265A8DD00085D43 /* NSArray+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+SYLogCategory.m"; sourceTree = "<group>"; };
-		A70350542265A8DD00085D43 /* NSDictionary+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SYLogCategory.h"; sourceTree = "<group>"; };
-		A70350552265A8DD00085D43 /* NSDictionary+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SYLogCategory.m"; sourceTree = "<group>"; };
-		A70350562265A8DD00085D43 /* SYLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogFile.h; sourceTree = "<group>"; };
-		A70350572265A8DD00085D43 /* SYLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogFile.m; sourceTree = "<group>"; };
-		A70350582265A8DD00085D43 /* SYLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogManager.h; sourceTree = "<group>"; };
-		A70350592265A8DD00085D43 /* SYLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogManager.m; sourceTree = "<group>"; };
-		A703505A2265A8DD00085D43 /* SYLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogView.h; sourceTree = "<group>"; };
-		A703505B2265A8DD00085D43 /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
-		A76CC2FD2266DDAA00FD0A0F /* NSObject+SYLogCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+SYLogCategory.h"; sourceTree = "<group>"; };
-		A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SYLogCategory.m"; sourceTree = "<group>"; };
+		80B73C34239B9C2A00FEAC2A /* SYLogPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogPopoverView.h; sourceTree = "<group>"; };
+		80B73C35239B9C2A00FEAC2A /* NSArray+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+SYLogCategory.h"; sourceTree = "<group>"; };
+		80B73C36239B9C2A00FEAC2A /* SYLogSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogSQLite.h; sourceTree = "<group>"; };
+		80B73C37239B9C2A00FEAC2A /* NSObject+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SYLogCategory.h"; sourceTree = "<group>"; };
+		80B73C38239B9C2A00FEAC2A /* SYLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogFile.h; sourceTree = "<group>"; };
+		80B73C39239B9C2A00FEAC2A /* SYLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogManager.m; sourceTree = "<group>"; };
+		80B73C3A239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SYLogCategory.h"; sourceTree = "<group>"; };
+		80B73C3B239B9C2A00FEAC2A /* SYLogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogView.h; sourceTree = "<group>"; };
+		80B73C3C239B9C2A00FEAC2A /* SYLogPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogPopoverView.m; sourceTree = "<group>"; };
+		80B73C3D239B9C2A00FEAC2A /* NSObject+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SYLogCategory.m"; sourceTree = "<group>"; };
+		80B73C3E239B9C2A00FEAC2A /* SYLogSQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogSQLite.m; sourceTree = "<group>"; };
+		80B73C3F239B9C2A00FEAC2A /* NSArray+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+SYLogCategory.m"; sourceTree = "<group>"; };
+		80B73C40239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SYLogCategory.m"; sourceTree = "<group>"; };
+		80B73C41239B9C2A00FEAC2A /* SYLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogManager.h; sourceTree = "<group>"; };
+		80B73C42239B9C2A00FEAC2A /* SYLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogFile.m; sourceTree = "<group>"; };
+		80B73C43239B9C2A00FEAC2A /* SYLogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYLogView.m; sourceTree = "<group>"; };
+		80B73C4D239B9EE300FEAC2A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		80B73C4F239B9EEA00FEAC2A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		80B73C51239B9EF000FEAC2A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		A76CC3002266DEC100FD0A0F /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		A76CC3012266DEC100FD0A0F /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		A7BD85A621709D2600C54BDB /* DemoLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80B73C52239B9EF000FEAC2A /* libsqlite3.tbd in Frameworks */,
+				80B73C50239B9EEA00FEAC2A /* Foundation.framework in Frameworks */,
+				80B73C4E239B9EE300FEAC2A /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,24 +114,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A70350512265A8DD00085D43 /* SYLogManager */ = {
+		80B73C33239B9C2A00FEAC2A /* SYLogManager */ = {
 			isa = PBXGroup;
 			children = (
-				A70350522265A8DD00085D43 /* NSArray+SYLogCategory.h */,
-				A70350532265A8DD00085D43 /* NSArray+SYLogCategory.m */,
-				A70350542265A8DD00085D43 /* NSDictionary+SYLogCategory.h */,
-				A70350552265A8DD00085D43 /* NSDictionary+SYLogCategory.m */,
-				A76CC2FD2266DDAA00FD0A0F /* NSObject+SYLogCategory.h */,
-				A76CC2FE2266DDAA00FD0A0F /* NSObject+SYLogCategory.m */,
-				A70350562265A8DD00085D43 /* SYLogFile.h */,
-				A70350572265A8DD00085D43 /* SYLogFile.m */,
-				A70350582265A8DD00085D43 /* SYLogManager.h */,
-				A70350592265A8DD00085D43 /* SYLogManager.m */,
-				A703505A2265A8DD00085D43 /* SYLogView.h */,
-				A703505B2265A8DD00085D43 /* SYLogView.m */,
+				80B73C34239B9C2A00FEAC2A /* SYLogPopoverView.h */,
+				80B73C35239B9C2A00FEAC2A /* NSArray+SYLogCategory.h */,
+				80B73C36239B9C2A00FEAC2A /* SYLogSQLite.h */,
+				80B73C37239B9C2A00FEAC2A /* NSObject+SYLogCategory.h */,
+				80B73C38239B9C2A00FEAC2A /* SYLogFile.h */,
+				80B73C39239B9C2A00FEAC2A /* SYLogManager.m */,
+				80B73C3A239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.h */,
+				80B73C3B239B9C2A00FEAC2A /* SYLogView.h */,
+				80B73C3C239B9C2A00FEAC2A /* SYLogPopoverView.m */,
+				80B73C3D239B9C2A00FEAC2A /* NSObject+SYLogCategory.m */,
+				80B73C3E239B9C2A00FEAC2A /* SYLogSQLite.m */,
+				80B73C3F239B9C2A00FEAC2A /* NSArray+SYLogCategory.m */,
+				80B73C40239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.m */,
+				80B73C41239B9C2A00FEAC2A /* SYLogManager.h */,
+				80B73C42239B9C2A00FEAC2A /* SYLogFile.m */,
+				80B73C43239B9C2A00FEAC2A /* SYLogView.m */,
 			);
 			name = SYLogManager;
 			path = ../../SYLogManager;
+			sourceTree = "<group>";
+		};
+		80B73C4C239B9EE300FEAC2A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				80B73C51239B9EF000FEAC2A /* libsqlite3.tbd */,
+				80B73C4F239B9EEA00FEAC2A /* Foundation.framework */,
+				80B73C4D239B9EE300FEAC2A /* UIKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		A7BD859D21709D2600C54BDB = {
@@ -126,6 +155,7 @@
 				A7BD85C121709D2800C54BDB /* DemoLogTests */,
 				A7BD85CC21709D2800C54BDB /* DemoLogUITests */,
 				A7BD85A721709D2600C54BDB /* Products */,
+				80B73C4C239B9EE300FEAC2A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -148,7 +178,7 @@
 				A7BD85AD21709D2600C54BDB /* ViewController.m */,
 				A76CC3002266DEC100FD0A0F /* Person.h */,
 				A76CC3012266DEC100FD0A0F /* Person.m */,
-				A70350512265A8DD00085D43 /* SYLogManager */,
+				80B73C33239B9C2A00FEAC2A /* SYLogManager */,
 				A7BD85DB21709D3600C54BDB /* Supporting Files */,
 			);
 			path = DemoLog;
@@ -314,16 +344,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A703505D2265A8DD00085D43 /* NSDictionary+SYLogCategory.m in Sources */,
+				80B73C47239B9C2A00FEAC2A /* SYLogSQLite.m in Sources */,
+				80B73C48239B9C2A00FEAC2A /* NSArray+SYLogCategory.m in Sources */,
 				A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */,
+				80B73C45239B9C2A00FEAC2A /* SYLogPopoverView.m in Sources */,
 				A76CC3022266DEC100FD0A0F /* Person.m in Sources */,
-				A703505E2265A8DD00085D43 /* SYLogFile.m in Sources */,
-				A703505C2265A8DD00085D43 /* NSArray+SYLogCategory.m in Sources */,
+				80B73C4A239B9C2A00FEAC2A /* SYLogFile.m in Sources */,
+				80B73C49239B9C2A00FEAC2A /* NSDictionary+SYLogCategory.m in Sources */,
+				80B73C46239B9C2A00FEAC2A /* NSObject+SYLogCategory.m in Sources */,
 				A7BD85B921709D2800C54BDB /* main.m in Sources */,
-				A703505F2265A8DD00085D43 /* SYLogManager.m in Sources */,
+				80B73C44239B9C2A00FEAC2A /* SYLogManager.m in Sources */,
 				A7BD85AB21709D2600C54BDB /* AppDelegate.m in Sources */,
-				A76CC2FF2266DDAA00FD0A0F /* NSObject+SYLogCategory.m in Sources */,
-				A70350602265A8DD00085D43 /* SYLogView.m in Sources */,
+				80B73C4B239B9C2A00FEAC2A /* SYLogView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

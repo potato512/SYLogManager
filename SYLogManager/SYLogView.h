@@ -7,32 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYLogFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *const NotificationShowLogView = @"NotificationShowLogView";
-static NSString *const NotificationHideLogView = @"NotificationHideLogView";
+@interface SYLogView : UITableView
 
-@interface SYLogView : UIView
-
-/// 父视图
-@property (nonatomic, strong) UIView *baseView;
-/// 是否显示
-@property (nonatomic, assign) BOOL showlogView;
-/// 显示回调
-@property (nonatomic, copy) void (^showClick)(void);
-/// 清除回调
-@property (nonatomic, copy) void (^clearClick)(void);
-/// 邮件发送回调
-@property (nonatomic, copy) void (^sendEmailClick)(void);
-/// 状态
-@property (nonatomic, strong) UIActivityIndicatorView *activityView;
-/// 显示
-- (void)showMessage:(NSString *)message;
-
-
-
-- (void)showLog:(NSAttributedString *)message;
+@property (nonatomic, strong) NSMutableArray *array;
+/// 时间颜色（默认深灰色）
+@property (nonatomic, strong) UIColor *colorLog;
 
 @end
 

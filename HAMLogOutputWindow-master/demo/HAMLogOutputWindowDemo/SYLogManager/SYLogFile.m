@@ -10,8 +10,6 @@
 #import <UIKit/UIKit.h>
 #import "SYLogSQLite.h"
 
-//static NSString *const logFile = @"SYLogFile.db";
-
 @interface SYLogModel ()
 
 @property (nonatomic, assign) NSString *logTime;
@@ -95,7 +93,6 @@ static NSString *const keyStyle = @"--";
     return logString;
 }
 
-
 @end
 
 #pragma mark - 文件管理
@@ -120,6 +117,9 @@ static NSString *const keyStyle = @"--";
 - (SYLogModel *)logWith:(NSString *)text key:(NSString *)key
 {
     @synchronized (self) {
+        if (self.logArray.count >= 5000) {
+            [self.logArray removeObjectAtIndex:0];
+        }
         SYLogModel *model = [[SYLogModel alloc] initWithlog:text key:key];
         [self.logArray addObject:model];
         [self saveLog:model];

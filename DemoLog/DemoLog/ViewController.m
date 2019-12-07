@@ -20,8 +20,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [self showInfo];
-    
     UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"next" style:UIBarButtonItemStyleDone target:self action:@selector(nextClick)];
     UIBarButtonItem *showItem = [[UIBarButtonItem alloc] initWithTitle:@"show" style:UIBarButtonItemStyleDone target:self action:@selector(showClick)];
     UIBarButtonItem *clearItem = [[UIBarButtonItem alloc] initWithTitle:@"clear" style:UIBarButtonItemStyleDone target:self action:@selector(clearClick)];
@@ -46,6 +44,7 @@
     
     if (self.navigationController.viewControllers.count > 5) {
         NSLog(@"text: %@", [array objectAtIndex:20]);
+        [SYLogManager.shareLog logText:[NSString stringWithFormat:@"text: %@", [array objectAtIndex:20]] key:NSStringFromClass(self.class)];
     }
     
     Person *person = [[Person alloc] init];
@@ -57,25 +56,24 @@
     person.learn = @{@"开发":@"Objective-C", @"project":@(10), @"team":@[@"张三", @"李四", @"wangWu", @"小明"]};
     NSLog(@"person: %@", person.objectDescription);
     
+    [SYLogManager.shareLog logText:person.objectDescription key:NSStringFromClass(self.class)];
     
 }
 
 - (void)nextClick
 {
-//    ViewController *next = [[ViewController alloc] init];
-//    [self.navigationController pushViewController:next animated:YES];
-    
-    [self saveFile];
+    ViewController *next = [[ViewController alloc] init];
+    [self.navigationController pushViewController:next animated:YES];
 }
 
 - (void)showClick
 {
-    SYLogManagerSingle.show = YES;
+    [self showInfo];
 }
 
 - (void)clearClick
 {
-    [SYLogManagerSingle clearLog];
+ 
 }
 
 - (void)saveFile

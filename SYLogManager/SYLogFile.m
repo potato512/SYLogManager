@@ -8,12 +8,9 @@
 
 #import "SYLogFile.h"
 #import <UIKit/UIKit.h>
+#import "SYLogSQLite.h"
 
-static NSString *const logFile = @"SYLog.txt";
-
-#pragma mark - 数据格式
-
-@interface SYLogText : NSObject
+@interface SYLogModel ()
 
 @property (nonatomic, assign) NSString *logTime;
 @property (nonatomic, strong) NSString *logText;
@@ -21,40 +18,79 @@ static NSString *const logFile = @"SYLog.txt";
 
 @end
 
-@implementation SYLogText
+@implementation SYLogModel
 
-+ (instancetype)logText:(NSString *)text key:(NSString *)key
-{
-    SYLogText *log = [SYLogText new];
-    log.logText = text;
-    log.logKey = (key.length > 0 ? key : @"未设置");
-    //
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
-    NSString *time = [formatter stringFromDate:NSDate.date];
-    log.logTime = time;
-    //
-    return log;
-}
-
-// 属性编码 向coder中写入数据
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.logTime forKey:@"logTime"];
-    [aCoder encodeObject:self.logText forKey:@"logText"];
-    [aCoder encodeObject:self.logKey forKey:@"logKey"];
-}
-
-// 属性解码 读取coder中的数据
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithlog:(NSString *)text key:(NSString *)key
 {
     self = [super init];
     if (self) {
-        self.logTime = [aDecoder decodeObjectForKey:@"logTime"];
-        self.logText = [aDecoder decodeObjectForKey:@"logText"];
-        self.logKey = [aDecoder decodeObjectForKey:@"logKey"];
+        self.logText = text;
+        self.logKey = (key.length > 0 ? key : @"");
+        //
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
+        NSString *time = [formatter stringFromDate:NSDate.date];
+        self.logTime = time;
+        //
+        CGFloat height = [self heightWithText:text];
+        self.height = height;
+        //
+        NSAttributedString *attribute = [self attributeStringWithTime:time text:text key:key];
+        self.attributeString = attribute;
     }
     return self;
+}
+
+/// 内部使用
+- (instancetype)initWithTime:(NSString *)time log:(NSString *)text key:(NSString *)key
+{
+    self = [super init];
+    if (self) {
+        self.logText = text;
+        self.logKey = (key.length > 0 ? key : @"");
+        self.logTime = time;
+        //
+        CGFloat height = [self heightWithText:text];
+        self.height = height;
+        //
+        NSAttributedString *attribute = [self attributeStringWithTime:time text:text key:key];
+        self.attributeString = attribute;
+    }
+    return self;
+}
+
+- (CGFloat)heightWithText:(NSString *)text
+{
+    CGFloat heigt = heightText;
+    if (text && [text isKindOfClass:NSString.class] && text.length > 0) {
+        if (7.0 <= [UIDevice currentDevice].systemVersion.floatValue) {
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            NSDictionary *dict = @{NSFontAttributeName:[UIFont systemFontOfSize:15], NSParagraphStyleAttributeName:paragraphStyle.copy};
+            
+            CGSize size = [text boundingRectWithSize:CGSizeMake(widthText, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
+            CGFloat heightTmp = size.height;
+            heightTmp += 25;
+            if (heightTmp < heightText) {
+                heightTmp = heightText;
+            }
+            heigt = heightTmp;
+        }
+    }
+    return heigt;
+}
+
+static NSString *const keyStyle = @"--";
+- (NSAttributedString *)attributeStringWithTime:(NSString *)time text:(NSString *)text key:(NSString *)key
+{
+    NSString *string = [NSString stringWithFormat:@"%@ %@ %@\n%@", time, keyStyle, key, text];
+    NSMutableAttributedString *logString = [[NSMutableAttributedString alloc] initWithString:string];
+    NSRange rang = [string rangeOfString:key];
+    if (rang.location == NSNotFound) {
+        rang = [string rangeOfString:keyStyle];
+    }
+    [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:@"crash闪退"] ? UIColor.redColor : ([key isEqualToString:@"打开应用"] ? UIColor.greenColor : UIColor.yellowColor)) range:NSMakeRange(0, (rang.location + rang.length))];
+    return logString;
 }
 
 @end
@@ -63,7 +99,7 @@ static NSString *const logFile = @"SYLog.txt";
 
 @interface SYLogFile ()
 
-@property (nonatomic, strong) NSMutableArray *logArray;
+@property (nonatomic, strong) SYLogSQLite *sqlite;
 
 @end
 
@@ -73,119 +109,21 @@ static NSString *const logFile = @"SYLog.txt";
 {
     self = [super init];
     if (self) {
-        
+        [self initializeSQLiteTable];
     }
     return self;
 }
 
-#pragma mark - 日志操作
-
-- (void)saveLogMessage
-{
-    if (self.isEnable) {
-        
-    } else {
-        // 联调调试不保存
-        if (isatty(STDOUT_FILENO)) {
-            return;
-        }
-        // 模拟器不保存
-        if ([UIDevice.currentDevice.model hasPrefix:@"Simulator"]) {
-            return;
-        }
-    }
-    
-    NSLog(@"\n---------log日志管理 %@------------", NSDate.date);
-    // 输入到文件
-    // log信息
-    freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stdout);
-    // 错误信息
-    freopen([self.filePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr); 
-}
-
-- (void)readLogMessage:(void (^)(NSString *message))complete
-{
-    // 读取的内容
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.filePath]) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            NSString *string = [[NSString alloc] initWithContentsOfFile:self.filePath encoding:NSUTF8StringEncoding error:nil];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (complete) {
-                    complete(string);
-                }
-            });
-        });
-    } else {
-        if (complete) {
-            complete(nil);
-        }
-    }
-    
-}
-
-- (void)deleteLogMessage
-{
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.filePath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
-    }
-}
-
-#pragma mark - getter
-
-- (NSString *)filePath
-{
-    if (_filePath == nil) {
-        NSArray *array = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *string = array.firstObject;
-        string = [string stringByAppendingPathComponent:logFile];
-        _filePath = [NSString stringWithString:string];
-    }
-    return _filePath;
-}
-
-
-
-
-- (void)save:(NSString *)text
-{
-    [self save:text key:@""];
-}
-
-- (void)save:(NSString *)text key:(NSString *)key
+- (SYLogModel *)logWith:(NSString *)text key:(NSString *)key
 {
     @synchronized (self) {
-        SYLogText *model = [SYLogText logText:text key:key];
+        if (self.logArray.count >= 5000) {
+            [self.logArray removeObjectAtIndex:0];
+        }
+        SYLogModel *model = [[SYLogModel alloc] initWithlog:text key:key];
         [self.logArray addObject:model];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            BOOL result = [self.logArray writeToFile:self.filePath atomically:NO];
-//            NSLog(@"log日志保存：%@", (result ? @"成功" : @"失败"));
-            
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.logArray];
-            [NSUserDefaults.standardUserDefaults setObject:data forKey:NSStringFromClass(self.class)];
-            [NSUserDefaults.standardUserDefaults synchronize];
-        });
-    };
-}
-
-- (void)read:(void (^)(NSAttributedString *text))complete
-{
-    @synchronized (self) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
-            for (SYLogText *model in self.logArray) {
-                NSString *string = [NSString stringWithFormat:@"%@ -- %@\n%@", model.logTime, model.logKey, model.logText];
-                NSMutableAttributedString *logString = [[NSMutableAttributedString alloc] initWithString:string];
-                NSRange rang = [string rangeOfString:model.logKey];
-                [logString addAttribute:NSForegroundColorAttributeName value:(self.colorTime ? : UIColor.yellowColor) range:NSMakeRange(0, (rang.location + rang.length))];
-                [attributedText appendAttributedString:logString];
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (complete) {
-                    complete(attributedText);
-                }
-            });
-        });
+        [self saveLog:model];
+        return model;
     };
 }
 
@@ -193,13 +131,10 @@ static NSString *const logFile = @"SYLog.txt";
 {
     @synchronized (self) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.logArray removeAllObjects];
-//            if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
-//                BOOL result = [NSFileManager.defaultManager removeItemAtPath:self.filePath error:nil];
-//                NSLog(@"log日志删除：%@", (result ? @"成功" : @"失败"));
-//            }
-            [NSUserDefaults.standardUserDefaults removeObjectForKey:NSStringFromClass(self.class)];
-            [NSUserDefaults.standardUserDefaults synchronize];
+            if (self.logArray.count > 0) {
+                [self.logArray removeAllObjects];
+                [self deleteLog];
+            }
         });
     };
 }
@@ -208,18 +143,59 @@ static NSString *const logFile = @"SYLog.txt";
 {
     if (_logArray == nil) {
         _logArray = [[NSMutableArray alloc] init];
-        // 默认加载本地
-//        if ([NSFileManager.defaultManager isExecutableFileAtPath:self.filePath]) {
-//            NSArray *array = [NSArray arrayWithContentsOfFile:self.filePath];
-//            [_logArray addObjectsFromArray:array];
-//        }
-        NSData *data = [NSUserDefaults.standardUserDefaults objectForKey:NSStringFromClass(self.class)];
-        if (data.length > 0) {
-            NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-            [_logArray addObjectsFromArray:array];
-        }
     }
     return _logArray;
+}
+
+#pragma mark - 存储
+
+- (SYLogSQLite *)sqlite
+{
+    if (_sqlite == nil) {
+        _sqlite = [[SYLogSQLite alloc] init];
+    }
+    return _sqlite;
+}
+
+- (void)initializeSQLiteTable
+{
+    // // ID, LogTime, LogKey, LogText
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS SYLogRecord(ID INT TEXTPRIMARY KEY, LogTime TEXT, LogKey TEXT, LogText TEXT NO NULL)";
+    [self.sqlite executeSQLite:sql];
+}
+
+- (void)saveLog:(SYLogModel *)model
+{
+    if (model == nil) {
+        NSLog(@"没有数据");
+        return;
+    }
+    
+    // ID, LogTime, LogKey, LogText
+    NSString *sql = [NSString stringWithFormat:@"INSERT OR REPLACE INTO SYLogRecord (ID, LogTime, LogKey, LogText) VALUES (NULL, '%@', '%@', '%@')", model.logTime, model.logKey, model.logText];
+    [self.sqlite executeSQLite:sql];
+}
+
+- (void)deleteLog
+{
+    NSString *sql = @"DELETE FROM SYLogRecord";
+    [self.sqlite executeSQLite:sql];
+}
+
+- (void)read
+{
+    NSString *sql = @"SELECT * FROM SYLogRecord";
+    NSArray *array = [self.sqlite selectSQLite:sql];
+    [self.logArray removeAllObjects];
+    NSMutableArray *logTmp = [[NSMutableArray alloc] init];
+    for (NSDictionary *dict in array) {
+        NSString *logTime = dict[@"logTime"];
+        NSString *logKey = dict[@"logKey"];
+        NSString *logText = dict[@"logText"];
+        SYLogModel *model = [[SYLogModel alloc] initWithTime:logTime log:logText key:logKey];
+        [logTmp addObject:model];
+    }
+    [self.logArray addObjectsFromArray:logTmp];
 }
 
 @end

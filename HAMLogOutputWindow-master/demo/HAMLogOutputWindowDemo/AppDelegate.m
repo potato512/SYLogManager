@@ -24,13 +24,18 @@
 //    [[HAMLogOutputWindow sharedInstance] setHidden:NO];
 #endif
     
-    [SYLogManager.shareLog configLog];
+    [SYLogManager.shareLog config];
     
     ViewController1 *rootVC = [ViewController1 new];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
     self.window.rootViewController = rootNav;
     self.window.backgroundColor = UIColor.whiteColor;
     [self.window makeKeyAndVisible];
+    
+    SYLogManager.shareLog.controller = self.window.rootViewController;
+    SYLogManager.shareLog.email = @"151311301@qq.com";
+    SYLogManager.shareLog.show = YES;
+    
     
     return YES;
 }

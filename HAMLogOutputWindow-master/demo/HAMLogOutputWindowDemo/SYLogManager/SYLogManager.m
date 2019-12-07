@@ -10,10 +10,11 @@
 #import "SYLogFile.h"
 #import "SYLogView.h"
 #import <MessageUI/MessageUI.h>
+#import "SYLogPopoverView.h"
 
 static CGFloat const originButton = 20.0;
 static CGFloat const sizeButton = 60.0;
-#define widthButton (self.logButton.frame.size.height * 3 + originButton)
+#define widthButtonView (self.logButton.frame.size.height * 3 + originButton)
 
 @interface SYLogManager () <MFMailComposeViewControllerDelegate>
 
@@ -23,7 +24,7 @@ static CGFloat const sizeButton = 60.0;
 @property (nonatomic, strong) UIView *baseView;
 //
 @property (nonatomic, strong) UIButton *logButton;
-@property (nonatomic, strong) UIView *logButtonView;
+@property (nonatomic, strong) NSArray *logActions;
 
 @end
 
@@ -50,9 +51,10 @@ static CGFloat const sizeButton = 60.0;
     return self;
 }
 
-- (void)configLog
+- (void)config
 {
     NSSetUncaughtExceptionHandler(&readException);
+    //
     [self.logFile read];
     self.logView.array = self.logFile.logArray;
     //
@@ -89,136 +91,14 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)showMenu:(UIButton *)button
 {
-    button.selected = !button.selected;
-    if (button.selected) {
-        [self showLogButtonView];
-    } else {
-        [self hideLogButtonView];
-    }
-}
-
-- (void)showLogButtonView
-{
-    CGFloat originX = (self.logButton.frame.origin.x + self.logButton.frame.size.width);
-    __block CGRect rect = self.logButtonView.frame;
-    rect.origin.x = originX;
-    if ((originX + widthButton) > self.baseView.frame.size.width) {
-        rect.origin.x = (self.logButton.frame.origin.x - widthButton);
-    }
-    rect.origin.y = self.logButton.frame.origin.y;
-    self.logButtonView.frame = rect;
-    //
-    self.logButtonView.hidden = NO;
-    [self.baseView bringSubviewToFront:self.logButtonView];
-    // 动画
-    self.logButtonView.alpha = 0;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.logButtonView.alpha = 1;
-    }];
-}
-- (void)hideLogButtonView
-{
-    if (self.logButtonView.hidden) {
-        return;
-    }
-    // 动画
-    [UIView animateWithDuration:0.3 animations:^{
-        self.logButtonView.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.logButtonView.hidden = YES;
-        [self.baseView sendSubviewToBack:self.logButtonView];
-    }];
-}
-
-
-- (UIView *)logButtonView
-{
-    if (_logButtonView == nil) {
-        _logButtonView = [[UIView alloc] initWithFrame:CGRectMake(originButton, originButton, widthButton, sizeButton)];
-        _logButtonView.layer.cornerRadius = _logButton.frame.size.width / 2;
-        _logButtonView.layer.masksToBounds = YES;
-        _logButtonView.layer.borderColor = UIColor.yellowColor.CGColor;
-        _logButtonView.layer.borderWidth = 3.0;
-        _logButtonView.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.3];
-        [self.baseView addSubview:_logButtonView];
-        _logButtonView.hidden = YES;
-        //
-        UIButton *hideButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, sizeButton, sizeButton)];
-        [_logButtonView addSubview:hideButton];
-        hideButton.layer.cornerRadius = hideButton.frame.size.width / 2;
-        hideButton.layer.masksToBounds = YES;
-        hideButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
-        hideButton.titleLabel.numberOfLines = 2;
-        hideButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        hideButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [hideButton setTitle:@"显示\nlog" forState:UIControlStateNormal];
-        [hideButton setTitle:@"隐藏\nlog" forState:UIControlStateSelected];
-        [hideButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-        [hideButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateSelected];
-        [hideButton addTarget:self action:@selector(hideButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        UIButton *enableButton = [[UIButton alloc] initWithFrame:CGRectMake((hideButton.frame.origin.x + hideButton.frame.size.width + originButton / 2), 0, sizeButton, sizeButton)];
-        [_logButtonView addSubview:enableButton];
-        enableButton.layer.cornerRadius = hideButton.frame.size.width / 2;
-        enableButton.layer.masksToBounds = YES;
-        enableButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
-        enableButton.titleLabel.numberOfLines = 2;
-        enableButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        enableButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [enableButton setTitle:@"开启\n滚动" forState:UIControlStateNormal];
-        [enableButton setTitle:@"关闭\n滚动" forState:UIControlStateSelected];
-        [enableButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-        [enableButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateSelected];
-        [enableButton addTarget:self action:@selector(enableButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        UIButton *clearButton = [[UIButton alloc] initWithFrame:CGRectMake((enableButton.frame.origin.x + enableButton.frame.size.width + originButton / 2), 0, sizeButton, sizeButton)];
-        [_logButtonView addSubview:clearButton];
-        clearButton.layer.cornerRadius = clearButton.frame.size.width / 2;
-        clearButton.layer.masksToBounds = YES;
-        clearButton.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.4];
-        clearButton.titleLabel.numberOfLines = 2;
-        clearButton.titleLabel.font = [UIFont systemFontOfSize:13];
-        clearButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [clearButton setTitle:@"清除\nlog" forState:UIControlStateNormal];
-        [clearButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
-        [clearButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateHighlighted];
-        [clearButton addTarget:self action:@selector(clearButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _logButtonView;
-}
-
-- (void)hideButtonClick:(UIButton *)button
-{
-    button.selected = !button.selected;
-    if (button.selected) {
-        self.logView.hidden = NO;
-        [self.baseView bringSubviewToFront:self.logView];
-        [self.baseView bringSubviewToFront:self.logButton];
-        [self.baseView bringSubviewToFront:self.logButtonView];
-    } else {
-        self.logView.hidden = YES;
-        [self.baseView sendSubviewToBack:self.logView];
-    }
-}
-
-- (void)enableButtonClick:(UIButton *)button
-{
-    button.selected = !button.selected;
-    if (button.selected) {
-        self.logView.userInteractionEnabled = YES;
-    } else {
-        self.logView.userInteractionEnabled = NO;
-    }
-}
-
-- (void)clearButtonClick:(UIButton *)button
-{
-    [self logClear];
+    [self logMenu];
 }
 
 // 拖动手势方法
 - (void)panRecognizerAction:(UIPanGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        [self hideLogButtonView];
+        
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         
     } else {
@@ -244,6 +124,51 @@ static CGFloat const sizeButton = 60.0;
     }
 }
 
+- (void)logMenu
+{
+    [SYLogPopoverView.popoverView showToView:self.logButton actions:self.logActions];
+}
+
+- (NSArray *)logActions
+{
+    if (_logActions == nil) {
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        SYLogPopoverAction *showAction = [SYLogPopoverAction actionWithTitle:@"显示log" selectTitle:@"隐藏log" handler:^(SYLogPopoverAction * _Nonnull action) {
+            action.selecte = !action.isSelecte;
+            [self logShow:action.isSelecte];
+        }];
+        [array addObject:showAction];
+        SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
+            action.selecte = !action.isSelecte;
+            [self logScroll:action.isSelecte];
+        }];
+        [array addObject:scrollAction];
+        if ([self validEmail:self.email]) {
+            SYLogPopoverAction *sendAction = [SYLogPopoverAction actionWithTitle:@"发送邮件" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
+                [self logShow:NO];
+                showAction.selecte = NO;
+                [self logSend];
+            }];
+            [array addObject:sendAction];
+        }
+        SYLogPopoverAction *copyAction = [SYLogPopoverAction actionWithTitle:@"复制" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
+            [self logShow:NO];
+            showAction.selecte = NO;
+            [self logCopy];
+        }];
+        [array addObject:copyAction];
+        SYLogPopoverAction *clearAction = [SYLogPopoverAction actionWithTitle:@"删除log" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
+            [self logShow:NO];
+            showAction.selecte = NO;
+            [self logClear];
+        }];
+        [array addObject:clearAction];
+        //
+        _logActions = [NSArray arrayWithArray:array];
+    }
+    return _logActions;
+}
+
 #pragma mark - log处理
 
 - (void)logText:(NSString *)text
@@ -259,8 +184,154 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logClear
 {
-    [self.logFile clear];
-    self.logView.array = self.logFile.logArray;
+    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"确认删除log？" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self.logFile clear];
+            self.logView.array = [NSMutableArray new];
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:deleteAction];
+        [self.controller presentViewController:alertController animated:YES completion:NULL];
+    }
+}
+
+- (void)logCopy
+{
+    NSMutableString *text = [[NSMutableString alloc] init];
+    for (SYLogModel *model in self.self.logFile.logArray) {
+        NSString *string = model.attributeString.string;
+        [text appendFormat:@"%@\n\n", string];
+    }
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = text;
+    //
+    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alertController addAction:cancelAction];
+        [self.controller presentViewController:alertController animated:YES completion:NULL];
+    }
+}
+
+- (void)logSend
+{
+    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        NSMutableString *text = [[NSMutableString alloc] init];
+        for (SYLogModel *model in self.self.logFile.logArray) {
+            NSString *string = model.attributeString.string;
+            [text appendFormat:@"%@\n\n", string];
+        }
+        //
+        [self sentEmail:text];
+    }
+}
+
+- (void)logShow:(BOOL)show
+{
+    if (show) {
+        self.logView.hidden = NO;
+        [self.baseView bringSubviewToFront:self.logView];
+        [self.baseView bringSubviewToFront:self.logButton];
+    } else {
+        self.logView.hidden = YES;
+        [self.baseView sendSubviewToBack:self.logView];
+    }
+}
+
+- (void)logScroll:(BOOL)scroll
+{
+    if (scroll) {
+        self.logView.userInteractionEnabled = YES;
+    } else {
+        self.logView.userInteractionEnabled = NO;
+    }
+}
+
+#pragma mark - 邮件
+
+- (BOOL)validEmail:(NSString *)email
+{
+    return (email && [email isKindOfClass:NSString.class] && email.length > 0);
+}
+
+- (void)sentEmail:(NSString *)text
+{
+    if (self.controller == nil || ![self.controller isKindOfClass:UIViewController.class]) {
+        ShowMessage(@"温馨提示", @"请设置【target】属性，以便发送邮件", @"知道了");
+        return;
+    }
+    
+    // 判断用户是否已设置邮件账户
+    if ([MFMailComposeViewController canSendMail]) {
+        // 弹出邮件发送视图
+        MFMailComposeViewController *emailVC = [[MFMailComposeViewController alloc] init];
+        // 设置邮件代理
+        [emailVC setMailComposeDelegate:self];
+        // 设置收件人
+        [emailVC setToRecipients:@[self.email]];
+        // 设置抄送人
+        // [emailVC setCcRecipients:@[@"1622849369@qq.com"]];
+        // 设置密送人
+        // [emailVC setBccRecipients:@[@"15690725786@163.com"]];
+        // 设置邮件主题
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
+        NSString *date = [dateFormatter stringFromDate:NSDate.date];
+        NSString *title = [NSString stringWithFormat:@"log日志【%@】%@", [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"], date];
+        [emailVC setSubject:title];
+        //设置邮件的正文内容
+        NSString *emailContent = [NSString stringWithFormat:@"邮件内容: \n%@", text];
+        // 是否为HTML格式
+        [emailVC setMessageBody:emailContent isHTML:NO];
+        // 如使用HTML格式，则为以下代码
+        // [mailCompose setMessageBody:@"<html><body><p>Hello</p><p>World！</p></body></html>" isHTML:YES];
+        // 添加附件
+        // UIImage *image = [UIImage imageNamed:@"qq"];
+        // NSData *imageData = UIImagePNGRepresentation(image);
+        // [mailCompose addAttachmentData:imageData mimeType:@"" fileName:@"qq.png"];
+        // NSString *file = [[NSBundle mainBundle] pathForResource:@"EmptyPDF" ofType:@"pdf"];
+        // NSData *pdf = [NSData dataWithContentsOfFile:file];
+        // [mailCompose addAttachmentData:pdf mimeType:@"" fileName:@"EmptyPDF.pdf"];
+        [self.controller presentViewController:emailVC animated:YES completion:nil];
+    } else {
+        // 给出提示,设备未开启邮件服务
+        ShowMessage(@"没有邮件帐户", @"请添加邮件帐户（添加方法：设置->邮件、通讯录、日历->添加帐户->其他->添加邮件帐户）", @"知道了");
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    switch (result) {
+        case MFMailComposeResultCancelled: {
+            NSLog(@"Mail send canceled: 用户取消编辑");
+            ShowMessage(nil, @"Mail send canceled: 用户取消编辑", @"知道了");
+        } break;
+        case MFMailComposeResultSaved: {
+            NSLog(@"Mail saved: 邮件保存成功");
+            ShowMessage(nil, @"Mail saved: 邮件保存成功", @"知道了");
+        } break;
+        case MFMailComposeResultSent: {
+            NSLog(@"Mail sent: 邮件发送成功");
+            ShowMessage(nil, @"Mail sent: 邮件发送成功", @"知道了");
+        } break;
+        case MFMailComposeResultFailed: {
+            NSLog(@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]);
+            ShowMessage(nil, [NSString stringWithFormat:@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]], @"知道了");
+        } break;
+    }
+    // 关闭邮件发送视图
+    [self.controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+void ShowMessage(NSString *title, NSString *message, NSString *button)
+{
+    [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:nil otherButtonTitles:button, nil] show];
 }
 
 #pragma mark - 异常
@@ -305,7 +376,6 @@ void readException(NSException *exception)
         [crashString appendString:string];
         [crashString appendString:@"\n"];
     }
-    NSLog(@"%@", crashString);
     [SYLogManager.shareLog logText:crashString key:@"crash闪退"];
 }
 
@@ -347,7 +417,6 @@ void readException(NSException *exception)
     self.logButton.hidden = !_show;
     if (self.logButton.hidden) {
         [self.baseView sendSubviewToBack:self.logButton];
-        [self hideLogButtonView];
     } else {
         [self.baseView bringSubviewToFront:self.logButton];
     }

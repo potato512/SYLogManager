@@ -48,6 +48,7 @@ static NSString *const logFile = @"SYLogFile.db";
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         _filePath = [paths objectAtIndex:0];
         _filePath = [_filePath stringByAppendingPathComponent:logFile];
+        NSLog(@"sqlite path: %@", _filePath);
     }
     return _filePath;
 }
