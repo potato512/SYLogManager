@@ -13,11 +13,15 @@ log日志查看。
 ~~~
 
 ~~~ javascript
-[SYLogManagerSingle initializeLog];
-SYLogManagerSingle.showView = self.window;
-SYLogManagerSingle.target = self.window.rootViewController;
-SYLogManagerSingle.email = @"151311301@qq.com";
-SYLogManagerSingle.show = YES;
+[SYLogManager.shareLog config];
+SYLogManager.shareLog.email = @"151311301@qq.com";
+
+// 显示等设置
+SYLogManager.shareLog.show = YES;
+SYLogManager.shareLog.controller = self.window.rootViewController;
+
+[SYLogManager.shareLog logText:@"hello world~"];
+[SYLogManager.shareLog logText:@"hello world~" key:@"001")];
 ~~~ 
 
 $ 待开发功能
@@ -34,7 +38,7 @@ $ 待开发功能
       * 操作菜单自适应：显示/隐藏、滚动响应、删除、复制、发邮件
       * 实时显示
       * 显示过程中可操作，或禁止操作
-      
+
 
 * 20191126
   * 版本号：1.1.3
