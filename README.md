@@ -1,5 +1,14 @@
 # SYLogManager
-log日志查看。
+log日志查看工具。
+
+### 特点：
+* log日志实时显示
+* log日志显示时，可设置界面交互，或禁止界面交互
+* log日志缓存在本地
+* log日志可复制，并粘贴到其他应用，如微信，QQ 等
+* log日志可发送邮件
+* log 日志可清空
+* log 日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息。
 
 
 # 使用介绍
@@ -9,10 +18,12 @@ log日志查看。
 
 # 代码示例
 ~~~ javascript
+// 导入头文件
 #import "SYLogManager.h"
 ~~~
 
 ~~~ javascript
+// 初始化配置
 [SYLogManager.shareLog config];
 SYLogManager.shareLog.email = @"151311301@qq.com";
 
@@ -20,14 +31,16 @@ SYLogManager.shareLog.email = @"151311301@qq.com";
 SYLogManager.shareLog.show = YES;
 SYLogManager.shareLog.controller = self.window.rootViewController;
 
+// 使用
 [SYLogManager.shareLog logText:@"hello world~"];
 [SYLogManager.shareLog logText:@"hello world~" key:@"001")];
 ~~~ 
 
-$ 待开发功能
-* 上传指定服务器
-* 发送指定邮箱
-* 显示对象信息
+效果图
+
+![SYLogManager.gif](./SYLogManager.gif) 
+
+
 
 # 修改完善
 * 20191207
