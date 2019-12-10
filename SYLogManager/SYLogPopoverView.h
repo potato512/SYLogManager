@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogPopoverView : UIView
 
-@property (nonatomic, assign) BOOL hideAfterTouchOutside;
+@property (nonatomic, assign) BOOL hideWhileTouch;
 @property (nonatomic, assign) BOOL showShade;
 
 + (instancetype)popoverView;

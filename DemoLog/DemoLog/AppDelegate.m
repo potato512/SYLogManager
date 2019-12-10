@@ -21,6 +21,7 @@
     
     // 初始化
     [SYLogManager.shareLog config];
+    //
     SYLogManager.shareLog.email = @"151311301@qq.com";
     
     ViewController *rootVC = [[ViewController alloc] init];

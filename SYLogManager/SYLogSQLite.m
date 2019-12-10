@@ -9,8 +9,6 @@
 #import "SYLogSQLite.h"
 #import <sqlite3.h>
 
-static NSString *const logFile = @"SYLogFile.db";
-
 @interface SYLogSQLite ()
 {
     // 数据库
@@ -18,6 +16,7 @@ static NSString *const logFile = @"SYLogFile.db";
     BOOL isOpenDataBase;
 }
 
+/// 缓存路径
 @property (nonatomic, strong) NSString *filePath;
 
 @end
@@ -28,7 +27,15 @@ static NSString *const logFile = @"SYLogFile.db";
 {
     self = [super init];
     if (self) {
-        
+        NSString *fileName = [NSString stringWithFormat:@"LogFile_%@.db", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleIdentifier"]];
+        // doucment
+//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+//        NSString *filePath = [paths objectAtIndex:0];
+        // 缓存
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        self.filePath = [paths objectAtIndex:0];
+        self.filePath = [self.filePath stringByAppendingPathComponent:fileName];
+        NSLog(@"sqlite path: %@", self.filePath);
     }
     return self;
 }
@@ -41,13 +48,14 @@ static NSString *const logFile = @"SYLogFile.db";
 - (NSString *)filePath
 {
     if (_filePath == nil) {
+        NSString *fileName = [NSString stringWithFormat:@"LogFile_%@.db", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleIdentifier"]];
         // doucment
 //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
 //        NSString *filePath = [paths objectAtIndex:0];
         // 缓存
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         _filePath = [paths objectAtIndex:0];
-        _filePath = [_filePath stringByAppendingPathComponent:logFile];
+        _filePath = [_filePath stringByAppendingPathComponent:fileName];
         NSLog(@"sqlite path: %@", _filePath);
     }
     return _filePath;

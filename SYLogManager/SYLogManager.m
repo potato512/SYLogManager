@@ -25,6 +25,8 @@ static CGFloat const sizeButton = 60.0;
 //
 @property (nonatomic, strong) UIButton *logButton;
 @property (nonatomic, strong) NSArray *logActions;
+//
+@property (nonatomic, assign) BOOL validLog;
 
 @end
 
@@ -53,12 +55,17 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)config
 {
+    self.validLog = YES;
+    
+#ifdef DEBUG
     NSSetUncaughtExceptionHandler(&readException);
     //
     [self.logFile read];
-    self.logView.array = self.logFile.logArray;
+    self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
     //
     [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
+#endif
+    
 }
 
 #pragma mark - 菜单视图
@@ -134,11 +141,22 @@ static CGFloat const sizeButton = 60.0;
     if (_logActions == nil) {
         NSMutableArray *array = [[NSMutableArray alloc] init];
         SYLogPopoverAction *showAction = [SYLogPopoverAction actionWithTitle:@"显示log" selectTitle:@"隐藏log" handler:^(SYLogPopoverAction * _Nonnull action) {
-            action.selecte = !action.isSelecte;
-            [self logShow:action.isSelecte];
+            if (self.validLog) {
+                action.selecte = !action.isSelecte;
+                [self logShow:action.isSelecte];
+            } else {
+                if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"未进行初始化配置" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertController addAction:cancelAction];
+                    [self.controller presentViewController:alertController animated:YES completion:NULL];
+                }
+            }
         }];
         [array addObject:showAction];
-        SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
+        SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动开启滚动开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
             action.selecte = !action.isSelecte;
             [self logScroll:action.isSelecte];
         }];
@@ -178,8 +196,15 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logText:(NSString *)text key:(NSString *)key
 {
+    if (!self.validLog) {
+        return;
+    }
+    
+#ifdef DEBUG
     [self.logFile logWith:text key:key];
-    self.logView.array = self.logFile.logArray;
+    self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
+#endif
+    
 }
 
 - (void)logClear
@@ -202,7 +227,7 @@ static CGFloat const sizeButton = 60.0;
 - (void)logCopy
 {
     NSMutableString *text = [[NSMutableString alloc] init];
-    for (SYLogModel *model in self.self.logFile.logArray) {
+    for (SYLogModel *model in self.self.logFile.logs) {
         NSString *string = model.attributeString.string;
         [text appendFormat:@"%@\n\n", string];
     }
@@ -223,7 +248,7 @@ static CGFloat const sizeButton = 60.0;
 {
     if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
-        for (SYLogModel *model in self.self.logFile.logArray) {
+        for (SYLogModel *model in self.self.logFile.logs) {
             NSString *string = model.attributeString.string;
             [text appendFormat:@"%@\n\n", string];
         }
@@ -397,7 +422,6 @@ void readException(NSException *exception)
         _logView.userInteractionEnabled = NO;
         _logView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
         _logView.hidden = YES;
-
     }
     return _logView;
 }

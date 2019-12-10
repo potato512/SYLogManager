@@ -8,9 +8,10 @@ log日志查看工具。
 * log日志可复制，并粘贴到其他应用，如微信，QQ 等
 * log日志可发送邮件
 * log 日志可清空
-* log 日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息。
+* log 日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息
+* 通过关键词，搜索过滤需要查看的 log 日志
 
-> `查看日志`按钮可拖动的任意位置
+> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志
 
 # 使用介绍
 * 自动导入：使用命令`pod 'SYLogManager'`导入到项目中
@@ -44,6 +45,13 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 
 
 # 修改完善
+* 20191208
+  * 版本号：1.2.1
+  * 修改优化
+    * 缓存文件名格式为：LogFile_应用包名.db
+    * 条件过滤
+    * 自动区分 deg 和 release 模式
+
 * 20191207
   * 版本号：1.2.0
   * 修改优化
@@ -52,7 +60,6 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
       * 操作菜单自适应：显示/隐藏、滚动响应、删除、复制、发邮件
       * 实时显示
       * 显示过程中可操作，或禁止操作
-
 
 * 20191126
   * 版本号：1.1.3
