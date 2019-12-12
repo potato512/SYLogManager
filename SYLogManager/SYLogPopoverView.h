@@ -27,18 +27,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogPopoverView : UIView
 
-@property (nonatomic, assign) BOOL hideAfterTouchOutside;
+@property (nonatomic, assign) BOOL hideWhileTouch;
 @property (nonatomic, assign) BOOL showShade;
 
 + (instancetype)popoverView;
 
-/*! @brief 指向指定的View来显示弹窗
+/*
+ *  指向指定的View来显示弹窗
  *  @param pointView 箭头指向的View
  *  @param actions   动作对象集合<SYLogPopoverAction>
  */
 - (void)showToView:(UIView *)pointView actions:(NSArray<SYLogPopoverAction *> *)actions;
 
-/*! @brief 指向指定的点来显示弹窗
+/*
+ *  指向指定的点来显示弹窗
  *  @param toPoint 箭头指向的点(这个点的坐标需按照keyWindow的坐标为参照)
  *  @param actions 动作对象集合<SYLogPopoverAction>
  */

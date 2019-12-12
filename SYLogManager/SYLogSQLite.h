@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogSQLite : NSObject
 
+/// 建表/删表/插入、更新、删除数据
 - (BOOL)executeSQLite:(NSString *)sqlString;
+/// 查询
 - (NSArray *)selectSQLite:(NSString *)sqlString;
 
 @end

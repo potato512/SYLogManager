@@ -100,6 +100,8 @@ static NSString *const keyStyle = @"--";
 @interface SYLogFile ()
 
 @property (nonatomic, strong) SYLogSQLite *sqlite;
+/// 默认保存5000条记录，超过则自动删除
+@property (nonatomic, strong) NSMutableArray *logArray;
 
 @end
 
@@ -139,12 +141,19 @@ static NSString *const keyStyle = @"--";
     };
 }
 
+#pragma mark - setter/getter
+
 - (NSMutableArray *)logArray
 {
     if (_logArray == nil) {
         _logArray = [[NSMutableArray alloc] init];
     }
     return _logArray;
+}
+
+- (NSArray *)logs
+{
+    return self.logArray;
 }
 
 #pragma mark - 存储

@@ -12,6 +12,9 @@
 
 @interface ViewController ()
 
+@property (nonatomic, strong) NSArray *array;
+@property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 @implementation ViewController
@@ -21,8 +24,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"next" style:UIBarButtonItemStyleDone target:self action:@selector(nextClick)];
-    UIBarButtonItem *showItem = [[UIBarButtonItem alloc] initWithTitle:@"show" style:UIBarButtonItemStyleDone target:self action:@selector(showClick)];
-    UIBarButtonItem *clearItem = [[UIBarButtonItem alloc] initWithTitle:@"clear" style:UIBarButtonItemStyleDone target:self action:@selector(clearClick)];
+    UIBarButtonItem *showItem = [[UIBarButtonItem alloc] initWithTitle:@"log" style:UIBarButtonItemStyleDone target:self action:@selector(logClick)];
+    UIBarButtonItem *clearItem = [[UIBarButtonItem alloc] initWithTitle:@"auto" style:UIBarButtonItemStyleDone target:self action:@selector(autoClick)];
     self.navigationItem.rightBarButtonItems = @[nextItem, clearItem, showItem];
 }
 
@@ -31,20 +34,30 @@
     NSLog(@"%@ 被释放了~", self.class);
 }
 
-- (void)showInfo
+- (void)nextClick
 {
-    NSArray *array = @[@"张三", @"李四", @"wangWu", @"小明"];
-    NSLog(@"array: %@", array);
+    ViewController *nextVC = [ViewController new];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
+- (NSArray *)array
+{
+    return @[@"创始人跑路，办公点人去楼空，又一互联网巨头倒下了", @"香港修例风波延宕至今，900余场游行集会活动，不少演变成严重暴力违法行为。繁华街市沦为“战区”，大学校园惨遭“洗礼”，“黑色恐怖”阴霾不散，香港的社会秩序与经济发展已在暴徒投掷的燃烧弹中烟熏火燎、千疮百孔，刺痛着所有珍爱她的心。近六个月了，假“自由”“民主”之名的暴力并没有“给文明以岁月”，却正要把家园故土拉入黑暗沉沦的旋涡，“回头望望，沧海茫茫”，看看如今的东方之珠，还是我们曾经引以为傲的“爱人”吗？", @"技术不是万能药，不要过分依赖", @"40岁失业程序员，面试失败后，当场流泪，太心酸了", @"2015年，深圳全市跨境电商交易额达到333.95亿美元，同比增长95.98%。2016年1月，国务院常务会议决定在深圳等12个城市新设跨境电子商务综合试验区。"];
+}
+
+- (void)logClick
+{
+    NSLog(@"array: %@", self.array);
     
     NSDictionary *dict = @{@"姓名":@"张三", @"职业":@"农二代", @"年龄":@(30), @"company":@"个体"};
     NSLog(@"dict: %@", dict);
     
-    NSArray *arrayDict = @[array, dict];
+    NSArray *arrayDict = @[self.array, dict];
     NSLog(@"arrayDict: %@", arrayDict);
     
     if (self.navigationController.viewControllers.count > 5) {
-        NSLog(@"text: %@", [array objectAtIndex:20]);
-        [SYLogManager.shareLog logText:[NSString stringWithFormat:@"text: %@", [array objectAtIndex:20]] key:NSStringFromClass(self.class)];
+        NSLog(@"text: %@", [self.array objectAtIndex:20]);
+        [SYLogManager.shareLog logText:[NSString stringWithFormat:@"text: %@", [self.array objectAtIndex:20]] key:NSStringFromClass(self.class)];
     }
     
     Person *person = [[Person alloc] init];
@@ -57,23 +70,25 @@
     NSLog(@"person: %@", person.objectDescription);
     
     [SYLogManager.shareLog logText:person.objectDescription key:NSStringFromClass(self.class)];
-    
 }
 
-- (void)nextClick
+- (void)autoClick
 {
-    ViewController *next = [[ViewController alloc] init];
-    [self.navigationController pushViewController:next animated:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(printLog) userInfo:nil repeats:YES];
 }
-
-- (void)showClick
+NSInteger count = 0;
+- (void)printLog
 {
-    [self showInfo];
-}
-
-- (void)clearClick
-{
- 
+    count++;
+    for (int i = 0; i < arc4random() % 10 + 1; i++) {
+        NSString *string = self.array[arc4random() % self.array.count];
+        [SYLogManager.shareLog logText:string];
+    }
+    if (count >= 5) {
+        count = 0;
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)saveFile
@@ -99,7 +114,6 @@
     
     NSArray *temps = [NSArray arrayWithContentsOfFile:filePath];
     NSLog(@"%@", temps);
-    
 }
 
 @end

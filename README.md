@@ -1,6 +1,17 @@
 # SYLogManager
-log日志查看。
+log日志查看工具。
 
+### 特点：
+* log日志实时显示
+* log日志显示时，可设置界面交互，或禁止界面交互
+* log日志缓存在本地
+* log日志可复制，并粘贴到其他应用，如微信，QQ 等
+* log日志可发送邮件
+* log日志可清空
+* log日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息
+* 通过关键词，搜索过滤需要查看的 log日志
+
+> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志
 
 # 使用介绍
 * 自动导入：使用命令`pod 'SYLogManager'`导入到项目中
@@ -9,10 +20,12 @@ log日志查看。
 
 # 代码示例
 ~~~ javascript
+// 导入头文件
 #import "SYLogManager.h"
 ~~~
 
 ~~~ javascript
+// 初始化配置
 [SYLogManager.shareLog config];
 SYLogManager.shareLog.email = @"151311301@qq.com";
 
@@ -20,16 +33,25 @@ SYLogManager.shareLog.email = @"151311301@qq.com";
 SYLogManager.shareLog.show = YES;
 SYLogManager.shareLog.controller = self.window.rootViewController;
 
+// 使用
 [SYLogManager.shareLog logText:@"hello world~"];
 [SYLogManager.shareLog logText:@"hello world~" key:@"001")];
 ~~~ 
 
-$ 待开发功能
-* 上传指定服务器
-* 发送指定邮箱
-* 显示对象信息
+效果图
+
+![SYLogManager.gif](./SYLogManager.gif) 
+
+
 
 # 修改完善
+* 20191208
+  * 版本号：1.2.1
+  * 修改优化
+    * 缓存文件名格式为：应用包名_logFile.db
+    * 条件过滤
+    * 自动区分 deg 和 release 模式
+
 * 20191207
   * 版本号：1.2.0
   * 修改优化
@@ -38,7 +60,6 @@ $ 待开发功能
       * 操作菜单自适应：显示/隐藏、滚动响应、删除、复制、发邮件
       * 实时显示
       * 显示过程中可操作，或禁止操作
-
 
 * 20191126
   * 版本号：1.1.3

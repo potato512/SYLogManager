@@ -132,10 +132,21 @@ float DegreesToRadians(float angle) {
     [self setUI];
 }
 
+- (void)dealloc
+{
+    NSLog(@"%@释放了~", self.class);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    _tableView.frame = CGRectMake(0, _isUpward ? kPopoverViewArrowHeight : 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - kPopoverViewArrowHeight);
+    self.tableView.frame = CGRectMake(0, (self.isUpward ? kPopoverViewArrowHeight : 0), CGRectGetWidth(self.bounds), (CGRectGetHeight(self.bounds) - kPopoverViewArrowHeight));
+}
+
++ (instancetype)popoverView
+{
+    SYLogPopoverView *view = [[SYLogPopoverView alloc] init];
+    return view;
 }
 
 #pragma mark 视图
@@ -147,40 +158,41 @@ float DegreesToRadians(float angle) {
     //
     self.backgroundColor = [UIColor whiteColor];
     // keyWindow
-    _keyWindow = [UIApplication sharedApplication].keyWindow;
-    _windowWidth = CGRectGetWidth(_keyWindow.bounds);
-    _windowHeight = CGRectGetHeight(_keyWindow.bounds);
+    self.keyWindow = [UIApplication sharedApplication].keyWindow;
+    self.windowWidth = CGRectGetWidth(self.keyWindow.bounds);
+    self.windowHeight = CGRectGetHeight(self.keyWindow.bounds);
     // shadeView
-    _shadeView = [[UIView alloc] initWithFrame:_keyWindow.bounds];
+    self.shadeView = [[UIView alloc] initWithFrame:self.keyWindow.bounds];
     [self setShowShade:NO];
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
-    [_shadeView addGestureRecognizer:tapGesture];
-    _tapGesture = tapGesture;
+    [self.shadeView addGestureRecognizer:tapGesture];
+    self.tapGesture = tapGesture;
     // tableView
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.scrollEnabled = NO;
-    _tableView.showsVerticalScrollIndicator = NO;
-    _tableView.separatorInset = UIEdgeInsetsZero;
-    _tableView.backgroundColor = UIColor.clearColor;
-    [_tableView registerClass:SYPopoverCell.class forCellReuseIdentifier:NSStringFromClass(SYPopoverCell.class)];
-    [self addSubview:_tableView];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.scrollEnabled = NO;
+    self.tableView.showsVerticalScrollIndicator = NO;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.backgroundColor = UIColor.clearColor;
+    [self.tableView registerClass:SYPopoverCell.class forCellReuseIdentifier:NSStringFromClass(SYPopoverCell.class)];
+    [self addSubview:self.tableView];
 }
 
 #pragma mark setter
 
-- (void)setHideAfterTouchOutside:(BOOL)hideAfterTouchOutside
+- (void)setHideWhileTouch:(BOOL)hideWhileTouch
 {
-    _hideAfterTouchOutside = hideAfterTouchOutside;
-    _tapGesture.enabled = _hideAfterTouchOutside;
+    _hideWhileTouch = hideWhileTouch;
+    self.tapGesture.enabled = _hideWhileTouch;
 }
 
-- (void)setShowShade:(BOOL)showShade {
+- (void)setShowShade:(BOOL)showShade
+{
     _showShade = showShade;
-    _shadeView.backgroundColor = _showShade ? [UIColor colorWithWhite:0.f alpha:0.18f] : [UIColor clearColor];
-    if (_borderLayer) {
-        _borderLayer.strokeColor = _showShade ? [UIColor clearColor].CGColor : _tableView.separatorColor.CGColor;
+    self.shadeView.backgroundColor = _showShade ? [UIColor colorWithWhite:0.f alpha:0.18f] : [UIColor clearColor];
+    if (self.borderLayer) {
+        self.borderLayer.strokeColor = _showShade ? [UIColor clearColor].CGColor : self.tableView.separatorColor.CGColor;
     }
 }
 
@@ -198,56 +210,57 @@ float DegreesToRadians(float angle) {
     float arrowBottomCornerRadius = 4.f;
     
     // 如果箭头指向的点过于偏左或者过于偏右则需要重新调整箭头 x 轴的坐标
-    CGFloat minHorizontalEdge = kPopoverViewMargin + cornerRadius + arrowWidth/2 + 2;
+    CGFloat minHorizontalEdge = kPopoverViewMargin + cornerRadius + arrowWidth / 2 + 2;
     if (toPoint.x < minHorizontalEdge) {
         toPoint.x = minHorizontalEdge;
     }
-    if (_windowWidth - toPoint.x < minHorizontalEdge) {
-        toPoint.x = _windowWidth - minHorizontalEdge;
+    if (self.windowWidth - toPoint.x < minHorizontalEdge) {
+        toPoint.x = self.windowWidth - minHorizontalEdge;
     }
     
     // 遮罩层
-    _shadeView.alpha = 0.f;
-    [_keyWindow addSubview:_shadeView];
+    self.shadeView.alpha = 0.f;
+    [self.keyWindow addSubview:self.shadeView];
     
     // 刷新数据以获取具体的ContentSize
-    [_tableView reloadData];
+    [self.tableView reloadData];
     // 根据刷新后的ContentSize和箭头指向方向来设置当前视图的frame
-    CGFloat currentW = [self calculateMaxWidth]; // 宽度通过计算获取最大值
-    CGFloat currentH = _tableView.contentSize.height + kPopoverViewArrowHeight;
+    CGFloat widthSelf = [self calculateMaxWidth]; // 宽度通过计算获取最大值
+    CGFloat heightSelf = self.tableView.contentSize.height + kPopoverViewArrowHeight;
     
     // 限制最高高度, 免得选项太多时超出屏幕
-    CGFloat maxHeight = _isUpward ? (_windowHeight - toPoint.y - kPopoverViewMargin) : (toPoint.y - CGRectGetHeight([UIApplication sharedApplication].statusBarFrame));
-    if (currentH > maxHeight) {
+    CGFloat maxHeight = self.isUpward ? (self.windowHeight - toPoint.y - kPopoverViewMargin) : (toPoint.y - CGRectGetHeight([UIApplication sharedApplication].statusBarFrame));
+    if (heightSelf > maxHeight) {
         // 如果弹窗高度大于最大高度的话则限制弹窗高度等于最大高度并允许tableView滑动.
-        currentH = maxHeight;
-        _tableView.scrollEnabled = YES;
-        if (!_isUpward) {
+        heightSelf = maxHeight;
+        self.tableView.scrollEnabled = YES;
+        if (!self.isUpward) {
             // 箭头指向下则移动到最后一行
-            [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(self.actionArray.count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(self.actionArray.count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         }
     }
     
-    CGFloat currentX = toPoint.x - currentW/2, currentY = toPoint.y;
+    CGFloat currentX = (toPoint.x - widthSelf / 2);
+    CGFloat currentY = toPoint.y;
     // x: 窗口靠左
-    if (toPoint.x <= currentW/2 + kPopoverViewMargin) {
+    if (toPoint.x <= (widthSelf / 2 + kPopoverViewMargin)) {
         currentX = kPopoverViewMargin;
     }
     // x: 窗口靠右
-    if (_windowWidth - toPoint.x <= currentW/2 + kPopoverViewMargin) {
-        currentX = _windowWidth - kPopoverViewMargin - currentW;
+    if ((self.windowWidth - toPoint.x) <= (widthSelf / 2 + kPopoverViewMargin)) {
+        currentX = (self.windowWidth - kPopoverViewMargin - widthSelf);
     }
     // y: 箭头向下
-    if (!_isUpward) {
-        currentY = toPoint.y - currentH;
+    if (!self.isUpward) {
+        currentY = toPoint.y - heightSelf;
     }
     
-    self.frame = CGRectMake(currentX, currentY, currentW, currentH);
+    self.frame = CGRectMake(currentX, currentY, widthSelf, heightSelf);
     
     // 截取箭头
-    CGPoint arrowPoint = CGPointMake(toPoint.x - CGRectGetMinX(self.frame), _isUpward ? 0 : currentH); // 箭头顶点在当前视图的坐标
-    CGFloat maskTop = _isUpward ? kPopoverViewArrowHeight : 0; // 顶部Y值
-    CGFloat maskBottom = _isUpward ? currentH : currentH - kPopoverViewArrowHeight; // 底部Y值
+    CGPoint arrowPoint = CGPointMake(toPoint.x - CGRectGetMinX(self.frame), self.isUpward ? 0 : heightSelf); // 箭头顶点在当前视图的坐标
+    CGFloat maskTop = (self.isUpward ? kPopoverViewArrowHeight : 0); // 顶部Y值
+    CGFloat maskBottom = (self.isUpward ? heightSelf : (heightSelf - kPopoverViewArrowHeight)); // 底部Y值
     UIBezierPath *maskPath = [UIBezierPath bezierPath];
     // 左上圆角
     [maskPath moveToPoint:CGPointMake(0, cornerRadius + maskTop)];
@@ -257,8 +270,8 @@ float DegreesToRadians(float angle) {
                       endAngle:DegreesToRadians(270)
                      clockwise:YES];
     // 箭头向上时的箭头位置
-    if (_isUpward) {
-        [maskPath addLineToPoint:CGPointMake(arrowPoint.x - arrowWidth/2, kPopoverViewArrowHeight)];
+    if (self.isUpward) {
+        [maskPath addLineToPoint:CGPointMake(arrowPoint.x - arrowWidth / 2, kPopoverViewArrowHeight)];
         [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x - arrowCornerRadius, arrowCornerRadius)
                          controlPoint:CGPointMake(arrowPoint.x - arrowWidth/2 + arrowBottomCornerRadius, kPopoverViewArrowHeight)];
         [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x + arrowCornerRadius, arrowCornerRadius)
@@ -267,28 +280,28 @@ float DegreesToRadians(float angle) {
                          controlPoint:CGPointMake(arrowPoint.x + arrowWidth/2 - arrowBottomCornerRadius, kPopoverViewArrowHeight)];
     }
     // 右上圆角
-    [maskPath addLineToPoint:CGPointMake(currentW - cornerRadius, maskTop)];
-    [maskPath addArcWithCenter:CGPointMake(currentW - cornerRadius, maskTop + cornerRadius)
+    [maskPath addLineToPoint:CGPointMake(widthSelf - cornerRadius, maskTop)];
+    [maskPath addArcWithCenter:CGPointMake(widthSelf - cornerRadius, maskTop + cornerRadius)
                         radius:cornerRadius
                     startAngle:DegreesToRadians(270)
                       endAngle:DegreesToRadians(0)
                      clockwise:YES];
     // 右下圆角
-    [maskPath addLineToPoint:CGPointMake(currentW, maskBottom - cornerRadius)];
-    [maskPath addArcWithCenter:CGPointMake(currentW - cornerRadius, maskBottom - cornerRadius)
+    [maskPath addLineToPoint:CGPointMake(widthSelf, maskBottom - cornerRadius)];
+    [maskPath addArcWithCenter:CGPointMake(widthSelf - cornerRadius, maskBottom - cornerRadius)
                         radius:cornerRadius
                     startAngle:DegreesToRadians(0)
                       endAngle:DegreesToRadians(90)
                      clockwise:YES];
     // 箭头向下时的箭头位置
-    if (!_isUpward) {
-        [maskPath addLineToPoint:CGPointMake(arrowPoint.x + arrowWidth/2, currentH - kPopoverViewArrowHeight)];
-        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x + arrowCornerRadius, currentH - arrowCornerRadius)
-                         controlPoint:CGPointMake(arrowPoint.x + arrowWidth/2 - arrowBottomCornerRadius, currentH - kPopoverViewArrowHeight)];
-        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x - arrowCornerRadius, currentH - arrowCornerRadius)
+    if (!self.isUpward) {
+        [maskPath addLineToPoint:CGPointMake(arrowPoint.x + arrowWidth / 2, heightSelf - kPopoverViewArrowHeight)];
+        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x + arrowCornerRadius, heightSelf - arrowCornerRadius)
+                         controlPoint:CGPointMake(arrowPoint.x + arrowWidth / 2 - arrowBottomCornerRadius, heightSelf - kPopoverViewArrowHeight)];
+        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x - arrowCornerRadius, heightSelf - arrowCornerRadius)
                          controlPoint:arrowPoint];
-        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x - arrowWidth/2, currentH - kPopoverViewArrowHeight)
-                         controlPoint:CGPointMake(arrowPoint.x - arrowWidth/2 + arrowBottomCornerRadius, currentH - kPopoverViewArrowHeight)];
+        [maskPath addQuadCurveToPoint:CGPointMake(arrowPoint.x - arrowWidth / 2, heightSelf - kPopoverViewArrowHeight)
+                         controlPoint:CGPointMake(arrowPoint.x - arrowWidth / 2 + arrowBottomCornerRadius, heightSelf - kPopoverViewArrowHeight)];
     }
     // 左下圆角
     [maskPath addLineToPoint:CGPointMake(cornerRadius, maskBottom)];
@@ -304,7 +317,7 @@ float DegreesToRadians(float angle) {
     maskLayer.path = maskPath.CGPath;
     self.layer.mask = maskLayer;
     // 边框 (只有在不显示半透明阴影层时才设置边框线条)
-    if (!_showShade) {
+    if (!self.showShade) {
         CAShapeLayer *borderLayer = [CAShapeLayer layer];
         borderLayer.frame = self.bounds;
         borderLayer.path = maskPath.CGPath;
@@ -313,53 +326,38 @@ float DegreesToRadians(float angle) {
         borderLayer.fillColor = [UIColor.redColor colorWithAlphaComponent:0.3].CGColor;
         borderLayer.strokeColor = UIColor.redColor.CGColor;
         [self.layer addSublayer:borderLayer];
-        _borderLayer = borderLayer;
+        self.borderLayer = borderLayer;
     }
     
-    [_keyWindow addSubview:self];
+    [self.keyWindow addSubview:self];
     
     // 弹出动画
     CGRect oldFrame = self.frame;
-    self.layer.anchorPoint = CGPointMake(arrowPoint.x / currentW, _isUpward ? 0.f : 1.f);
+    self.layer.anchorPoint = CGPointMake(arrowPoint.x / widthSelf, self.isUpward ? 0.f : 1.f);
     self.frame = oldFrame;
     self.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     [UIView animateWithDuration:0.25f animations:^{
         self.transform = CGAffineTransformIdentity;
-        _shadeView.alpha = 1.f;
+        self.shadeView.alpha = 1.f;
     }];
 }
 
 /*! @brief 计算最大宽度 */
 - (CGFloat)calculateMaxWidth
 {
-    CGFloat maxWidth = 0.f, titleLeftEdge = 0.f;
-    UIFont *titleFont = [SYPopoverCell titleFont];
+    CGFloat width = 0;
+    UIFont *font = [SYPopoverCell titleFont];
     for (SYLogPopoverAction *action in self.actionArray) {
-        titleLeftEdge = 0.f;
-        CGFloat titleWidth;
-        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
-            // iOS7及往后版本
-            titleWidth = [action.titleNormal sizeWithAttributes:@{NSFontAttributeName : titleFont}].width;
-        } else {
-            // iOS6
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            titleWidth = [action.titleNormal sizeWithFont:titleFont].width;
-#pragma GCC diagnostic pop
-        }
-        
-        CGFloat contentWidth = PopoverViewCellHorizontalMargin * 2 + titleLeftEdge + titleWidth;
-        if (contentWidth > maxWidth) {
-            maxWidth = ceil(contentWidth); // 获取最大宽度时需使用进一取法, 否则Cell中没有图片时会可能导致标题显示不完整.
+        CGFloat titleWidth = [action.titleNormal sizeWithAttributes:@{NSFontAttributeName:font}].width;
+        titleWidth = (PopoverViewCellHorizontalMargin * 2 + titleWidth + kPopoverViewMargin);
+        if (titleWidth > width) {
+            width = titleWidth;
         }
     }
-    
-    // 如果最大宽度大于(窗口宽度 - kPopoverViewMargin*2)则限制最大宽度等于(窗口宽度 - kPopoverViewMargin*2)
-    if (maxWidth > CGRectGetWidth(_keyWindow.bounds) - kPopoverViewMargin * 2) {
-        maxWidth = CGRectGetWidth(_keyWindow.bounds) - kPopoverViewMargin * 2;
+    if (width > (self.keyWindow.bounds.size.width - kPopoverViewMargin * 2)) {
+        width = (self.keyWindow.bounds.size.width - kPopoverViewMargin * 2);
     }
-    
-    return maxWidth;
+    return width;
 }
 
 /*! @brief 点击外部隐藏弹窗 */
@@ -367,26 +365,21 @@ float DegreesToRadians(float angle) {
 {
     [UIView animateWithDuration:0.25f animations:^{
         self.alpha = 0.f;
-        _shadeView.alpha = 0.f;
+        self.shadeView.alpha = 0.f;
         self.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
     } completion:^(BOOL finished) {
-        [_shadeView removeFromSuperview];
+        [self.shadeView removeFromSuperview];
         [self removeFromSuperview];
     }];
-}
-
-+ (instancetype)popoverView
-{
-    return [[self alloc] init];
 }
 
 /*! @brief 指向指定的View来显示弹窗 */
 - (void)showToView:(UIView *)pointView actions:(NSArray<SYLogPopoverAction *> *)actions
 {
     // 判断 pointView 是偏上还是偏下
-    CGRect pointViewRect = [pointView.superview convertRect:pointView.frame toView:_keyWindow];
+    CGRect pointViewRect = [pointView.superview convertRect:pointView.frame toView:self.keyWindow];
     CGFloat pointViewUpLength = CGRectGetMinY(pointViewRect);
-    CGFloat pointViewDownLength = _windowHeight - CGRectGetMaxY(pointViewRect);
+    CGFloat pointViewDownLength = self.windowHeight - CGRectGetMaxY(pointViewRect);
     // 弹窗箭头指向的点
     CGPoint toPoint = CGPointMake(CGRectGetMidX(pointViewRect), 0);
     if (pointViewUpLength > pointViewDownLength) {
@@ -398,17 +391,17 @@ float DegreesToRadians(float angle) {
     }
     
     // 箭头指向方向
-    _isUpward = pointViewUpLength <= pointViewDownLength;
+    self.isUpward = pointViewUpLength <= pointViewDownLength;
     self.actionArray = [actions copy];
     [self showToPoint:toPoint];
 }
 
 /*! @brief 指向指定的点来显示弹窗 */
-- (void)showToPoint:(CGPoint)toPoint actions:(NSArray<SYLogPopoverAction *> *)actions
+- (void)showToPoint:(CGPoint)toPoint actions:(NSArray <SYLogPopoverAction *> *)actions
 {
     self.actionArray = [actions copy];
     // 计算箭头指向方向
-    _isUpward = toPoint.y <= _windowHeight - toPoint.y;
+    self.isUpward = toPoint.y <= self.windowHeight - toPoint.y;
     [self showToPoint:toPoint];
 }
 
@@ -441,10 +434,10 @@ float DegreesToRadians(float angle) {
     
     [UIView animateWithDuration:0.25f animations:^{
         self.alpha = 0.f;
-        _shadeView.alpha = 0.f;
+        self.shadeView.alpha = 0.f;
     } completion:^(BOOL finished) {
         self.actionArray = nil;
-        [_shadeView removeFromSuperview];
+        [self.shadeView removeFromSuperview];
         [self removeFromSuperview];
     }];
 }

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示或隐藏（在设置根视图控制器之后）
 @property (nonatomic, assign) BOOL show;
 
-/// 初始化配置（在设置根视图控制器之前）
+/// 初始化配置，默认缓存地址（在设置根视图控制器之前）
 - (void)config;
 /// log
 - (void)logText:(NSString *)text;
@@ -51,9 +51,9 @@ NS_ASSUME_NONNULL_END
  1 引入头文件 #import "SYLogManager.h"
  2 初始化 [SYLogManager.shareLog config];
  3 属性设置
-SYLogManager.shareLog.target = self.window.rootViewController;
-SYLogManager.shareLog.email = @"151311301@qq.com";
-SYLogManager.shareLog.show = YES;
+ SYLogManager.shareLog.target = self.window.rootViewController;
+ SYLogManager.shareLog.email = @"151311301@qq.com";
+ SYLogManager.shareLog.show = YES;
  4 自定义日志信息
  [SYLogManager.shareLog logText:@"正在进行网络请求"];
  [SYLogManager.shareLog logText:@"正在进行网络请求" key:@"网络"];
