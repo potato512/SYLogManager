@@ -64,7 +64,6 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         self.backgroundColor = UIColor.clearColor;
-        self.tableHeaderView = self.searchView;
         self.tableFooterView = [UIView new];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.scrollEnabled = YES;
@@ -86,6 +85,21 @@
 }
 
 #pragma mark - delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return self.searchView.frame.size.height;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return self.searchView;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
