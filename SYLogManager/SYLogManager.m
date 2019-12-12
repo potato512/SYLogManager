@@ -155,7 +155,7 @@ static CGFloat const sizeButton = 60.0;
             }
         }];
         [array addObject:showAction];
-        SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动开启滚动开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
+        SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
             action.selecte = !action.isSelecte;
             [self logScroll:action.isSelecte];
         }];
