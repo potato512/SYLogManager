@@ -46,7 +46,7 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 
 # 修改完善
 * 20191212
-  * 版本号：1.2.2 1.2.3
+  * 版本号：1.2.2 1.2.3 1.2.4
   * 修改优化
     * 异常修改
     
