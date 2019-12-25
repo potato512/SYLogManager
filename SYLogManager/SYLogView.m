@@ -64,7 +64,6 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         self.backgroundColor = UIColor.clearColor;
-        self.tableHeaderView = self.searchView;
         self.tableFooterView = [UIView new];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.scrollEnabled = YES;
@@ -86,6 +85,21 @@
 }
 
 #pragma mark - delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return self.searchView.frame.size.height;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return self.searchView;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -142,10 +156,10 @@
                 top = 44;
             }
         }
-        _searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 48)];
+        _searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, (top + 48))];
         _searchView.backgroundColor = UIColor.clearColor;
         //
-        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 5, (_searchView.frame.size.width - 40), (_searchView.frame.size.height - 10))];
+        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, (top + 5), (_searchView.frame.size.width - 40), (_searchView.frame.size.height - top - 10))];
         [_searchView addSubview:self.searchTextField];
         self.searchTextField.layer.cornerRadius = self.searchTextField.frame.size.height / 2;
         self.searchTextField.layer.masksToBounds = YES;
@@ -161,7 +175,7 @@
         self.searchTextField.returnKeyType = UIReturnKeySearch;
         self.searchTextField.delegate = self;
         //
-        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_searchView.frame.size.width - 20 - 60), 5, 60, (_searchView.frame.size.height - 10))];
+        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_searchView.frame.size.width - 20 - 60), (top + 5), 60, (_searchView.frame.size.height - top - 10))];
         [_searchView addSubview:self.cancelButton];
         self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
         [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];

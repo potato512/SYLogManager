@@ -526,6 +526,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: xie pingsheng (JWZ9Q83YVK)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
 				INFOPLIST_FILE = "$(SRCROOT)/DemoLog/Supporting Files/Info.plist";
@@ -544,6 +545,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: xie pingsheng (JWZ9Q83YVK)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
 				INFOPLIST_FILE = "$(SRCROOT)/DemoLog/Supporting Files/Info.plist";

@@ -22,6 +22,7 @@
     // 初始化
     [SYLogManager.shareLog config];
     SYLogManager.shareLog.email = @"151311301@qq.com";
+    SYLogManager.shareLog.logEnable = YES;
     
     ViewController *rootVC = [[ViewController alloc] init];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];

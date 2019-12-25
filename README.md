@@ -28,6 +28,7 @@ log日志查看工具。
 // 初始化配置
 [SYLogManager.shareLog config];
 SYLogManager.shareLog.email = @"151311301@qq.com";
+SYLogManager.shareLog.logEnable = YES;
 
 // 显示等设置
 SYLogManager.shareLog.show = YES;
@@ -49,7 +50,7 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
   * 版本与：1.2.5
   * 修改优化
     * 添加属性`logEnable`
-    
+
 * 20191212
   * 版本号：1.2.2 1.2.3 1.2.4
   * 修改优化
