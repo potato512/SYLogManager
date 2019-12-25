@@ -58,6 +58,10 @@ static CGFloat const sizeButton = 60.0;
     self.validLog = YES;
     
 #ifdef DEBUG
+    if (!self.logEnable) {
+        return;
+    }
+    
     NSSetUncaughtExceptionHandler(&readException);
     //
     [self.logFile read];
@@ -200,6 +204,10 @@ static CGFloat const sizeButton = 60.0;
     }
     
 #ifdef DEBUG
+    if (!self.logEnable) {
+        return;
+    }
+    
     [self.logFile logWith:text key:key];
     self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
 #endif

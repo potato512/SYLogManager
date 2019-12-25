@@ -11,7 +11,7 @@ log日志查看工具。
 * log日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息
 * 通过关键词，搜索过滤需要查看的 log日志
 
-> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志
+> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志；默认`logEnable`为NO，且不记录 log 日志；
 
 # 使用介绍
 * 自动导入：使用命令`pod 'SYLogManager'`导入到项目中
@@ -45,8 +45,13 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 
 
 # 修改完善
+* 20191225
+  * 版本与：1.2.5
+  * 修改优化
+    * 添加属性`logEnable`
+    
 * 20191212
-  * 版本号：1.2.2 1.2.3
+  * 版本号：1.2.2 1.2.3 1.2.4
   * 修改优化
     * 异常修改
     

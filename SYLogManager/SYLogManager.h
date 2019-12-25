@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *colorLog;
 /// 显示或隐藏（在设置根视图控制器之后）
 @property (nonatomic, assign) BOOL show;
+/// 是否记录（默认不记录NO）
+@property (nonatomic, assign) BOOL logEnable;
 
 /// 初始化配置，默认缓存地址（在设置根视图控制器之前）
 - (void)config;
