@@ -79,8 +79,12 @@
 - (void)scrollToBottom
 {
     NSInteger count = self.array.count;
+    if (self.isSearch) {
+        count = self.searchArray.count;
+    }
     if (count > 1) {
         [self scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+//        [self setContentOffset:CGPointMake(0, self.contentSize.height - self.frame.size.height) animated:NO];
     }
 }
 
@@ -226,12 +230,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [UIApplication.sharedApplication.delegate.window endEditing:YES];
-    [self.searchArray removeAllObjects];
-    //
-    NSString *text = textField.text;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"logText CONTAINS %@", text];
-    NSArray *array = [self.array filteredArrayUsingPredicate:predicate];
-    [self.searchArray addObjectsFromArray:array];
+    [self searchWithText:textField.text];
     [self reloadData];
     
     return YES;
@@ -250,11 +249,23 @@
     [UIApplication.sharedApplication.delegate.window endEditing:YES];
 }
 
+- (void)searchWithText:(NSString *)text
+{
+    [self.searchArray removeAllObjects];
+    //
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"logText CONTAINS %@", text];
+    NSArray *array = [self.array filteredArrayUsingPredicate:predicate];
+    [self.searchArray addObjectsFromArray:array];
+}
+
 #pragma mark - setter
 
 - (void)setArray:(NSMutableArray *)array
 {
     _array = array;
+    if (self.isSearch) {
+        [self searchWithText:self.searchTextField.text];
+    }
     [self reloadData];
     [self scrollToBottom];
 }

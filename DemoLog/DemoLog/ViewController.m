@@ -36,6 +36,8 @@
 
 - (void)nextClick
 {
+    NSString *text = self.array[100];
+    
     ViewController *nextVC = [ViewController new];
     [self.navigationController pushViewController:nextVC animated:YES];
 }
@@ -69,7 +71,8 @@
     person.learn = @{@"开发":@"Objective-C", @"project":@(10), @"team":@[@"张三", @"李四", @"wangWu", @"小明"]};
     NSLog(@"person: %@", person.objectDescription);
     
-    [SYLogManager.shareLog logText:person.objectDescription key:NSStringFromClass(self.class)];
+//    [SYLogManager.shareLog logText:person.objectDescription key:NSStringFromClass(self.class)];
+    SYLog(YES, NSStringFromClass(self.class), @"%@", person.objectDescription);
 }
 
 - (void)autoClick
@@ -82,7 +85,8 @@ NSInteger count = 0;
     count++;
     for (int i = 0; i < arc4random() % 10 + 1; i++) {
         NSString *string = self.array[arc4random() % self.array.count];
-        [SYLogManager.shareLog logText:string];
+//        [SYLogManager.shareLog logText:string];
+        SYLog(YES, @"", @"%@", string);
     }
     if (count >= 5) {
         count = 0;

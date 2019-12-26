@@ -25,7 +25,7 @@
     self = [super init];
     if (self) {
         self.logText = text;
-        self.logKey = (key.length > 0 ? key : @"");
+        self.logKey = ([key isKindOfClass:NSString.class] && (key.length > 0)) ? key : @"";
         //
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
@@ -35,7 +35,7 @@
         CGFloat height = [self heightWithText:text];
         self.height = height;
         //
-        NSAttributedString *attribute = [self attributeStringWithTime:time text:text key:key];
+        NSAttributedString *attribute = [self attributeStringWithTime:self.logTime text:self.logText key:self.logKey];
         self.attributeString = attribute;
     }
     return self;
@@ -89,7 +89,12 @@ static NSString *const keyStyle = @"--";
     if (rang.location == NSNotFound) {
         rang = [string rangeOfString:keyStyle];
     }
-    [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:@"crash闪退"] ? UIColor.redColor : ([key isEqualToString:@"打开应用"] ? UIColor.greenColor : UIColor.yellowColor)) range:NSMakeRange(0, (rang.location + rang.length))];
+    if ([key isEqualToString:@"crash闪退"]) {
+        [logString addAttribute:NSForegroundColorAttributeName value:UIColor.redColor range:NSMakeRange(0, string.length)];
+    } else {
+        [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:@"打开应用"] ? UIColor.greenColor : UIColor.yellowColor) range:NSMakeRange(0, (rang.location + rang.length))];
+    }
+    
     return logString;
 }
 
@@ -193,18 +198,18 @@ static NSString *const keyStyle = @"--";
 
 - (void)read
 {
-    NSString *sql = @"SELECT * FROM SYLogRecord";
-    NSArray *array = [self.sqlite selectSQLite:sql];
-    [self.logArray removeAllObjects];
-    NSMutableArray *logTmp = [[NSMutableArray alloc] init];
-    for (NSDictionary *dict in array) {
-        NSString *logTime = dict[@"logTime"];
-        NSString *logKey = dict[@"logKey"];
-        NSString *logText = dict[@"logText"];
-        SYLogModel *model = [[SYLogModel alloc] initWithTime:logTime log:logText key:logKey];
-        [logTmp addObject:model];
-    }
-    [self.logArray addObjectsFromArray:logTmp];
+        NSString *sql = @"SELECT * FROM SYLogRecord";
+        NSArray *array = [self.sqlite selectSQLite:sql];
+        [self.logArray removeAllObjects];
+        NSMutableArray *logTmp = [[NSMutableArray alloc] init];
+        for (NSDictionary *dict in array) {
+            NSString *logTime = dict[@"logTime"];
+            NSString *logKey = dict[@"logKey"];
+            NSString *logText = dict[@"logText"];
+            SYLogModel *model = [[SYLogModel alloc] initWithTime:logTime log:logText key:logKey];
+            [logTmp addObject:model];
+        }
+        [self.logArray addObjectsFromArray:logTmp];
 }
 
 @end

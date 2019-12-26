@@ -12,6 +12,14 @@
 #import "NSDictionary+SYLogCategory.h"
 #import "NSObject+SYLogCategory.h"
 
+#ifdef DEBUG
+/// 中控打印及log记录
+#define SYLog(logEnable, logKey, format, ...) {NSLog( @"< %@:(第 %d 行) > %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(format), ##__VA_ARGS__]);if (logEnable) {[SYLogManager.shareLog logText:[NSString stringWithFormat:(format), ##__VA_ARGS__] key:logKey];}}
+#else
+/// 中控打印及log记录
+#define SYLog(logEnable, logKey, format, ...)
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYLogManager : NSObject
@@ -26,11 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *colorLog;
 /// 显示或隐藏（在设置根视图控制器之后）
 @property (nonatomic, assign) BOOL show;
-/// 是否记录（默认不记录NO）
-@property (nonatomic, assign) BOOL logEnable;
 
 /// 初始化配置，默认缓存地址（在设置根视图控制器之前）
-- (void)config;
+- (void)config:(BOOL)enable;
 /// log
 - (void)logText:(NSString *)text;
 - (void)logText:(NSString *)text key:(NSString *)key;
@@ -51,13 +57,16 @@ NS_ASSUME_NONNULL_END
  
  使用示例
  1 引入头文件 #import "SYLogManager.h"
- 2 初始化 [SYLogManager.shareLog config];
+ 2 初始化 [SYLogManager.shareLog config:YES];
  3 属性设置
  SYLogManager.shareLog.target = self.window.rootViewController;
  SYLogManager.shareLog.email = @"151311301@qq.com";
+ SYLogManager.shareLog.colorLog = UIColor.greenColor;
  SYLogManager.shareLog.show = YES;
  4 自定义日志信息
  [SYLogManager.shareLog logText:@"正在进行网络请求"];
  [SYLogManager.shareLog logText:@"正在进行网络请求" key:@"网络"];
+ 或
+ SYLog(YES, @"网络", @"%@", @"正在进行网络请求");
  
  */

@@ -53,15 +53,14 @@ static CGFloat const sizeButton = 60.0;
     return self;
 }
 
-- (void)config
+- (void)config:(BOOL)enable
 {
-    self.validLog = YES;
-    
-#ifdef DEBUG
-    if (!self.logEnable) {
+    self.validLog = enable;
+    if (!self.validLog) {
         return;
     }
     
+#ifdef DEBUG
     NSSetUncaughtExceptionHandler(&readException);
     //
     [self.logFile read];
@@ -200,15 +199,11 @@ static CGFloat const sizeButton = 60.0;
 - (void)logText:(NSString *)text key:(NSString *)key
 {
     if (!self.validLog) {
-        return;
-    }
-    
-#ifdef DEBUG
-    if (!self.logEnable) {
         ShowMessage(@"温馨提示", @"未开启log权限，不能记录log", @"知道了");
         return;
     }
     
+#ifdef DEBUG
     [self.logFile logWith:text key:key];
     self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
 #endif
@@ -216,12 +211,12 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logClear
 {
-#ifdef DEBUG
-    if (!self.logEnable) {
+    if (!self.validLog) {
         ShowMessage(@"温馨提示", @"未开启log权限，不能清除", @"知道了");
         return;
     }
     
+#ifdef DEBUG
     if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"确认删除log？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -240,12 +235,12 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logCopy
 {
-#ifdef DEBUG
-    if (!self.logEnable) {
+    if (!self.validLog) {
         ShowMessage(@"温馨提示", @"未开启log权限，不能复制", @"知道了");
         return;
     }
     
+#ifdef DEBUG
     NSMutableString *text = [[NSMutableString alloc] init];
     for (SYLogModel *model in self.self.logFile.logs) {
         NSString *string = model.attributeString.string;
@@ -267,12 +262,12 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logSend
 {
-#ifdef DEBUG
-    if (!self.logEnable) {
+    if (!self.validLog) {
         ShowMessage(@"温馨提示", @"未开启log权限，不能发送邮件", @"知道了");
         return;
     }
     
+#ifdef DEBUG
     if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
         for (SYLogModel *model in self.self.logFile.logs) {

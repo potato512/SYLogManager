@@ -11,7 +11,7 @@ log日志查看工具。
 * log日志除自定义信息外，还定制实现了 crash 信息，并显示相关的设备等信息
 * 通过关键词，搜索过滤需要查看的 log日志
 
-> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志；默认`logEnable`为NO，且不记录 log 日志；
+> `查看日志`按钮可拖动的任意位置；'release' 模式下，不记录 log 日志；
 
 # 使用介绍
 * 自动导入：使用命令`pod 'SYLogManager'`导入到项目中
@@ -26,7 +26,7 @@ log日志查看工具。
 
 ~~~ javascript
 // 初始化配置
-[SYLogManager.shareLog config];
+[SYLogManager.shareLog config:YES];
 SYLogManager.shareLog.email = @"151311301@qq.com";
 SYLogManager.shareLog.logEnable = YES;
 
@@ -37,6 +37,10 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 // 使用
 [SYLogManager.shareLog logText:@"hello world~"];
 [SYLogManager.shareLog logText:@"hello world~" key:@"001")];
+
+// 或
+SYLog(YES, @"人物", @"%@", @"小明");
+SYLog(YES, @"花草", @"%@", @"牡丹蝴蝶");
 ~~~ 
 
 效果图
@@ -46,8 +50,17 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 
 
 # 修改完善
+* 20191226
+  * 版本号：1.2.7
+  * 修改优化
+    * 闪退高亮红色显示
+    * 搜索显示时，闪退修复
+    * 去掉属性`logEnable`
+    * 修改初始化方法为`- (void)config:(BOOL)enable;`
+    * 新增宏定义（即可中控打印显示，又log日志记录）`SYLog(logEnable, logKey, format, ...)`
+
 * 20191225
-  * 版本与：1.2.5 1.2.6
+  * 版本号：1.2.5 1.2.6
   * 修改优化
     * 添加属性`logEnable`
 
