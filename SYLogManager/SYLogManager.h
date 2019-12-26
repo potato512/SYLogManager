@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 视图控制器用于弹窗及发邮件（在设置根视图控制器之后）
 @property (nonatomic, strong) UIViewController *controller;
-/// 邮件接收地址（选填）
+/// 邮件接收地址（选填，填写后须设置属性 controller）
 @property (nonatomic, strong) NSString *email;
 /// 时间颜色（默认红色）
 @property (nonatomic, strong) UIColor *colorLog;

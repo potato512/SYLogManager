@@ -47,7 +47,7 @@ SYLogManager.shareLog.controller = self.window.rootViewController;
 
 # 修改完善
 * 20191225
-  * 版本与：1.2.5
+  * 版本与：1.2.5 1.2.6
   * 修改优化
     * 添加属性`logEnable`
 

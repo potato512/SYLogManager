@@ -205,6 +205,7 @@ static CGFloat const sizeButton = 60.0;
     
 #ifdef DEBUG
     if (!self.logEnable) {
+        ShowMessage(@"温馨提示", @"未开启log权限，不能记录log", @"知道了");
         return;
     }
     
@@ -215,6 +216,12 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)logClear
 {
+#ifdef DEBUG
+    if (!self.logEnable) {
+        ShowMessage(@"温馨提示", @"未开启log权限，不能清除", @"知道了");
+        return;
+    }
+    
     if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"确认删除log？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -228,10 +235,17 @@ static CGFloat const sizeButton = 60.0;
         [alertController addAction:deleteAction];
         [self.controller presentViewController:alertController animated:YES completion:NULL];
     }
+#endif
 }
 
 - (void)logCopy
 {
+#ifdef DEBUG
+    if (!self.logEnable) {
+        ShowMessage(@"温馨提示", @"未开启log权限，不能复制", @"知道了");
+        return;
+    }
+    
     NSMutableString *text = [[NSMutableString alloc] init];
     for (SYLogModel *model in self.self.logFile.logs) {
         NSString *string = model.attributeString.string;
@@ -248,10 +262,17 @@ static CGFloat const sizeButton = 60.0;
         [alertController addAction:cancelAction];
         [self.controller presentViewController:alertController animated:YES completion:NULL];
     }
+#endif
 }
 
 - (void)logSend
 {
+#ifdef DEBUG
+    if (!self.logEnable) {
+        ShowMessage(@"温馨提示", @"未开启log权限，不能发送邮件", @"知道了");
+        return;
+    }
+    
     if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
         for (SYLogModel *model in self.self.logFile.logs) {
@@ -261,6 +282,7 @@ static CGFloat const sizeButton = 60.0;
         //
         [self sentEmail:text];
     }
+#endif
 }
 
 - (void)logShow:(BOOL)show
