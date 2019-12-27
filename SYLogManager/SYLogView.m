@@ -64,7 +64,15 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         self.backgroundColor = UIColor.clearColor;
-        self.tableFooterView = [UIView new];
+        CGFloat height = 0;
+        if (@available(iOS 11.0, *)) {
+            UIWindow *window = [UIApplication sharedApplication].delegate.window;
+            if (window.safeAreaInsets.bottom > 0.0) {
+                // 是机型iPhoneX/iPhoneXR/iPhoneXS/iPhoneXSMax
+                height = 20;
+            }
+        }
+        self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, height)];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.scrollEnabled = YES;
         [self registerClass:SYLogCell.class forCellReuseIdentifier:NSStringFromClass(SYLogCell.class)];
@@ -84,7 +92,6 @@
     }
     if (count > 1) {
         [self scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-//        [self setContentOffset:CGPointMake(0, self.contentSize.height - self.frame.size.height) animated:NO];
     }
 }
 

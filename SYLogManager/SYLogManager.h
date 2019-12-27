@@ -27,16 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shareLog;
 
 /// 视图控制器用于弹窗及发邮件（在设置根视图控制器之后）
-@property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) UIViewController *logController;
 /// 邮件接收地址（选填，填写后须设置属性 controller）
-@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *logEmail;
 /// 时间颜色（默认红色）
-@property (nonatomic, strong) UIColor *colorLog;
+@property (nonatomic, strong) UIColor *logColor;
 /// 显示或隐藏（在设置根视图控制器之后）
-@property (nonatomic, assign) BOOL show;
+@property (nonatomic, assign) BOOL logShow;
 
 /// 初始化配置，默认缓存地址（在设置根视图控制器之前）
-- (void)config:(BOOL)enable;
+- (void)logConfig:(BOOL)enable;
 /// log
 - (void)logText:(NSString *)text;
 - (void)logText:(NSString *)text key:(NSString *)key;

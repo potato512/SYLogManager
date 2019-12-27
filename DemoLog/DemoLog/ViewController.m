@@ -23,15 +23,32 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    [button setTitle:@"显示" forState:UIControlStateNormal];
+    [button setTitle:@"隐藏" forState:UIControlStateSelected];
+    [button setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.redColor forState:UIControlStateSelected];
+    [button addTarget:self action:@selector(showClick:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *showItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"next" style:UIBarButtonItemStyleDone target:self action:@selector(nextClick)];
-    UIBarButtonItem *showItem = [[UIBarButtonItem alloc] initWithTitle:@"log" style:UIBarButtonItemStyleDone target:self action:@selector(logClick)];
+    UIBarButtonItem *logItem = [[UIBarButtonItem alloc] initWithTitle:@"log" style:UIBarButtonItemStyleDone target:self action:@selector(logClick)];
     UIBarButtonItem *clearItem = [[UIBarButtonItem alloc] initWithTitle:@"auto" style:UIBarButtonItemStyleDone target:self action:@selector(autoClick)];
-    self.navigationItem.rightBarButtonItems = @[nextItem, clearItem, showItem];
+    self.navigationItem.rightBarButtonItems = @[nextItem, clearItem, logItem, showItem];
 }
 
 - (void)dealloc
 {
     NSLog(@"%@ 被释放了~", self.class);
+}
+
+- (void)showClick:(UIButton *)button
+{
+    button.selected = !button.selected;
+    if (button.selected) {
+        SYLogManager.shareLog.logShow = YES;
+    } else {
+        SYLogManager.shareLog.logShow = NO;
+    }
 }
 
 - (void)nextClick

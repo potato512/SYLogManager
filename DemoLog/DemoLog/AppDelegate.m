@@ -20,9 +20,9 @@
     // Override point for customization after application launch.
     
     // 初始化
-    [SYLogManager.shareLog config:YES];
-    SYLogManager.shareLog.email = @"151311301@qq.com";
-    SYLogManager.shareLog.colorLog = UIColor.greenColor;
+    [SYLogManager.shareLog logConfig:YES];
+    SYLogManager.shareLog.logEmail = @"151311301@qq.com";
+    SYLogManager.shareLog.logColor = UIColor.greenColor;
     
     ViewController *rootVC = [[ViewController alloc] init];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
@@ -31,8 +31,8 @@
     [self.window makeKeyAndVisible];
     
     // 显示等设置
-    SYLogManager.shareLog.show = YES;
-    SYLogManager.shareLog.controller = self.window.rootViewController;
+    SYLogManager.shareLog.logShow = NO;
+    SYLogManager.shareLog.logController = self.window.rootViewController;
     
     
     return YES;

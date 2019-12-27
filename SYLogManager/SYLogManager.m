@@ -53,7 +53,7 @@ static CGFloat const sizeButton = 60.0;
     return self;
 }
 
-- (void)config:(BOOL)enable
+- (void)logConfig:(BOOL)enable
 {
     self.validLog = enable;
     if (!self.validLog) {
@@ -147,13 +147,13 @@ static CGFloat const sizeButton = 60.0;
                 action.selecte = !action.isSelecte;
                 [self logShow:action.isSelecte];
             } else {
-                if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+                if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"未进行初始化配置" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         
                     }];
                     [alertController addAction:cancelAction];
-                    [self.controller presentViewController:alertController animated:YES completion:NULL];
+                    [self.logController presentViewController:alertController animated:YES completion:NULL];
                 }
             }
         }];
@@ -163,7 +163,7 @@ static CGFloat const sizeButton = 60.0;
             [self logScroll:action.isSelecte];
         }];
         [array addObject:scrollAction];
-        if ([self validEmail:self.email]) {
+        if ([self validEmail:self.logEmail]) {
             SYLogPopoverAction *sendAction = [SYLogPopoverAction actionWithTitle:@"发送邮件" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
                 [self logShow:NO];
                 showAction.selecte = NO;
@@ -199,7 +199,6 @@ static CGFloat const sizeButton = 60.0;
 - (void)logText:(NSString *)text key:(NSString *)key
 {
     if (!self.validLog) {
-        ShowMessage(@"温馨提示", @"未开启log权限，不能记录log", @"知道了");
         return;
     }
     
@@ -212,12 +211,11 @@ static CGFloat const sizeButton = 60.0;
 - (void)logClear
 {
     if (!self.validLog) {
-        ShowMessage(@"温馨提示", @"未开启log权限，不能清除", @"知道了");
         return;
     }
     
 #ifdef DEBUG
-    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+    if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"确认删除log？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
@@ -228,7 +226,7 @@ static CGFloat const sizeButton = 60.0;
         }];
         [alertController addAction:cancelAction];
         [alertController addAction:deleteAction];
-        [self.controller presentViewController:alertController animated:YES completion:NULL];
+        [self.logController presentViewController:alertController animated:YES completion:NULL];
     }
 #endif
 }
@@ -236,7 +234,6 @@ static CGFloat const sizeButton = 60.0;
 - (void)logCopy
 {
     if (!self.validLog) {
-        ShowMessage(@"温馨提示", @"未开启log权限，不能复制", @"知道了");
         return;
     }
     
@@ -249,13 +246,13 @@ static CGFloat const sizeButton = 60.0;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = text;
     //
-    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+    if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         [alertController addAction:cancelAction];
-        [self.controller presentViewController:alertController animated:YES completion:NULL];
+        [self.logController presentViewController:alertController animated:YES completion:NULL];
     }
 #endif
 }
@@ -263,12 +260,11 @@ static CGFloat const sizeButton = 60.0;
 - (void)logSend
 {
     if (!self.validLog) {
-        ShowMessage(@"温馨提示", @"未开启log权限，不能发送邮件", @"知道了");
         return;
     }
     
 #ifdef DEBUG
-    if (self.controller && [self.controller respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+    if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
         for (SYLogModel *model in self.self.logFile.logs) {
             NSString *string = model.attributeString.string;
@@ -310,7 +306,7 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)sentEmail:(NSString *)text
 {
-    if (self.controller == nil || ![self.controller isKindOfClass:UIViewController.class]) {
+    if (self.logController == nil || ![self.logController isKindOfClass:UIViewController.class]) {
         ShowMessage(@"温馨提示", @"请设置【target】属性，以便发送邮件", @"知道了");
         return;
     }
@@ -322,7 +318,7 @@ static CGFloat const sizeButton = 60.0;
         // 设置邮件代理
         [emailVC setMailComposeDelegate:self];
         // 设置收件人
-        [emailVC setToRecipients:@[self.email]];
+        [emailVC setToRecipients:@[self.logEmail]];
         // 设置抄送人
         // [emailVC setCcRecipients:@[@"1622849369@qq.com"]];
         // 设置密送人
@@ -346,7 +342,7 @@ static CGFloat const sizeButton = 60.0;
         // NSString *file = [[NSBundle mainBundle] pathForResource:@"EmptyPDF" ofType:@"pdf"];
         // NSData *pdf = [NSData dataWithContentsOfFile:file];
         // [mailCompose addAttachmentData:pdf mimeType:@"" fileName:@"EmptyPDF.pdf"];
-        [self.controller presentViewController:emailVC animated:YES completion:nil];
+        [self.logController presentViewController:emailVC animated:YES completion:nil];
     } else {
         // 给出提示,设备未开启邮件服务
         ShowMessage(@"没有邮件帐户", @"请添加邮件帐户（添加方法：设置->邮件、通讯录、日历->添加帐户->其他->添加邮件帐户）", @"知道了");
@@ -374,7 +370,7 @@ static CGFloat const sizeButton = 60.0;
         } break;
     }
     // 关闭邮件发送视图
-    [self.controller dismissViewControllerAnimated:YES completion:nil];
+    [self.logController dismissViewControllerAnimated:YES completion:nil];
 }
 
 void ShowMessage(NSString *title, NSString *message, NSString *button)
@@ -451,17 +447,20 @@ void readException(NSException *exception)
 
 #pragma mark - setter
 
-- (void)setColorLog:(UIColor *)colorLog
+- (void)setLogColor:(UIColor *)logColor
 {
-    _colorLog = colorLog;
-    self.logView.colorLog = _colorLog;
+    _logColor = logColor;
+    self.logView.colorLog = _logColor;
 }
 
-- (void)setShow:(BOOL)show
+- (void)setLogShow:(BOOL)logShow
 {
-    _show = show;
+    _logShow = logShow;
+    if (!self.validLog) {
+        return;
+    }
     //
-    self.logButton.hidden = !_show;
+    self.logButton.hidden = !_logShow;
     if (self.logButton.hidden) {
         [self.baseView sendSubviewToBack:self.logButton];
     } else {
