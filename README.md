@@ -28,7 +28,6 @@ log日志查看工具。
 // 初始化配置
 [SYLogManager.shareLog config:YES];
 SYLogManager.shareLog.email = @"151311301@qq.com";
-SYLogManager.shareLog.logEnable = YES;
 
 // 显示等设置
 SYLogManager.shareLog.show = YES;
