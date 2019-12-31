@@ -239,7 +239,7 @@ static NSString *const keyStyle = @"--";
         NSInteger numberDel = (number - logMaxCount - 1);
         for (NSInteger index = 0; index < numberDel; index++) {
             // 超过N条时，删除数据库记录
-            SYLogModel *model = logTmp[index];
+            SYLogModel *model = logTmp.firstObject;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSString *sql = [NSString stringWithFormat:@"DELETE FROM SYLogRecord WHERE logText = '%@'", model.logText];
                 [self.sqlite executeSQLite:sql];

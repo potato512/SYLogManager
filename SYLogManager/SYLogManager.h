@@ -57,12 +57,13 @@ NS_ASSUME_NONNULL_END
  
  使用示例
  1 引入头文件 #import "SYLogManager.h"
- 2 初始化 [SYLogManager.shareLog config:YES];
- 3 属性设置
- SYLogManager.shareLog.target = self.window.rootViewController;
- SYLogManager.shareLog.email = @"151311301@qq.com";
- SYLogManager.shareLog.colorLog = UIColor.greenColor;
- SYLogManager.shareLog.show = YES;
+ 2 属性设置
+ SYLogManager.shareLog.logController = self.window.rootViewController;
+ SYLogManager.shareLog.logEmail = @"151311301@qq.com";
+ SYLogManager.shareLog.logColor = UIColor.greenColor;
+ SYLogManager.shareLog.logShow = YES;
+ 3 配置
+ [SYLogManager.shareLog logConfig:YES];
  4 自定义日志信息
  [SYLogManager.shareLog logText:@"正在进行网络请求"];
  [SYLogManager.shareLog logText:@"正在进行网络请求" key:@"网络"];

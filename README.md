@@ -25,13 +25,14 @@ log日志查看工具。
 ~~~
 
 ~~~ javascript
-// 初始化配置
-[SYLogManager.shareLog config:YES];
-SYLogManager.shareLog.email = @"151311301@qq.com";
-
 // 显示等设置
-SYLogManager.shareLog.show = YES;
-SYLogManager.shareLog.controller = self.window.rootViewController;
+SYLogManager.shareLog.logEmail = @"151311301@qq.com";
+SYLogManager.shareLog.logColor = UIColor.greenColor;
+SYLogManager.shareLog.logShow = YES;
+SYLogManager.shareLog.logController = self.window.rootViewController;
+
+// 配置
+[SYLogManager.shareLog logConfig:YES];
 
 // 使用
 [SYLogManager.shareLog logText:@"hello world~"];
@@ -50,7 +51,7 @@ SYLog(YES, @"花草", @"%@", @"牡丹蝴蝶");
 
 # 修改完善
 * 20191231
-  * 版本号：1.2.9
+  * 版本号：1.2.9 1.3.0
   * 修改优化
     * 实时快速显示时，闪退修复
     * 新增非实时显示
