@@ -7,6 +7,7 @@
 //
 
 #import "SYLogView.h"
+#import <pthread/pthread.h>
 
 #pragma mark - 列表单元格
 
@@ -47,6 +48,9 @@
 #pragma mark - 列表视图
 
 @interface SYLogView () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
+{
+    pthread_mutex_t mutexLock;
+}
 
 @property (nonatomic, strong) UIView *searchView;
 @property (nonatomic, strong) NSMutableArray *searchArray;
@@ -64,6 +68,8 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         self.backgroundColor = UIColor.clearColor;
+        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
         CGFloat height = 0;
         if (@available(iOS 11.0, *)) {
             UIWindow *window = [UIApplication sharedApplication].delegate.window;
@@ -72,6 +78,7 @@
                 height = 20;
             }
         }
+        self.tableHeaderView = self.searchView;
         self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, height)];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.scrollEnabled = YES;
@@ -82,35 +89,20 @@
     return self;
 }
 
-#pragma mark - 交互
-
-- (void)scrollToBottom
+- (void)dealloc
 {
-    NSInteger count = self.array.count;
-    if (self.isSearch) {
-        count = self.searchArray.count;
-    }
-    if (count > 1) {
-        [self scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(count - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    }
+    pthread_mutex_destroy(&mutexLock);
+}
+
+- (void)reloadLogView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadData];
+        [self setContentOffset:CGPointZero];
+    });
 }
 
 #pragma mark - delegate
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return self.searchView.frame.size.height;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    return self.searchView;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -154,7 +146,7 @@
     return NO;
 }
 
-#pragma mark - getter
+#pragma mark - 搜索
 
 - (UIView *)searchView
 {
@@ -203,6 +195,10 @@
 
 - (void)cancelClick:(UIButton *)button
 {
+    if (self.showType == SYLogViewShowTypeImmediately) {
+        [self addNotificationAddModel];
+    }
+    
     [UIApplication.sharedApplication.delegate.window endEditing:YES];
     //
     self.searchTextField.text = @"";
@@ -221,6 +217,11 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    if (self.showType == SYLogViewShowTypeImmediately) {
+        // 避免搜索时还在刷新界面，导致无法进行编辑
+        [self removeNotificationAddModel];
+    }
+    
     self.isSearch = YES;
     [self reloadData];
     //
@@ -256,6 +257,20 @@
     [UIApplication.sharedApplication.delegate.window endEditing:YES];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (self.showType == SYLogViewShowTypeImmediately) {
+        [self removeNotificationAddModel];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.showType == SYLogViewShowTypeImmediately) {
+        [self addNotificationAddModel];
+    }
+}
+
 - (void)searchWithText:(NSString *)text
 {
     [self.searchArray removeAllObjects];
@@ -269,12 +284,47 @@
 
 - (void)setArray:(NSMutableArray *)array
 {
+    pthread_mutex_lock(&mutexLock);
     _array = array;
+    pthread_mutex_unlock(&mutexLock);
     if (self.isSearch) {
-        [self searchWithText:self.searchTextField.text];
+        return;
     }
-    [self reloadData];
-    [self scrollToBottom];
+    //
+    [self reloadLogView];
+}
+
+#pragma mark - 方法通知
+
+- (void)addModel:(SYLogModel *)model
+{
+    if (model) {
+        pthread_mutex_lock(&mutexLock);
+        [self.array insertObject:model atIndex:0];
+        pthread_mutex_unlock(&mutexLock);
+        if (self.isSearch) {
+            return;
+        }
+        
+        [self postNotificationAddModel];
+    }
+}
+
+static NSString *const kNotificationName = @"reloadTableWhileAddModel";
+- (void)postNotificationAddModel
+{
+    [NSNotificationCenter.defaultCenter postNotificationName:kNotificationName object:nil];
+}
+
+- (void)addNotificationAddModel
+{
+    [self removeNotificationAddModel];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(reloadLogView) name:kNotificationName object:nil];
+}
+
+- (void)removeNotificationAddModel
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self name:kNotificationName object:nil];
 }
 
 @end

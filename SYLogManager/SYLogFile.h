@@ -27,8 +27,8 @@ static CGFloat const heightText = (25 + 25);
 
 @interface SYLogFile : NSObject
 
-/// 记录（最多5000条）
-@property (nonatomic, strong, readonly)  NSArray *logs;
+/// 记录（最多500条，倒序）
+@property (nonatomic, strong, readonly) NSArray *logs;
 
 - (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;
 - (void)read;

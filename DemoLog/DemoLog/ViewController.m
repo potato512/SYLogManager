@@ -94,18 +94,21 @@
 
 - (void)autoClick
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(printLog) userInfo:nil repeats:YES];
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    } else {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(printLog) userInfo:nil repeats:YES];
+    }
 }
 NSInteger count = 0;
 - (void)printLog
 {
+    NSLog(@"timer count = %@", @(count));
     count++;
-    for (int i = 0; i < arc4random() % 10 + 1; i++) {
-        NSString *string = self.array[arc4random() % self.array.count];
-//        [SYLogManager.shareLog logText:string];
-        SYLog(YES, @"", @"%@", string);
-    }
-    if (count >= 5) {
+    NSString *string = self.array[arc4random() % self.array.count];
+    SYLog(YES, @"", @"%@", string);
+    if (count >= 1000) {
         count = 0;
         [self.timer invalidate];
         self.timer = nil;

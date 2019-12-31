@@ -27,6 +27,7 @@ static CGFloat const sizeButton = 60.0;
 @property (nonatomic, strong) NSArray *logActions;
 //
 @property (nonatomic, assign) BOOL validLog;
+@property (nonatomic, assign) SYLogViewShowType showType;
 
 @end
 
@@ -64,7 +65,6 @@ static CGFloat const sizeButton = 60.0;
     NSSetUncaughtExceptionHandler(&readException);
     //
     [self.logFile read];
-    self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
     //
     [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
 #endif
@@ -142,22 +142,32 @@ static CGFloat const sizeButton = 60.0;
 {
     if (_logActions == nil) {
         NSMutableArray *array = [[NSMutableArray alloc] init];
-        SYLogPopoverAction *showAction = [SYLogPopoverAction actionWithTitle:@"显示log" selectTitle:@"隐藏log" handler:^(SYLogPopoverAction * _Nonnull action) {
+        SYLogPopoverAction *showAction = [SYLogPopoverAction actionWithTitle:@"显示log(非实时)" selectTitle:@"隐藏log(非实时)" handler:^(SYLogPopoverAction * _Nonnull action) {
             if (self.validLog) {
-                action.selecte = !action.isSelecte;
-                [self logShow:action.isSelecte];
-            } else {
-                if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"未进行初始化配置" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                        
-                    }];
-                    [alertController addAction:cancelAction];
-                    [self.logController presentViewController:alertController animated:YES completion:NULL];
+                if (self.showType == SYLogViewShowTypeImmediately) {
+                    return ;
                 }
+                action.selecte = !action.isSelecte;
+                self.showType = (action.isSelecte ? SYLogViewShowTypeDefault : 0);
+                [self logViewShow:action.isSelecte];
+            } else {
+                NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无法显示");
             }
         }];
         [array addObject:showAction];
+        SYLogPopoverAction *showiImmediatelyAction = [SYLogPopoverAction actionWithTitle:@"显示log(实时)" selectTitle:@"隐藏log(实时)" handler:^(SYLogPopoverAction * _Nonnull action) {
+            if (self.validLog) {
+                if (self.showType == SYLogViewShowTypeDefault) {
+                    return ;
+                }
+                action.selecte = !action.isSelecte;
+                self.showType = (action.isSelecte ? SYLogViewShowTypeImmediately : 0);
+                [self logViewShow:action.isSelecte];
+            } else {
+                NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无法显示");
+            }
+        }];
+        [array addObject:showiImmediatelyAction];
         SYLogPopoverAction *scrollAction = [SYLogPopoverAction actionWithTitle:@"开启滚动" selectTitle:@"关闭滚动" handler:^(SYLogPopoverAction * _Nonnull action) {
             action.selecte = !action.isSelecte;
             [self logScroll:action.isSelecte];
@@ -165,21 +175,24 @@ static CGFloat const sizeButton = 60.0;
         [array addObject:scrollAction];
         if ([self validEmail:self.logEmail]) {
             SYLogPopoverAction *sendAction = [SYLogPopoverAction actionWithTitle:@"发送邮件" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
-                [self logShow:NO];
+                [self logViewShow:NO];
                 showAction.selecte = NO;
+                showiImmediatelyAction.selecte = NO;
                 [self logSend];
             }];
             [array addObject:sendAction];
         }
         SYLogPopoverAction *copyAction = [SYLogPopoverAction actionWithTitle:@"复制" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
-            [self logShow:NO];
+            [self logViewShow:NO];
             showAction.selecte = NO;
+            showiImmediatelyAction.selecte = NO;
             [self logCopy];
         }];
         [array addObject:copyAction];
         SYLogPopoverAction *clearAction = [SYLogPopoverAction actionWithTitle:@"删除log" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
-            [self logShow:NO];
+            [self logViewShow:NO];
             showAction.selecte = NO;
+            showiImmediatelyAction.selecte = NO;
             [self logClear];
         }];
         [array addObject:clearAction];
@@ -199,18 +212,26 @@ static CGFloat const sizeButton = 60.0;
 - (void)logText:(NSString *)text key:(NSString *)key
 {
     if (!self.validLog) {
+        NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无法记录");
         return;
     }
     
 #ifdef DEBUG
-    [self.logFile logWith:text key:key];
-    self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
+    SYLogModel *model = [self.logFile logWith:text key:key];
+    //
+    self.logView.showType = self.showType;
+    if (self.showType == SYLogViewShowTypeDefault) {
+        
+    } else if (self.showType == SYLogViewShowTypeImmediately) {
+        [self.logView addModel:model];
+    }
 #endif
 }
 
 - (void)logClear
 {
     if (!self.validLog) {
+        NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无记录");
         return;
     }
     
@@ -234,12 +255,13 @@ static CGFloat const sizeButton = 60.0;
 - (void)logCopy
 {
     if (!self.validLog) {
+        NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无记录");
         return;
     }
     
 #ifdef DEBUG
     NSMutableString *text = [[NSMutableString alloc] init];
-    for (SYLogModel *model in self.self.logFile.logs) {
+    for (SYLogModel *model in self.logFile.logs) {
         NSString *string = model.attributeString.string;
         [text appendFormat:@"%@\n\n", string];
     }
@@ -260,13 +282,14 @@ static CGFloat const sizeButton = 60.0;
 - (void)logSend
 {
     if (!self.validLog) {
+        NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无记录");
         return;
     }
     
 #ifdef DEBUG
     if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
-        for (SYLogModel *model in self.self.logFile.logs) {
+        for (SYLogModel *model in self.logFile.logs) {
             NSString *string = model.attributeString.string;
             [text appendFormat:@"%@\n\n", string];
         }
@@ -276,15 +299,28 @@ static CGFloat const sizeButton = 60.0;
 #endif
 }
 
-- (void)logShow:(BOOL)show
+- (void)logViewShow:(BOOL)show
 {
     if (show) {
         self.logView.hidden = NO;
         [self.baseView bringSubviewToFront:self.logView];
         [self.baseView bringSubviewToFront:self.logButton];
+
+        if (self.showType == SYLogViewShowTypeDefault) {
+            self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
+        } else if (self.showType == SYLogViewShowTypeImmediately) {
+            self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
+            [self.logView addNotificationAddModel];
+        }
     } else {
         self.logView.hidden = YES;
         [self.baseView sendSubviewToBack:self.logView];
+        
+        if (self.showType == SYLogViewShowTypeDefault) {
+            
+        } else if (self.showType == SYLogViewShowTypeImmediately) {
+            [self.logView removeNotificationAddModel];
+        }
     }
 }
 
@@ -354,19 +390,19 @@ static CGFloat const sizeButton = 60.0;
     switch (result) {
         case MFMailComposeResultCancelled: {
             NSLog(@"Mail send canceled: 用户取消编辑");
-            ShowMessage(nil, @"Mail send canceled: 用户取消编辑", @"知道了");
+            ShowMessage(nil, @"用户取消编辑", @"知道了");
         } break;
         case MFMailComposeResultSaved: {
             NSLog(@"Mail saved: 邮件保存成功");
-            ShowMessage(nil, @"Mail saved: 邮件保存成功", @"知道了");
+            ShowMessage(nil, @"邮件保存成功", @"知道了");
         } break;
         case MFMailComposeResultSent: {
             NSLog(@"Mail sent: 邮件发送成功");
-            ShowMessage(nil, @"Mail sent: 邮件发送成功", @"知道了");
+            ShowMessage(nil, @"邮件发送成功", @"知道了");
         } break;
         case MFMailComposeResultFailed: {
             NSLog(@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]);
-            ShowMessage(nil, [NSString stringWithFormat:@"Mail send errored: %@ : 用户尝试保存或发送邮件失败", [error localizedDescription]], @"知道了");
+            ShowMessage(nil, [NSString stringWithFormat:@"用户尝试保存或发送邮件失败: %@", [error localizedDescription]], @"知道了");
         } break;
     }
     // 关闭邮件发送视图
@@ -437,10 +473,11 @@ void readException(NSException *exception)
 {
     if (_logView == nil) {
         _logView = [[SYLogView alloc] initWithFrame:self.baseView.bounds style:UITableViewStylePlain];
-        [self.baseView addSubview:_logView];
         _logView.userInteractionEnabled = NO;
         _logView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
         _logView.hidden = YES;
+        
+        [self.baseView addSubview:_logView];
     }
     return _logView;
 }
@@ -456,9 +493,6 @@ void readException(NSException *exception)
 - (void)setLogShow:(BOOL)logShow
 {
     _logShow = logShow;
-    if (!self.validLog) {
-        return;
-    }
     //
     self.logButton.hidden = !_logShow;
     if (self.logButton.hidden) {

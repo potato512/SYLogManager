@@ -9,6 +9,10 @@
 #import "SYLogFile.h"
 #import <UIKit/UIKit.h>
 #import "SYLogSQLite.h"
+#import <pthread/pthread.h>
+
+/// 最多N条记录
+static NSInteger const logMaxCount = 1000;
 
 @interface SYLogModel ()
 
@@ -103,9 +107,12 @@ static NSString *const keyStyle = @"--";
 #pragma mark - 文件管理
 
 @interface SYLogFile ()
+{
+    pthread_mutex_t mutexLock;
+}
 
 @property (nonatomic, strong) SYLogSQLite *sqlite;
-/// 默认保存5000条记录，超过则自动删除
+/// 默认保存N条记录，超过则自动删除
 @property (nonatomic, strong) NSMutableArray *logArray;
 
 @end
@@ -116,34 +123,42 @@ static NSString *const keyStyle = @"--";
 {
     self = [super init];
     if (self) {
+        pthread_mutex_init(&mutexLock, NULL);
+        
         [self initializeSQLiteTable];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    pthread_mutex_destroy(&mutexLock);
+}
+
 - (SYLogModel *)logWith:(NSString *)text key:(NSString *)key
 {
-    @synchronized (self) {
-        if (self.logArray.count >= 5000) {
-            [self.logArray removeObjectAtIndex:0];
-        }
-        SYLogModel *model = [[SYLogModel alloc] initWithlog:text key:key];
-        [self.logArray addObject:model];
-        [self saveLog:model];
-        return model;
-    };
+    pthread_mutex_lock(&mutexLock);
+    if (self.logArray.count >= (logMaxCount - 1)) {
+        [self.logArray removeObjectAtIndex:0];
+    }
+    SYLogModel *model = [[SYLogModel alloc] initWithlog:text key:key];
+    [self.logArray addObject:model];
+    [self saveLog:model];
+    pthread_mutex_unlock(&mutexLock);
+    
+    return self.logArray.lastObject;
 }
 
 - (void)clear
 {
-    @synchronized (self) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (self.logArray.count > 0) {
-                [self.logArray removeAllObjects];
-                [self deleteLog];
-            }
-        });
-    };
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        pthread_mutex_lock(&self->mutexLock);
+        if (self.logArray.count > 0) {
+            [self.logArray removeAllObjects];
+            [self deleteLog];
+        }
+        pthread_mutex_unlock(&self->mutexLock);
+    });
 }
 
 #pragma mark - setter/getter
@@ -158,7 +173,14 @@ static NSString *const keyStyle = @"--";
 
 - (NSArray *)logs
 {
-    return self.logArray;
+    pthread_mutex_lock(&mutexLock);
+    NSArray *arrayTmp = [NSArray arrayWithArray:self.logArray];
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (SYLogModel *model in arrayTmp) {
+        [array insertObject:model atIndex:0];
+    }
+    pthread_mutex_unlock(&mutexLock);
+    return array;
 }
 
 #pragma mark - 存储
@@ -198,18 +220,36 @@ static NSString *const keyStyle = @"--";
 
 - (void)read
 {
-        NSString *sql = @"SELECT * FROM SYLogRecord";
-        NSArray *array = [self.sqlite selectSQLite:sql];
-        [self.logArray removeAllObjects];
-        NSMutableArray *logTmp = [[NSMutableArray alloc] init];
-        for (NSDictionary *dict in array) {
-            NSString *logTime = dict[@"logTime"];
-            NSString *logKey = dict[@"logKey"];
-            NSString *logText = dict[@"logText"];
-            SYLogModel *model = [[SYLogModel alloc] initWithTime:logTime log:logText key:logKey];
-            [logTmp addObject:model];
+    pthread_mutex_lock(&mutexLock);
+    NSString *sql = @"SELECT * FROM SYLogRecord";
+    NSArray *array = [self.sqlite selectSQLite:sql];
+    [self.logArray removeAllObjects];
+    NSMutableArray *logTmp = [[NSMutableArray alloc] init];
+    for (NSDictionary *dict in array) {
+        NSString *logTime = dict[@"logTime"];
+        NSString *logKey = dict[@"logKey"];
+        NSString *logText = dict[@"logText"];
+        SYLogModel *model = [[SYLogModel alloc] initWithTime:logTime log:logText key:logKey];
+        [logTmp addObject:model];
+    }
+    //
+    NSInteger number = logTmp.count;
+    // 超过N条时删除
+    if (number >= logMaxCount) {
+        NSInteger numberDel = (number - logMaxCount - 1);
+        for (NSInteger index = 0; index < numberDel; index++) {
+            // 超过N条时，删除数据库记录
+            SYLogModel *model = logTmp[index];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSString *sql = [NSString stringWithFormat:@"DELETE FROM SYLogRecord WHERE logText = '%@'", model.logText];
+                [self.sqlite executeSQLite:sql];
+            });
+            
+            [logTmp removeObjectAtIndex:0];
         }
-        [self.logArray addObjectsFromArray:logTmp];
+    }
+    [self.logArray addObjectsFromArray:logTmp];
+    pthread_mutex_unlock(&mutexLock);
 }
 
 @end

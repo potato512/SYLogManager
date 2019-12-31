@@ -412,11 +412,13 @@ float DegreesToRadians(float angle) {
     return self.actionArray.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return kPopoverViewCellHeight;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     SYPopoverCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(SYPopoverCell.class)];
     
     SYLogPopoverAction *action = self.actionArray[indexPath.row];
