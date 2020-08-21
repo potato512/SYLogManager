@@ -523,6 +523,11 @@ void readException(NSException *exception)
 {
     _show = show;
     //
+    if (self.config == nil) {
+        NSLog(@"config = nil, 必须先配置config");
+        return;
+    }
+    
     self.logButton.hidden = !_show;
     if (self.logButton.hidden) {
         [self.baseView sendSubviewToBack:self.logButton];
