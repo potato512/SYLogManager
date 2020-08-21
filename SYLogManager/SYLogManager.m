@@ -16,7 +16,25 @@ static CGFloat const originButton = 20.0;
 static CGFloat const sizeButton = 60.0;
 #define widthButtonView (self.logButton.frame.size.height * 3 + originButton)
 
+@implementation SYLogConfig
+
+@end
+
+
 @interface SYLogManager () <MFMailComposeViewControllerDelegate>
+
+
+/// 视图控制器用于弹窗及发邮件（在设置根视图控制器之后）
+@property (nonatomic, strong) UIViewController *logController;
+/// 邮件接收地址（选填，填写后须设置属性 controller）
+@property (nonatomic, strong) NSString *logEmail;
+/// 时间颜色（默认红色）
+@property (nonatomic, strong) UIColor *logColor;
+/// 显示父视图
+@property (nonatomic, strong) UIView *logShowView;
+/// 显示或隐藏（warning:初始化后最后设置）
+@property (nonatomic, assign) BOOL logShow;
+
 
 @property (nonatomic, strong) SYLogFile *logFile;
 @property (nonatomic, strong) SYLogView *logView;
@@ -49,25 +67,8 @@ static CGFloat const sizeButton = 60.0;
 {
     self = [super init];
     if (self) {
-        self.baseView = UIApplication.sharedApplication.delegate.window;
     }
     return self;
-}
-
-- (void)logConfig:(BOOL)enable
-{
-    self.validLog = enable;
-    if (!self.validLog) {
-        return;
-    }
-    
-#ifdef DEBUG
-    NSSetUncaughtExceptionHandler(&readException);
-    //
-    [self.logFile read];
-    //
-    [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
-#endif
 }
 
 #pragma mark - 菜单视图
@@ -173,6 +174,11 @@ static CGFloat const sizeButton = 60.0;
             [self logScroll:action.isSelecte];
         }];
         [array addObject:scrollAction];
+        SYLogPopoverAction *searchAction = [SYLogPopoverAction actionWithTitle:@"开启搜索" selectTitle:@"关闭搜索" handler:^(SYLogPopoverAction * _Nonnull action) {
+            action.selecte = !action.isSelecte;
+            [self logSearch:action.isSelecte];
+        }];
+        [array addObject:searchAction];
         if ([self validEmail:self.logEmail]) {
             SYLogPopoverAction *sendAction = [SYLogPopoverAction actionWithTitle:@"发送邮件" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
                 [self logViewShow:NO];
@@ -213,6 +219,14 @@ static CGFloat const sizeButton = 60.0;
 {
     if (!self.validLog) {
         NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无法记录");
+        return;
+    }
+    if (!self.logShow) {
+        NSLog(@"'logShow = NO' 不显示，不处理");
+        return;
+    }
+    if (self.baseView == nil) {
+        NSLog(@"'baseView' 不能为nil");
         return;
     }
     
@@ -331,6 +345,11 @@ static CGFloat const sizeButton = 60.0;
     } else {
         self.logView.userInteractionEnabled = NO;
     }
+}
+
+- (void)logSearch:(BOOL)search
+{
+    self.logView.showSearch = search;
 }
 
 #pragma mark - 邮件
@@ -484,22 +503,60 @@ void readException(NSException *exception)
 
 #pragma mark - setter
 
-- (void)setLogColor:(UIColor *)logColor
-{
-    _logColor = logColor;
-    self.logView.colorLog = _logColor;
-}
-
 - (void)setLogShow:(BOOL)logShow
 {
     _logShow = logShow;
     //
-    self.logButton.hidden = !_logShow;
+    if (self.logShowView) {
+        if (self.baseView == nil) {
+            self.baseView = self.logShowView;
+        }
+        if (self.logColor) {
+            self.logView.colorLog = self.logColor;
+        }
+    }
+
+    self.show = _logShow;
+}
+
+- (void)setShow:(BOOL)show
+{
+    _show = show;
+    //
+    self.logButton.hidden = !_show;
     if (self.logButton.hidden) {
         [self.baseView sendSubviewToBack:self.logButton];
     } else {
         [self.baseView bringSubviewToFront:self.logButton];
     }
+}
+
+- (void)setConfig:(SYLogConfig *)config
+{
+    _config = config;
+    //
+    if (_config == nil) {
+        return;
+    }
+    
+    self.validLog = _config.logEnable;
+    if (!self.validLog) {
+        return;
+    }
+    
+    self.logEmail = _config.logEmail;
+    self.logColor = _config.logColor;
+    self.logController = _config.logController;
+    self.logShowView = _config.logShowView;
+    self.logShow = _config.logShow;
+
+#ifdef DEBUG
+    NSSetUncaughtExceptionHandler(&readException);
+    //
+    [self.logFile read];
+    //
+    [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
+#endif
 }
 
 @end

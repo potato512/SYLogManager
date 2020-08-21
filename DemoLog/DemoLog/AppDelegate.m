@@ -19,20 +19,21 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    // 初始化
-    [SYLogManager.shareLog logConfig:YES];
-    SYLogManager.shareLog.logEmail = @"151311301@qq.com";
-    SYLogManager.shareLog.logColor = UIColor.greenColor;
-    
     ViewController *rootVC = [[ViewController alloc] init];
     UINavigationController *rootNav = [[UINavigationController alloc] initWithRootViewController:rootVC];
     self.window.rootViewController = rootNav;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    // 显示等设置
-    SYLogManager.shareLog.logShow = NO;
-    SYLogManager.shareLog.logController = self.window.rootViewController;
+    // 初始化
+    SYLogConfig *config = [SYLogConfig new];
+    config.logEmail = @"151311301@qq.com";
+    config.logColor = UIColor.greenColor;
+    config.logController = self.window.rootViewController;
+    config.logShowView = self.window;
+    config.logShow = YES;
+    config.logEnable = YES;
+    SYLogManager.shareLog.config = config;
     
     
     return YES;

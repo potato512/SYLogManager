@@ -78,7 +78,6 @@
                 height = 20;
             }
         }
-        self.tableHeaderView = self.searchView;
         self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, height)];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.scrollEnabled = YES;
@@ -292,6 +291,17 @@
     }
     //
     [self reloadLogView];
+}
+
+- (void)setShowSearch:(BOOL)showSearch
+{
+    _showSearch = showSearch;
+    if (_showSearch) {
+        self.tableHeaderView = self.searchView;
+    } else {
+        self.tableHeaderView = nil;
+    }
+    self.contentOffset = CGPointZero;
 }
 
 #pragma mark - 方法通知

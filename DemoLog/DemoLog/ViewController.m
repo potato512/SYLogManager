@@ -45,9 +45,9 @@
 {
     button.selected = !button.selected;
     if (button.selected) {
-        SYLogManager.shareLog.logShow = YES;
+        SYLogManager.shareLog.show = YES;
     } else {
-        SYLogManager.shareLog.logShow = NO;
+        SYLogManager.shareLog.show = NO;
     }
 }
 

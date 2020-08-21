@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, SYLogViewShowType) {
 /// 时间颜色（默认深灰色）
 @property (nonatomic, strong) UIColor *colorLog;
 @property (nonatomic, assign) SYLogViewShowType showType;
+@property (nonatomic, assign) BOOL showSearch;
 
 - (void)addModel:(SYLogModel *)model;
 //

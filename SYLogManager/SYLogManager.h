@@ -22,23 +22,42 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYLogManager : NSObject
+@interface SYLogConfig : NSObject
 
-+ (instancetype)shareLog;
-
-/// 视图控制器用于弹窗及发邮件（在设置根视图控制器之后）
+/// 视图控制器用于弹窗及发邮件
 @property (nonatomic, strong) UIViewController *logController;
 /// 邮件接收地址（选填，填写后须设置属性 controller）
 @property (nonatomic, strong) NSString *logEmail;
 /// 时间颜色（默认红色）
 @property (nonatomic, strong) UIColor *logColor;
-/// 显示或隐藏（在设置根视图控制器之后）
+/// 显示父视图
+@property (nonatomic, strong) UIView *logShowView;
+/// 显示或隐藏
 @property (nonatomic, assign) BOOL logShow;
+/// 开关log日志
+@property (nonatomic, assign) BOOL logEnable;
 
-/// 初始化配置，默认缓存地址（在设置根视图控制器之前）
-- (void)logConfig:(BOOL)enable;
-/// log
+@end
+
+@interface SYLogManager : NSObject
+
++ (instancetype)shareLog;
+
+/// 配置
+@property (nonatomic, strong) SYLogConfig *config;
+/// 显示或隐藏（warning:config初始化后设置才有效）
+@property (nonatomic, assign) BOOL show;
+
+/**
+ *  记录log日志
+ *  text:log日志信息
+ */
 - (void)logText:(NSString *)text;
+/**
+ *  记录log日志
+ *  text:log日志信息
+ *  key:类型，用于搜索和区分区分log日志
+ */
 - (void)logText:(NSString *)text key:(NSString *)key;
 
 @end
@@ -58,12 +77,19 @@ NS_ASSUME_NONNULL_END
  使用示例
  1 引入头文件 #import "SYLogManager.h"
  2 属性设置
- SYLogManager.shareLog.logController = self.window.rootViewController;
- SYLogManager.shareLog.logEmail = @"151311301@qq.com";
- SYLogManager.shareLog.logColor = UIColor.greenColor;
- SYLogManager.shareLog.logShow = YES;
+ SYLogConfig *config = [SYLogConfig new];
+ config.logEmail = @"151311301@qq.com";
+ config.logColor = UIColor.greenColor;
+ config.logController = self.window.rootViewController;
+ config.logShowView = self.window;
+ config.logShow = YES;
+ config.logEnable = YES;
  3 配置
- [SYLogManager.shareLog logConfig:YES];
+ SYLogManager.shareLog.config = config;
+ // 或
+ SYLogManager.shareLog.show = YES;
+ // 或
+ SYLogManager.shareLog.show = NO;
  4 自定义日志信息
  [SYLogManager.shareLog logText:@"正在进行网络请求"];
  [SYLogManager.shareLog logText:@"正在进行网络请求" key:@"网络"];
