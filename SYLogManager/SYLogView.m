@@ -274,7 +274,7 @@
 {
     [self.searchArray removeAllObjects];
     //
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"logText CONTAINS %@", text];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"attributeString.string CONTAINS %@", text];
     NSArray *array = [self.array filteredArrayUsingPredicate:predicate];
     [self.searchArray addObjectsFromArray:array];
 }

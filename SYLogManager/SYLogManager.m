@@ -230,7 +230,6 @@ static CGFloat const sizeButton = 60.0;
         return;
     }
     
-#ifdef DEBUG
     SYLogModel *model = [self.logFile logWith:text key:key];
     //
     self.logView.showType = self.showType;
@@ -239,7 +238,6 @@ static CGFloat const sizeButton = 60.0;
     } else if (self.showType == SYLogViewShowTypeImmediately) {
         [self.logView addModel:model];
     }
-#endif
 }
 
 - (void)logClear
@@ -249,7 +247,6 @@ static CGFloat const sizeButton = 60.0;
         return;
     }
     
-#ifdef DEBUG
     if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"确认删除log？" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -263,7 +260,6 @@ static CGFloat const sizeButton = 60.0;
         [alertController addAction:deleteAction];
         [self.logController presentViewController:alertController animated:YES completion:NULL];
     }
-#endif
 }
 
 - (void)logCopy
@@ -273,7 +269,6 @@ static CGFloat const sizeButton = 60.0;
         return;
     }
     
-#ifdef DEBUG
     NSMutableString *text = [[NSMutableString alloc] init];
     for (SYLogModel *model in self.logFile.logs) {
         NSString *string = model.attributeString.string;
@@ -290,7 +285,6 @@ static CGFloat const sizeButton = 60.0;
         [alertController addAction:cancelAction];
         [self.logController presentViewController:alertController animated:YES completion:NULL];
     }
-#endif
 }
 
 - (void)logSend
@@ -300,7 +294,6 @@ static CGFloat const sizeButton = 60.0;
         return;
     }
     
-#ifdef DEBUG
     if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
         for (SYLogModel *model in self.logFile.logs) {
@@ -310,7 +303,6 @@ static CGFloat const sizeButton = 60.0;
         //
         [self sentEmail:text];
     }
-#endif
 }
 
 - (void)logViewShow:(BOOL)show
@@ -555,12 +547,23 @@ void readException(NSException *exception)
     self.logShowView = _config.logShowView;
     self.logShow = _config.logShow;
 
-#ifdef DEBUG
     NSSetUncaughtExceptionHandler(&readException);
     //
     [self.logFile read];
     //
     [self logText:[NSString stringWithFormat:@"打开使用[%@--V %@]", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"], [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]] key:@"打开应用"];
+}
+
+#pragma mark - 打印及记录
+
+void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
+{
+    if (logEnable) {
+        [SYLogManager.shareLog logText:text key:key];
+    }
+    
+#ifdef DEBUG
+    NSLog( @"\n< %@:(第 %d 行) > \n%@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, text);
 #endif
 }
 

@@ -37,13 +37,14 @@ config.logEnable = YES;
 // 配置
 SYLogManager.shareLog.config = config;
  
+// 显示，或隐藏
 SYLogManager.shareLog.show = YES;
-// 或
 SYLogManager.shareLog.show = NO;
+
 // 使用
 [SYLogManager.shareLog logText:@"hello world~"];
 [SYLogManager.shareLog logText:@"hello world~" key:@"001")];
-
+SYLogSave(YES, @"网络", @"正在进行网络请求");
 // 或
 SYLog(YES, @"人物", @"%@", @"小明");
 SYLog(YES, @"花草", @"%@", @"牡丹蝴蝶");
@@ -56,6 +57,11 @@ SYLog(YES, @"花草", @"%@", @"牡丹蝴蝶");
 
 
 # 修改完善
+* 20200822
+  * 版本号：1.3.2
+  * 修改优化
+    * 搜索优化（时间、内容、分类）
+    
 * 20200821
   * 版本号：1.3.1
   * 修改优化

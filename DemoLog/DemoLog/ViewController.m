@@ -107,8 +107,9 @@ NSInteger count = 0;
     NSLog(@"timer count = %@", @(count));
     count++;
     NSString *string = self.array[arc4random() % self.array.count];
-    SYLog(YES, @"", @"%@", string);
-    if (count >= 1000) {
+    SYLog(YES, @"计时保存SYLog", @"%@", string);
+    SYLogSave(YES, @"计时保存SYLogSave", string);
+    if (count >= 10) {
         count = 0;
         [self.timer invalidate];
         self.timer = nil;

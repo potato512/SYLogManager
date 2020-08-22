@@ -12,13 +12,8 @@
 #import "NSDictionary+SYLogCategory.h"
 #import "NSObject+SYLogCategory.h"
 
-#ifdef DEBUG
 /// 中控打印及log记录
-#define SYLog(logEnable, logKey, format, ...) {NSLog( @"< %@:(第 %d 行) > %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(format), ##__VA_ARGS__]);if (logEnable) {[SYLogManager.shareLog logText:[NSString stringWithFormat:(format), ##__VA_ARGS__] key:logKey];}}
-#else
-/// 中控打印及log记录
-#define SYLog(logEnable, logKey, format, ...)
-#endif
+#define SYLog(logEnable, logKey, format, ...) {SYLogSave(logEnable, logKey, [NSString stringWithFormat:(format), ##__VA_ARGS__]);}
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -60,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)logText:(NSString *)text key:(NSString *)key;
 
+/// 打印及记录
+void SYLogSave(BOOL logEnable, NSString *key, NSString *text);
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -93,6 +91,7 @@ NS_ASSUME_NONNULL_END
  4 自定义日志信息
  [SYLogManager.shareLog logText:@"正在进行网络请求"];
  [SYLogManager.shareLog logText:@"正在进行网络请求" key:@"网络"];
+ SYLogSave(YES, @"网络", @"正在进行网络请求");
  或
  SYLog(YES, @"网络", @"%@", @"正在进行网络请求");
  
