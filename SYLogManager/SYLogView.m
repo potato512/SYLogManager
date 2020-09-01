@@ -47,6 +47,9 @@
 
 #pragma mark - 列表视图
 
+static CGFloat const origin = 20;
+static CGFloat const widthButton = 60;
+
 @interface SYLogView () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 {
     pthread_mutex_t mutexLock;
@@ -58,6 +61,7 @@
 //
 @property (nonatomic, strong) UITextField *searchTextField;
 @property (nonatomic, strong) UIButton *cancelButton;
+@property (nonatomic, strong) UIButton *cpyButton;
 
 @end
 
@@ -161,7 +165,7 @@
         _searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, (top + 48))];
         _searchView.backgroundColor = UIColor.clearColor;
         //
-        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, (top + 5), (_searchView.frame.size.width - 40), (_searchView.frame.size.height - top - 10))];
+        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(origin, (top + 5), (_searchView.frame.size.width - origin * 3), (_searchView.frame.size.height - top - 10))];
         [_searchView addSubview:self.searchTextField];
         self.searchTextField.layer.cornerRadius = self.searchTextField.frame.size.height / 2;
         self.searchTextField.layer.masksToBounds = YES;
@@ -176,8 +180,20 @@
         self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
         self.searchTextField.returnKeyType = UIReturnKeySearch;
         self.searchTextField.delegate = self;
-        //
-        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_searchView.frame.size.width - 20 - 60), (top + 5), 60, (_searchView.frame.size.height - top - 10))];
+        // 复制
+        self.cpyButton = [[UIButton alloc] initWithFrame:CGRectMake((_searchView.frame.size.width - origin - widthButton - origin / 2 - widthButton), (top + 5), widthButton, (_searchView.frame.size.height - top - 10))];
+        [_searchView addSubview:self.cpyButton];
+        self.cpyButton.titleLabel.font = [UIFont systemFontOfSize:15];
+        [self.cpyButton setTitle:@"复制" forState:UIControlStateNormal];
+        [self.cpyButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        [self.cpyButton setTitleColor:UIColor.redColor forState:UIControlStateHighlighted];
+        self.cpyButton.layer.cornerRadius = self.cpyButton.frame.size.height / 2;
+        self.cpyButton.layer.masksToBounds = YES;
+        self.cpyButton.backgroundColor = UIColor.whiteColor;
+        [self.cpyButton addTarget:self action:@selector(copyClick:) forControlEvents:UIControlEventTouchUpInside];
+        self.cpyButton.alpha = 0.0;
+        // 取消
+        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_searchView.frame.size.width - origin - widthButton), (top + 5), widthButton, (_searchView.frame.size.height - top - 10))];
         [_searchView addSubview:self.cancelButton];
         self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
         [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
@@ -192,6 +208,18 @@
     return _searchView;
 }
 
+- (void)copyClick:(UIButton *)button
+{
+    if (self.isSearch) {
+        if (self.searchArray.count > 0) {
+            if (self.copyClick) {
+                self.copyClick(self.searchArray);
+            }
+        }
+    } else {
+        NSLog(@"无搜索记录");
+    }
+}
 - (void)cancelClick:(UIButton *)button
 {
     if (self.showType == SYLogViewShowTypeImmediately) {
@@ -208,9 +236,10 @@
     
     __block CGRect rect = self.searchTextField.frame;
     [UIView animateWithDuration:0.3 animations:^{
-        rect.size.width = (self.searchView.frame.size.width - 40);
+        rect.size.width = (self.searchView.frame.size.width - origin * 2);
         self.searchTextField.frame = rect;
         button.alpha = 0;
+        self.cpyButton.alpha = 0;
     }];
 }
 
@@ -226,8 +255,9 @@
     //
     __block CGRect rect = self.searchTextField.frame;
     [UIView animateWithDuration:0.3 animations:^{
-        rect.size.width = (self.searchView.frame.size.width - 40 - 60 - 20);
+        rect.size.width = (self.searchView.frame.size.width - origin * 3 - widthButton * 2);
         self.searchTextField.frame = rect;
+        self.cpyButton.alpha = 1;
         self.cancelButton.alpha = 1;
     }];
     

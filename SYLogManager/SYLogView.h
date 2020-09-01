@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, SYLogViewShowType) {
 @property (nonatomic, strong) UIColor *colorLog;
 @property (nonatomic, assign) SYLogViewShowType showType;
 @property (nonatomic, assign) BOOL showSearch;
+@property (nonatomic, copy) void (^copyClick)(NSArray *array);
 
 - (void)addModel:(SYLogModel *)model;
 //

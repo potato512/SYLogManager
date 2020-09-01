@@ -342,6 +342,7 @@ static CGFloat const sizeButton = 60.0;
 - (void)logSearch:(BOOL)search
 {
     self.logView.showSearch = search;
+    self.logView.userInteractionEnabled = search;
 }
 
 #pragma mark - 邮件
@@ -487,7 +488,26 @@ void readException(NSException *exception)
         _logView.userInteractionEnabled = NO;
         _logView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
         _logView.hidden = YES;
-        
+        // 搜索记录复制
+        __weak SYLogManager *weakSelf = self;
+        _logView.copyClick = ^(NSArray * _Nonnull array) {
+            NSMutableString *text = [[NSMutableString alloc] init];
+            for (SYLogModel *model in array) {
+                NSString *string = model.attributeString.string;
+                [text appendFormat:@"%@\n\n", string];
+            }
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            pasteboard.string = text;
+            //
+            if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    
+                }];
+                [alertController addAction:cancelAction];
+                [weakSelf.logController presentViewController:alertController animated:YES completion:NULL];
+            }
+        };
         [self.baseView addSubview:_logView];
     }
     return _logView;
@@ -563,7 +583,7 @@ void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
     }
     
 #ifdef DEBUG
-    NSLog( @"\n< %@:(第 %d 行) > \n%@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, text);
+    printf("\n< %s:(第 %d 行) > \n%s", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [text UTF8String]);
 #endif
 }
 
