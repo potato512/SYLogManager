@@ -174,27 +174,11 @@ static CGFloat const sizeButton = 60.0;
             [self logScroll:action.isSelecte];
         }];
         [array addObject:scrollAction];
-        SYLogPopoverAction *searchAction = [SYLogPopoverAction actionWithTitle:@"开启搜索" selectTitle:@"关闭搜索" handler:^(SYLogPopoverAction * _Nonnull action) {
+        SYLogPopoverAction *searchAction = [SYLogPopoverAction actionWithTitle:@"开启控制" selectTitle:@"关闭控制" handler:^(SYLogPopoverAction * _Nonnull action) {
             action.selecte = !action.isSelecte;
-            [self logSearch:action.isSelecte];
+            [self logControl:action.isSelecte];
         }];
         [array addObject:searchAction];
-        if ([self validEmail:self.logEmail]) {
-            SYLogPopoverAction *sendAction = [SYLogPopoverAction actionWithTitle:@"发送邮件" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
-                [self logViewShow:NO];
-                showAction.selecte = NO;
-                showiImmediatelyAction.selecte = NO;
-                [self logSend];
-            }];
-            [array addObject:sendAction];
-        }
-        SYLogPopoverAction *copyAction = [SYLogPopoverAction actionWithTitle:@"复制" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
-            [self logViewShow:NO];
-            showAction.selecte = NO;
-            showiImmediatelyAction.selecte = NO;
-            [self logCopy];
-        }];
-        [array addObject:copyAction];
         SYLogPopoverAction *clearAction = [SYLogPopoverAction actionWithTitle:@"删除log" selectTitle:@"" handler:^(SYLogPopoverAction * _Nonnull action) {
             [self logViewShow:NO];
             showAction.selecte = NO;
@@ -262,32 +246,7 @@ static CGFloat const sizeButton = 60.0;
     }
 }
 
-- (void)logCopy
-{
-    if (!self.validLog) {
-        NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无记录");
-        return;
-    }
-    
-    NSMutableString *text = [[NSMutableString alloc] init];
-    for (SYLogModel *model in self.logFile.logs) {
-        NSString *string = model.attributeString.string;
-        [text appendFormat:@"%@\n\n", string];
-    }
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = text;
-    //
-    if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
-        [alertController addAction:cancelAction];
-        [self.logController presentViewController:alertController animated:YES completion:NULL];
-    }
-}
-
-- (void)logSend
+- (void)logControlWithType:(SYLogViewControlType)type array:(NSArray *)array
 {
     if (!self.validLog) {
         NSLog(@"'- (void)logConfig:(BOOL)enable' 初始化配置为NO，无记录");
@@ -296,12 +255,31 @@ static CGFloat const sizeButton = 60.0;
     
     if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         NSMutableString *text = [[NSMutableString alloc] init];
-        for (SYLogModel *model in self.logFile.logs) {
-            NSString *string = model.attributeString.string;
-            [text appendFormat:@"%@\n\n", string];
+        for (SYLogModel *model in array) {
+            if (type == SYLogViewControlTypeEmail || type == SYLogViewControlTypeCopy) {
+                NSString *string = model.attributeString.string;
+                [text appendFormat:@"%@\n\n", string];
+            } else if (type == SYLogViewControlTypeCopySelected || type == SYLogViewControlTypeEmailSelected) {
+                if (model.selected) {
+                    NSString *string = model.attributeString.string;
+                    [text appendFormat:@"%@\n\n", string];
+                }
+            }
         }
         //
-        [self sentEmail:text];
+        if (text.length <= 0) {
+            NSString *message = @"还没有log日志记录信息~";
+            if (type == SYLogViewControlTypeCopySelected || type == SYLogViewControlTypeEmailSelected) {
+                message = @"还没有【选择】log日志记录信息~";
+            }
+            ShowMessage(@"温馨提示", message, @"知道了");
+            return;
+        }
+        if (type == SYLogViewControlTypeCopy || type == SYLogViewControlTypeCopySelected) {
+            [self logCopy:text];
+        } else if (type == SYLogViewControlTypeEmail || type == SYLogViewControlTypeEmailSelected) {
+           [self sentEmail:text];
+        }
     }
 }
 
@@ -311,7 +289,7 @@ static CGFloat const sizeButton = 60.0;
         self.logView.hidden = NO;
         [self.baseView bringSubviewToFront:self.logView];
         [self.baseView bringSubviewToFront:self.logButton];
-
+        
         if (self.showType == SYLogViewShowTypeDefault) {
             self.logView.array = [NSMutableArray arrayWithArray:self.logFile.logs];
         } else if (self.showType == SYLogViewShowTypeImmediately) {
@@ -339,10 +317,27 @@ static CGFloat const sizeButton = 60.0;
     }
 }
 
-- (void)logSearch:(BOOL)search
+- (void)logControl:(BOOL)search
 {
-    self.logView.showSearch = search;
+    self.logView.showControl = search;
     self.logView.userInteractionEnabled = search;
+}
+
+#pragma mark - 复制
+
+- (void)logCopy:(NSString *)text
+{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = text;
+    //
+    if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alertController addAction:cancelAction];
+        [self.logController presentViewController:alertController animated:YES completion:NULL];
+    }
 }
 
 #pragma mark - 邮件
@@ -354,6 +349,11 @@ static CGFloat const sizeButton = 60.0;
 
 - (void)sentEmail:(NSString *)text
 {
+    if (![self validEmail:self.logEmail]) {
+        ShowMessage(@"温馨提示", @"请设置【logEmail】属性，以便发送邮件", @"知道了");
+        return;
+    }
+    
     if (self.logController == nil || ![self.logController isKindOfClass:UIViewController.class]) {
         ShowMessage(@"温馨提示", @"请设置【target】属性，以便发送邮件", @"知道了");
         return;
@@ -490,23 +490,8 @@ void readException(NSException *exception)
         _logView.hidden = YES;
         // 搜索记录复制
         __weak SYLogManager *weakSelf = self;
-        _logView.copyClick = ^(NSArray * _Nonnull array) {
-            NSMutableString *text = [[NSMutableString alloc] init];
-            for (SYLogModel *model in array) {
-                NSString *string = model.attributeString.string;
-                [text appendFormat:@"%@\n\n", string];
-            }
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            pasteboard.string = text;
-            //
-            if (self.logController && [self.logController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"已复制到系统粘贴板" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    
-                }];
-                [alertController addAction:cancelAction];
-                [weakSelf.logController presentViewController:alertController animated:YES completion:NULL];
-            }
+        _logView.buttonClick = ^(SYLogViewControlType type, NSArray * _Nonnull array) {
+            [weakSelf logControlWithType:type array:array];
         };
         [self.baseView addSubview:_logView];
     }

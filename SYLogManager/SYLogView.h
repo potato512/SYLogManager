@@ -18,6 +18,17 @@ typedef NS_ENUM(NSInteger, SYLogViewShowType) {
     /// 显示类型，实时
     SYLogViewShowTypeImmediately = 2
 };
+/// 交互类型，复制all、发邮件all、复制选择、发邮件选择
+typedef NS_ENUM(NSInteger, SYLogViewControlType) {
+    /// 交互类型，复制all
+    SYLogViewControlTypeCopy = 1,
+    /// 交互类型，发邮件all
+    SYLogViewControlTypeEmail = 2,
+    /// 交互类型，复制选择
+    SYLogViewControlTypeCopySelected = 3,
+    /// 交互类型，发邮件选择
+    SYLogViewControlTypeEmailSelected = 4
+};
 
 @interface SYLogView : UITableView
 
@@ -25,8 +36,8 @@ typedef NS_ENUM(NSInteger, SYLogViewShowType) {
 /// 时间颜色（默认深灰色）
 @property (nonatomic, strong) UIColor *colorLog;
 @property (nonatomic, assign) SYLogViewShowType showType;
-@property (nonatomic, assign) BOOL showSearch;
-@property (nonatomic, copy) void (^copyClick)(NSArray *array);
+@property (nonatomic, assign) BOOL showControl;
+@property (nonatomic, copy) void (^buttonClick)(SYLogViewControlType type, NSArray *array);
 
 - (void)addModel:(SYLogModel *)model;
 //

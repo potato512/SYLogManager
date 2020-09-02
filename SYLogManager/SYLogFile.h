@@ -20,6 +20,7 @@ static CGFloat const heightText = (25 + 25);
 //
 @property (nonatomic, strong) NSAttributedString *attributeString;
 @property (nonatomic, assign) CGFloat height;
+@property (nonatomic, assign) BOOL selected;
 
 - (instancetype)initWithlog:(NSString *)text key:(NSString *)key;
 
