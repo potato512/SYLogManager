@@ -61,7 +61,9 @@ static NSInteger const kTagButton = 1000;
 @property (nonatomic, assign) BOOL isSelected;
 //
 @property (nonatomic, strong) UITextField *searchTextField;
+@property (nonatomic, strong) UIButton *crashButton;
 @property (nonatomic, strong) UIButton *cancelButton;
+
 @property (nonatomic, strong) UIButton *cpyAllButton;
 @property (nonatomic, strong) UIButton *emailAllButton;
 @property (nonatomic, strong) UIButton *seleButton;
@@ -197,7 +199,8 @@ static NSInteger const kTagButton = 1000;
         CGFloat widthButton = (self.frame.size.width - origin * 6) / 5;
         CGFloat heightText = 36;
         //
-        CGFloat top = 20;if (@available(iOS 11.0, *)) {
+        CGFloat top = 20;
+        if (@available(iOS 11.0, *)) {
             UIWindow *window = [UIApplication sharedApplication].delegate.window;
             if (window.safeAreaInsets.bottom > 0.0) {
                 // 是机型iPhoneX/iPhoneXR/iPhoneXS/iPhoneXSMax
@@ -211,14 +214,14 @@ static NSInteger const kTagButton = 1000;
         _buttonView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
         [self.superview addSubview:_buttonView];
         // 搜索
-        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(origin, top, (_buttonView.frame.size.width - origin * 2), heightText)];
+        self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(origin, (top + origin), (_buttonView.frame.size.width - origin * 2), heightText)];
         [_buttonView addSubview:self.searchTextField];
         self.searchTextField.layer.cornerRadius = self.searchTextField.frame.size.height / 2;
         self.searchTextField.layer.borderColor = UIColor.lightGrayColor.CGColor;
         self.searchTextField.layer.borderWidth = 0.5;
         self.searchTextField.layer.masksToBounds = YES;
         self.searchTextField.backgroundColor = UIColor.whiteColor;
-        self.searchTextField.placeholder = @"请输入过滤词";
+        self.searchTextField.placeholder = @"请输入搜索词";
         self.searchTextField.textColor = UIColor.blackColor;
         self.searchTextField.font = [UIFont systemFontOfSize:15];
         self.searchTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -228,8 +231,22 @@ static NSInteger const kTagButton = 1000;
         self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
         self.searchTextField.returnKeyType = UIReturnKeySearch;
         self.searchTextField.delegate = self;
+        // 搜索闪退
+        self.crashButton = [[UIButton alloc] initWithFrame:CGRectMake((_buttonView.frame.size.width - origin - widthButton - origin - widthButton), (top + origin), widthButton, heightText)];
+        [_buttonView addSubview:self.crashButton];
+        self.crashButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        [self.crashButton setTitle:@"crash" forState:UIControlStateNormal];
+        [self.crashButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+        [self.crashButton setTitleColor:UIColor.redColor forState:UIControlStateHighlighted];
+        self.crashButton.layer.cornerRadius = self.crashButton.frame.size.height / 2;
+        self.crashButton.layer.borderColor = UIColor.lightGrayColor.CGColor;
+        self.crashButton.layer.borderWidth = 0.5;
+        self.crashButton.layer.masksToBounds = YES;
+        self.crashButton.backgroundColor = UIColor.whiteColor;
+        [self.crashButton addTarget:self action:@selector(crashClick:) forControlEvents:UIControlEventTouchUpInside];
+        self.crashButton.alpha = 0.0;
         // 取消
-        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_buttonView.frame.size.width - origin - widthButton), top, widthButton, heightText)];
+        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((_buttonView.frame.size.width - origin - widthButton), (top + origin), widthButton, heightText)];
         [_buttonView addSubview:self.cancelButton];
         self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
@@ -330,6 +347,13 @@ static NSInteger const kTagButton = 1000;
     return _buttonView;
 }
 
+- (void)crashClick:(UIButton *)button
+{
+    self.searchTextField.text = @"crash";
+    [UIApplication.sharedApplication.delegate.window endEditing:YES];
+    [self searchWithText:self.searchTextField.text];
+    [self reloadData];
+}
 - (void)cancelClick:(UIButton *)button
 {
     if (self.showType == SYLogViewShowTypeImmediately) {
@@ -349,6 +373,7 @@ static NSInteger const kTagButton = 1000;
         rect.size.width = (self.buttonView.frame.size.width - rect.origin.x * 2);
         self.searchTextField.frame = rect;
         button.alpha = 0;
+        self.crashButton.alpha = 0;
     }];
 }
 
@@ -389,9 +414,10 @@ static NSInteger const kTagButton = 1000;
     //
     __block CGRect rect = self.searchTextField.frame;
     [UIView animateWithDuration:0.3 animations:^{
-        rect.size.width = (self.buttonView.frame.size.width - self.searchTextField.frame.origin.x * 3 - self.cancelButton.frame.size.width);
+        rect.size.width = (self.buttonView.frame.size.width - self.searchTextField.frame.origin.x * 4 - self.cancelButton.frame.size.width * 2);
         self.searchTextField.frame = rect;
         self.cancelButton.alpha = 1;
+        self.crashButton.alpha = 1;
     }];
     
     return YES;

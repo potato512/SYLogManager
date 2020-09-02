@@ -93,7 +93,7 @@ static NSString *const keyStyle = @"--";
     if (rang.location == NSNotFound) {
         rang = [string rangeOfString:keyStyle];
     }
-    if ([key isEqualToString:@"crash闪退"]) {
+    if ([key isEqualToString:@"crash闪退奔溃"]) {
         [logString addAttribute:NSForegroundColorAttributeName value:UIColor.redColor range:NSMakeRange(0, string.length)];
     } else {
         [logString addAttribute:NSForegroundColorAttributeName value:([key isEqualToString:@"打开应用"] ? UIColor.greenColor : UIColor.yellowColor) range:NSMakeRange(0, (rang.location + rang.length))];

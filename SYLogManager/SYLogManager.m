@@ -468,7 +468,7 @@ void readException(NSException *exception)
         [crashString appendString:string];
         [crashString appendString:@"\n"];
     }
-    [SYLogManager.shareLog logText:crashString key:@"crash闪退"];
+    [SYLogManager.shareLog logText:crashString key:@"crash闪退奔溃"];
 }
 
 #pragma mark - getter

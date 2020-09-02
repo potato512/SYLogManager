@@ -53,7 +53,15 @@
 
 - (void)nextClick
 {
-    NSString *text = self.array[100];
+    NSInteger random = arc4random() % 100;
+    if (random % 3 == 0) {
+        NSString *text = self.array[100];
+    } else if (random % 3 == 1) {
+        NSString *text = nil;
+        NSArray *list = @[@"1",text];
+    } else if (random % 3 == 2) {
+        [self performSelector:@selector(pushClick)];
+    }
     
     ViewController *nextVC = [ViewController new];
     [self.navigationController pushViewController:nextVC animated:YES];
