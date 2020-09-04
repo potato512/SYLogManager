@@ -54,7 +54,10 @@ SYLog(YES, @"花草", @"%@", @"牡丹蝴蝶");
 
 ![SYLogManager.gif](./SYLogManager.gif) 
 
-
+# 待修改-收集
+* 20200902
+  * crash搜索默认选中
+  * 修改方法名：SYLogPopoverView-DegreesToRadians，改成SYLogDegreesToRadians
 
 # 修改完善
 * 20200902

@@ -16,7 +16,7 @@ static float const kPopoverViewCellHeight = 40.f; ///< cell指定高度
 static float const kPopoverViewArrowHeight = 13.f; ///< 箭头高度
 
 // convert degrees to radians
-float DegreesToRadians(float angle) {
+float SYLogDegreesToRadians(float angle) {
     return angle * M_PI / 180;
 }
 
@@ -266,8 +266,8 @@ float DegreesToRadians(float angle) {
     [maskPath moveToPoint:CGPointMake(0, cornerRadius + maskTop)];
     [maskPath addArcWithCenter:CGPointMake(cornerRadius, cornerRadius + maskTop)
                         radius:cornerRadius
-                    startAngle:DegreesToRadians(180)
-                      endAngle:DegreesToRadians(270)
+                    startAngle:SYLogDegreesToRadians(180)
+                      endAngle:SYLogDegreesToRadians(270)
                      clockwise:YES];
     // 箭头向上时的箭头位置
     if (self.isUpward) {
@@ -283,15 +283,15 @@ float DegreesToRadians(float angle) {
     [maskPath addLineToPoint:CGPointMake(widthSelf - cornerRadius, maskTop)];
     [maskPath addArcWithCenter:CGPointMake(widthSelf - cornerRadius, maskTop + cornerRadius)
                         radius:cornerRadius
-                    startAngle:DegreesToRadians(270)
-                      endAngle:DegreesToRadians(0)
+                    startAngle:SYLogDegreesToRadians(270)
+                      endAngle:SYLogDegreesToRadians(0)
                      clockwise:YES];
     // 右下圆角
     [maskPath addLineToPoint:CGPointMake(widthSelf, maskBottom - cornerRadius)];
     [maskPath addArcWithCenter:CGPointMake(widthSelf - cornerRadius, maskBottom - cornerRadius)
                         radius:cornerRadius
-                    startAngle:DegreesToRadians(0)
-                      endAngle:DegreesToRadians(90)
+                    startAngle:SYLogDegreesToRadians(0)
+                      endAngle:SYLogDegreesToRadians(90)
                      clockwise:YES];
     // 箭头向下时的箭头位置
     if (!self.isUpward) {
@@ -307,8 +307,8 @@ float DegreesToRadians(float angle) {
     [maskPath addLineToPoint:CGPointMake(cornerRadius, maskBottom)];
     [maskPath addArcWithCenter:CGPointMake(cornerRadius, maskBottom - cornerRadius)
                         radius:cornerRadius
-                    startAngle:DegreesToRadians(90)
-                      endAngle:DegreesToRadians(180)
+                    startAngle:SYLogDegreesToRadians(90)
+                      endAngle:SYLogDegreesToRadians(180)
                      clockwise:YES];
     [maskPath closePath];
     // 截取圆角和箭头
