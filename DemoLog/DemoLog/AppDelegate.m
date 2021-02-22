@@ -40,6 +40,10 @@
     //
     SYLogManager.shareLog.logUser = @"devZhang";
     SYLogManager.shareLog.logVin = @"123321123";
+    // 自动发送
+    [SYLogManager.shareLog logSend:^(BOOL success) {
+            
+    }];
     
     return YES;
 }

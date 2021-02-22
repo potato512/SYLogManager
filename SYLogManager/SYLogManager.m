@@ -631,6 +631,7 @@ void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
     NSString *logDeviceName = UIDevice.currentDevice.name;
     // 上传 日志信息
     NSArray *array = self.logFile.logsCrash;
+    NSLog(@"日志上传：%@", array.count <= 0 ? @"没有记录" : [NSString stringWithFormat:@"有 %ld 条记录", array.count]);
     for (SYLogModel *modelCrash in array) {
         NSString *string = modelCrash.logText;
         //
@@ -659,7 +660,12 @@ void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
 /// 获取上传log日志
 - (void)logReadWithPage:(NSInteger)page size:(NSInteger)size complete:(void (^)(NSArray <SYLogCrashModel *>*array, NSError *error))complete
 {
-    [self.logServe logCrashReadWithPage:page size:size complete:complete];
+    [self.logServe logCrashReadWithPage:page size:size complete:^(NSArray<SYLogCrashModel *> * _Nonnull array, NSError * _Nonnull error) {
+        NSLog(@"日志记录：%@", array.count <= 0 ? @"没有记录" : [NSString stringWithFormat:@"有 %ld 条记录", array.count]);
+        if (complete) {
+            complete(array, error);
+        }
+    }];
 }
 
 @end
