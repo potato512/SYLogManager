@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5828844125E0BA040050F014 /* SYLogServe.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828844025E0BA040050F014 /* SYLogServe.m */; };
+		5882469A25E3890D00FCD913 /* BmobSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5882469525E388F800FCD913 /* BmobSDK.framework */; };
+		5882469F25E3895700FCD913 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5882469E25E3895700FCD913 /* CoreLocation.framework */; };
+		588246A125E3895D00FCD913 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A025E3895D00FCD913 /* Security.framework */; };
+		588246A325E3896400FCD913 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A225E3896400FCD913 /* CoreGraphics.framework */; };
+		588246A525E3896A00FCD913 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A425E3896A00FCD913 /* MobileCoreServices.framework */; };
+		588246A725E3897100FCD913 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A625E3897100FCD913 /* CFNetwork.framework */; };
+		588246A925E3897800FCD913 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A825E3897800FCD913 /* CoreTelephony.framework */; };
+		588246AB25E3897F00FCD913 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246AA25E3897F00FCD913 /* SystemConfiguration.framework */; };
+		588246AD25E3898900FCD913 /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246AC25E3898900FCD913 /* libz.1.2.5.tbd */; };
+		588246B225E3899300FCD913 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246B125E3899300FCD913 /* libicucore.tbd */; };
+		588246B725E389A800FCD913 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246B625E389A800FCD913 /* libc++.tbd */; };
+		588246BC25E389B200FCD913 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246BB25E389B200FCD913 /* Photos.framework */; };
 		80B73C44239B9C2A00FEAC2A /* SYLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C39239B9C2A00FEAC2A /* SYLogManager.m */; };
 		80B73C45239B9C2A00FEAC2A /* SYLogPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3C239B9C2A00FEAC2A /* SYLogPopoverView.m */; };
 		80B73C46239B9C2A00FEAC2A /* NSObject+SYLogCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B73C3D239B9C2A00FEAC2A /* NSObject+SYLogCategory.m */; };
@@ -47,6 +60,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5828843F25E0BA040050F014 /* SYLogServe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYLogServe.h; sourceTree = "<group>"; };
+		5828844025E0BA040050F014 /* SYLogServe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYLogServe.m; sourceTree = "<group>"; };
+		5882468F25E3868000FCD913 /* BmobSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BmobSDK.framework; path = ../SYLogManager/LogServe/BmobSDK.framework; sourceTree = "<group>"; };
+		5882469525E388F800FCD913 /* BmobSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BmobSDK.framework; sourceTree = "<group>"; };
+		5882469E25E3895700FCD913 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		588246A025E3895D00FCD913 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		588246A225E3896400FCD913 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		588246A425E3896A00FCD913 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		588246A625E3897100FCD913 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		588246A825E3897800FCD913 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		588246AA25E3897F00FCD913 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		588246AC25E3898900FCD913 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		588246B125E3899300FCD913 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		588246B625E389A800FCD913 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		588246BB25E389B200FCD913 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		80B73C34239B9C2A00FEAC2A /* SYLogPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogPopoverView.h; sourceTree = "<group>"; };
 		80B73C35239B9C2A00FEAC2A /* NSArray+SYLogCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+SYLogCategory.h"; sourceTree = "<group>"; };
 		80B73C36239B9C2A00FEAC2A /* SYLogSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYLogSQLite.h; sourceTree = "<group>"; };
@@ -91,6 +119,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				588246BC25E389B200FCD913 /* Photos.framework in Frameworks */,
+				588246B725E389A800FCD913 /* libc++.tbd in Frameworks */,
+				588246B225E3899300FCD913 /* libicucore.tbd in Frameworks */,
+				588246AD25E3898900FCD913 /* libz.1.2.5.tbd in Frameworks */,
+				588246AB25E3897F00FCD913 /* SystemConfiguration.framework in Frameworks */,
+				588246A925E3897800FCD913 /* CoreTelephony.framework in Frameworks */,
+				588246A725E3897100FCD913 /* CFNetwork.framework in Frameworks */,
+				588246A525E3896A00FCD913 /* MobileCoreServices.framework in Frameworks */,
+				588246A325E3896400FCD913 /* CoreGraphics.framework in Frameworks */,
+				588246A125E3895D00FCD913 /* Security.framework in Frameworks */,
+				5882469F25E3895700FCD913 /* CoreLocation.framework in Frameworks */,
+				5882469A25E3890D00FCD913 /* BmobSDK.framework in Frameworks */,
 				80B73C52239B9EF000FEAC2A /* libsqlite3.tbd in Frameworks */,
 				80B73C50239B9EEA00FEAC2A /* Foundation.framework in Frameworks */,
 				80B73C4E239B9EE300FEAC2A /* UIKit.framework in Frameworks */,
@@ -114,9 +154,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5828843C25E0B9D30050F014 /* LogServe */ = {
+			isa = PBXGroup;
+			children = (
+				5828843F25E0BA040050F014 /* SYLogServe.h */,
+				5828844025E0BA040050F014 /* SYLogServe.m */,
+			);
+			path = LogServe;
+			sourceTree = "<group>";
+		};
+		5882469425E388F800FCD913 /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				5882469525E388F800FCD913 /* BmobSDK.framework */,
+			);
+			path = SDK;
+			sourceTree = "<group>";
+		};
 		80B73C33239B9C2A00FEAC2A /* SYLogManager */ = {
 			isa = PBXGroup;
 			children = (
+				5828843C25E0B9D30050F014 /* LogServe */,
 				80B73C34239B9C2A00FEAC2A /* SYLogPopoverView.h */,
 				80B73C35239B9C2A00FEAC2A /* NSArray+SYLogCategory.h */,
 				80B73C36239B9C2A00FEAC2A /* SYLogSQLite.h */,
@@ -141,6 +199,18 @@
 		80B73C4C239B9EE300FEAC2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				588246BB25E389B200FCD913 /* Photos.framework */,
+				588246B625E389A800FCD913 /* libc++.tbd */,
+				588246B125E3899300FCD913 /* libicucore.tbd */,
+				588246AC25E3898900FCD913 /* libz.1.2.5.tbd */,
+				588246AA25E3897F00FCD913 /* SystemConfiguration.framework */,
+				588246A825E3897800FCD913 /* CoreTelephony.framework */,
+				588246A625E3897100FCD913 /* CFNetwork.framework */,
+				588246A425E3896A00FCD913 /* MobileCoreServices.framework */,
+				588246A225E3896400FCD913 /* CoreGraphics.framework */,
+				588246A025E3895D00FCD913 /* Security.framework */,
+				5882469E25E3895700FCD913 /* CoreLocation.framework */,
+				5882468F25E3868000FCD913 /* BmobSDK.framework */,
 				80B73C51239B9EF000FEAC2A /* libsqlite3.tbd */,
 				80B73C4F239B9EEA00FEAC2A /* Foundation.framework */,
 				80B73C4D239B9EE300FEAC2A /* UIKit.framework */,
@@ -178,6 +248,7 @@
 				A7BD85AD21709D2600C54BDB /* ViewController.m */,
 				A76CC3002266DEC100FD0A0F /* Person.h */,
 				A76CC3012266DEC100FD0A0F /* Person.m */,
+				5882469425E388F800FCD913 /* SDK */,
 				80B73C33239B9C2A00FEAC2A /* SYLogManager */,
 				A7BD85DB21709D3600C54BDB /* Supporting Files */,
 			);
@@ -346,6 +417,7 @@
 			files = (
 				80B73C47239B9C2A00FEAC2A /* SYLogSQLite.m in Sources */,
 				80B73C48239B9C2A00FEAC2A /* NSArray+SYLogCategory.m in Sources */,
+				5828844125E0BA040050F014 /* SYLogServe.m in Sources */,
 				A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */,
 				80B73C45239B9C2A00FEAC2A /* SYLogPopoverView.m in Sources */,
 				A76CC3022266DEC100FD0A0F /* Person.m in Sources */,
@@ -526,9 +598,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: xie pingsheng (JWZ9Q83YVK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DemoLog/SDK",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/DemoLog/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -545,9 +621,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: xie pingsheng (JWZ9Q83YVK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DemoLog/SDK",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/DemoLog/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

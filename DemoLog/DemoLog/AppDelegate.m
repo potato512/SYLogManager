@@ -33,8 +33,13 @@
     config.logShowView = self.window;
     config.logShow = YES;
     config.logEnable = YES;
+    //
+    config.logSendEnable = YES;
+    //
     SYLogManager.shareLog.config = config;
-    
+    //
+    SYLogManager.shareLog.logUser = @"devZhang";
+    SYLogManager.shareLog.logVin = @"123321123";
     
     return YES;
 }

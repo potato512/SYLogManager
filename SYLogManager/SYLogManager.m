@@ -12,6 +12,19 @@
 #import <MessageUI/MessageUI.h>
 #import "SYLogPopoverView.h"
 
+//
+// 设备信息
+#define kLogDeviceModel [NSString stringWithFormat:@"设备类型：%@", UIDevice.currentDevice.model]
+#define kLogDeviceSystem [NSString stringWithFormat:@"设备系统：%@", UIDevice.currentDevice.systemName]
+#define kLogDeviceVersion [NSString stringWithFormat:@"设备系统版本：%@", UIDevice.currentDevice.systemVersion]
+#define kLogDeviceName [NSString stringWithFormat:@"设备名称：%@", UIDevice.currentDevice.name]
+#define kLogDeviceBatteryState [NSString stringWithFormat:@"设备电池：%@", batteryState]
+#define kLogDeviceBattery [NSString stringWithFormat:@"设备量：%f", UIDevice.currentDevice.batteryLevel]
+// 应用信息
+#define kLogAppName [NSString stringWithFormat:@"应用名称：%@", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"]]
+#define kLogAppVersion [NSString stringWithFormat:@"应用版本：%@", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]]
+
+//
 static CGFloat const originButton = 20.0;
 static CGFloat const sizeButton = 60.0;
 #define widthButtonView (self.logButton.frame.size.height * 3 + originButton)
@@ -46,6 +59,8 @@ static CGFloat const sizeButton = 60.0;
 //
 @property (nonatomic, assign) BOOL validLog;
 @property (nonatomic, assign) SYLogViewShowType showType;
+//
+@property (nonatomic, strong) SYLogServe *logServe;
 
 @end
 
@@ -67,6 +82,7 @@ static CGFloat const sizeButton = 60.0;
 {
     self = [super init];
     if (self) {
+        [self logInitialize];
     }
     return self;
 }
@@ -432,10 +448,10 @@ void ShowMessage(NSString *title, NSString *message, NSString *button)
 void readException(NSException *exception)
 {
     // 设备信息
-    NSString *deviceModel = [NSString stringWithFormat:@"设备类型：%@", UIDevice.currentDevice.model];
-    NSString *deviceSystem = [NSString stringWithFormat:@"设备系统：%@", UIDevice.currentDevice.systemName];
-    NSString *deviceVersion = [NSString stringWithFormat:@"设备系统版本：%@", UIDevice.currentDevice.systemVersion];
-    NSString *deviceName = [NSString stringWithFormat:@"设备名称：%@", UIDevice.currentDevice.name];
+    NSString *deviceModel = kLogDeviceModel;
+    NSString *deviceSystem = kLogDeviceSystem;
+    NSString *deviceVersion = kLogDeviceVersion;
+    NSString *deviceName = kLogDeviceName;
     NSString *batteryState = @"UIDeviceBatteryStateUnknown";
     switch (UIDevice.currentDevice.batteryState) {
         case UIDeviceBatteryStateUnknown: batteryState = @"UIDeviceBatteryStateUnknown"; break;
@@ -444,11 +460,11 @@ void readException(NSException *exception)
         case UIDeviceBatteryStateFull: batteryState = @"UIDeviceBatteryStateFull"; break;
         default: break;
     }
-    NSString *deviceBatteryState = [NSString stringWithFormat:@"设备电池：%@", batteryState];
-    NSString *deviceBattery = [NSString stringWithFormat:@"设备量：%f", UIDevice.currentDevice.batteryLevel];
+    NSString *deviceBatteryState = kLogDeviceBatteryState;
+    NSString *deviceBattery = kLogDeviceBattery;
     // 应用信息
-    NSString *appName = [NSString stringWithFormat:@"应用名称：%@", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"]];
-    NSString *appVersion = [NSString stringWithFormat:@"应用版本：%@", [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+    NSString *appName = kLogAppName;
+    NSString *appVersion = kLogAppVersion;
     // 异常信息
     NSString *errorName = [NSString stringWithFormat:@"异常名称：%@", exception.name];
     NSString *errorReason = [NSString stringWithFormat:@"异常原因：%@",exception.reason];
@@ -541,7 +557,9 @@ void readException(NSException *exception)
         return;
     }
     
-    self.validLog = _config.logEnable;
+    BOOL logEnable = _config.logEnable;
+    BOOL logSend = _config.isSendEnable;
+    self.validLog = (logEnable || logSend);
     if (!self.validLog) {
         return;
     }
@@ -570,6 +588,78 @@ void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
 #ifdef DEBUG
     printf("\n< %s:(第 %d 行) > \n%s", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [text UTF8String]);
 #endif
+}
+
+#pragma mark - 日志服务
+
+- (SYLogServe *)logServe
+{
+    if (_logServe == nil) {
+        _logServe = [[SYLogServe alloc] init];
+    }
+    return _logServe;
+}
+
+/// 初始化
+- (void)logInitialize
+{
+    [self.logServe logCarashInitialize];
+}
+
+/// 上传log日志
+- (void)logSend:(void (^)(BOOL success))handle
+{
+    if (!self.config.logSendEnable) {
+        return;
+    }
+    
+    // 上传 应用名称
+    NSString *logAppName = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"];
+    // 上传 应用版本
+    NSString *logAppVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    // 上传 日志时间
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy年MM月dd日 HH:mm";
+    NSString *logTime = [formatter stringFromDate:NSDate.date];
+    // 上传 设备类型（1 iPhone，2 Android）
+    NSNumber *logDeviceType = @1;
+    // 上传 设备系统（iOS，Android）
+    NSString *logDeviceSystem = UIDevice.currentDevice.systemName;
+    // 上传 设备系统版本，如：iOS14
+    NSString *logDeviceSystemV = UIDevice.currentDevice.systemVersion;
+    // 上传 设备名称
+    NSString *logDeviceName = UIDevice.currentDevice.name;
+    // 上传 日志信息
+    NSArray *array = self.logFile.logsCrash;
+    for (SYLogModel *modelCrash in array) {
+        NSString *string = modelCrash.logText;
+        //
+        SYLogCrashModel *model = [[SYLogCrashModel alloc] init];
+        model.logAppName = logAppName;
+        model.logAppVersion = logAppVersion;
+        model.logUploadTime = logTime;
+        model.logDeviceType = logDeviceType;
+        model.logDeviceSystem = logDeviceSystem;
+        model.logDeviceSystemV = logDeviceSystemV;
+        model.logDeviceName = logDeviceName;
+        model.logMessage = string;
+        model.logUserName = self.logUser;
+        model.logUserVin = self.logVin;
+        //
+        __weak SYLogManager *weak = self;
+        [self.logServe logCrashSaveWithModel:model complete:^(BOOL isSuccessful, NSError * _Nonnull error) {
+            if (isSuccessful) {
+                [weak.logFile clearWithKey:string];
+            } 
+            NSLog(@"crash日志上传：%@", (isSuccessful ? @"成功" : @"失败"));
+        }];
+    }
+}
+
+/// 获取上传log日志
+- (void)logReadWithPage:(NSInteger)page size:(NSInteger)size complete:(void (^)(NSArray <SYLogCrashModel *>*array, NSError *error))complete
+{
+    [self.logServe logCrashReadWithPage:page size:size complete:complete];
 }
 
 @end

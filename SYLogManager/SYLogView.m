@@ -465,7 +465,6 @@ static NSInteger const kTagButton = 1000;
     //
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"attributeString.string CONTAINS %@", text];
     NSArray *array = [self.array filteredArrayUsingPredicate:predicate];
-    // 默认选中crash
     for (SYLogModel *model in array) {
         NSString *text = model.attributeString.string;
         NSRange range = [text rangeOfString:keyCrash];

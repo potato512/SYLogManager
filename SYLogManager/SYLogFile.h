@@ -19,6 +19,9 @@ static CGFloat const heightText = (25 + 25);
 
 @interface SYLogModel : NSObject
 
+@property (nonatomic, assign) NSString *logTime;
+@property (nonatomic, strong) NSString *logText;
+@property (nonatomic, strong) NSString *logKey;
 //
 @property (nonatomic, strong) NSAttributedString *attributeString;
 @property (nonatomic, assign) CGFloat height;
@@ -32,10 +35,14 @@ static CGFloat const heightText = (25 + 25);
 
 /// 记录（最多500条，倒序）
 @property (nonatomic, strong, readonly) NSArray *logs;
+/// crash记录
+@property (nonatomic, strong, readonly) NSArray *logsCrash;
 
 - (SYLogModel *)logWith:(NSString *)text key:(NSString *)key;
 - (void)read;
 - (void)clear;
+/// 条件删除（key = model.logText）
+- (void)clearWithKey:(NSString *)key;
 
 @end
 

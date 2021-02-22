@@ -16,10 +16,6 @@ static NSInteger const logMaxCount = 1000;
 
 @interface SYLogModel ()
 
-@property (nonatomic, assign) NSString *logTime;
-@property (nonatomic, strong) NSString *logText;
-@property (nonatomic, strong) NSString *logKey;
-
 @end
 
 @implementation SYLogModel
@@ -171,15 +167,26 @@ static NSString *const keyStyle = @"--";
     return _logArray;
 }
 
+/// 记录（最多500条，倒序）
 - (NSArray *)logs
 {
     pthread_mutex_lock(&mutexLock);
     NSArray *arrayTmp = [NSArray arrayWithArray:self.logArray];
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for (SYLogModel *model in arrayTmp) {
-        [array insertObject:model atIndex:0];
-    }
+    // 倒序
+//    NSMutableArray *array = [[NSMutableArray alloc] init];
+//    for (SYLogModel *model in arrayTmp) {
+//        [array insertObject:model atIndex:0];
+//    }
+    NSArray *array = [[arrayTmp reverseObjectEnumerator] allObjects];
     pthread_mutex_unlock(&mutexLock);
+    return array;
+}
+
+- (NSArray *)logsCrash
+{
+    NSArray *array = self.logs;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"attributeString.string CONTAINS %@", @"crash"];
+    array = [array filteredArrayUsingPredicate:predicate];
     return array;
 }
 
@@ -240,15 +247,26 @@ static NSString *const keyStyle = @"--";
         for (NSInteger index = 0; index < numberDel; index++) {
             // 超过N条时，删除数据库记录
             SYLogModel *model = logTmp.firstObject;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSString *sql = [NSString stringWithFormat:@"DELETE FROM SYLogRecord WHERE logText = '%@'", model.logText];
-                [self.sqlite executeSQLite:sql];
-            });
-            
+            NSString *clearKey = model.logText;
+            [self clearWithKey:clearKey];
             [logTmp removeObjectAtIndex:0];
         }
     }
     [self.logArray addObjectsFromArray:logTmp];
+    pthread_mutex_unlock(&mutexLock);
+}
+
+/// 条件删除（key = model.logText）
+- (void)clearWithKey:(NSString *)key
+{
+    if (key == nil || ([key isKindOfClass:NSString.class] && key.length <= 0)) {
+        return;
+    }
+    pthread_mutex_lock(&mutexLock);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *sql = [NSString stringWithFormat:@"DELETE FROM SYLogRecord WHERE logText = '%@'", key];
+        [self.sqlite executeSQLite:sql];
+    });
     pthread_mutex_unlock(&mutexLock);
 }
 

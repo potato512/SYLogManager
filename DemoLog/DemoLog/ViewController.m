@@ -10,10 +10,12 @@
 #import "SYLogManager.h"
 #import "Person.h"
 
-@interface ViewController ()
+@interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSArray *array;
 @property (nonatomic, strong) NSTimer *timer;
+//
+@property (nonatomic, strong) NSArray *crashArray;
 
 @end
 
@@ -22,7 +24,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
+
+    UIBarButtonItem *sendItem = [[UIBarButtonItem alloc] initWithTitle:@"send" style:UIBarButtonItemStyleDone target:self action:@selector(sendClick)];
+    UIBarButtonItem *readItem = [[UIBarButtonItem alloc] initWithTitle:@"read" style:UIBarButtonItemStyleDone target:self action:@selector(readClick)];
+    self.navigationItem.leftBarButtonItems = @[sendItem, readItem];
+    //
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
     [button setTitle:@"显示" forState:UIControlStateNormal];
     [button setTitle:@"隐藏" forState:UIControlStateSelected];
@@ -34,11 +40,31 @@
     UIBarButtonItem *logItem = [[UIBarButtonItem alloc] initWithTitle:@"log" style:UIBarButtonItemStyleDone target:self action:@selector(logClick)];
     UIBarButtonItem *clearItem = [[UIBarButtonItem alloc] initWithTitle:@"auto" style:UIBarButtonItemStyleDone target:self action:@selector(autoClick)];
     self.navigationItem.rightBarButtonItems = @[nextItem, clearItem, logItem, showItem];
+    //
+    [self crashTable];
 }
 
 - (void)dealloc
 {
     NSLog(@"%@ 被释放了~", self.class);
+}
+
+- (void)sendClick
+{
+    //
+    [SYLogManager.shareLog logSend:^(BOOL success) {
+        NSLog(@"log上传 %@", success ? @"成功" : @"失败");
+    }];
+}
+- (void)readClick
+{
+    [SYLogManager.shareLog logReadWithPage:1 size:500 complete:^(NSArray * _Nonnull array, NSError * _Nonnull error) {
+        NSLog(@"log获取：%@-%@", (error ? @"失败" : @"成功"), error);
+        
+        for (id object in array) {
+            NSLog(@"object = %@", object);
+        }
+    }];
 }
 
 - (void)showClick:(UIButton *)button
@@ -53,16 +79,6 @@
 
 - (void)nextClick
 {
-    NSInteger random = arc4random() % 100;
-    if (random % 3 == 0) {
-        NSString *text = self.array[100];
-    } else if (random % 3 == 1) {
-        NSString *text = nil;
-        NSArray *list = @[@"1",text];
-    } else if (random % 3 == 2) {
-        [self performSelector:@selector(pushClick)];
-    }
-    
     ViewController *nextVC = [ViewController new];
     [self.navigationController pushViewController:nextVC animated:YES];
 }
@@ -147,6 +163,73 @@ NSInteger count = 0;
     
     NSArray *temps = [NSArray arrayWithContentsOfFile:filePath];
     NSLog(@"%@", temps);
+}
+
+#pragma mark - crash
+
+- (void)crashTable
+{
+    UITableView *table = [[UITableView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:table];
+    table.delegate = self;
+    table.dataSource = self;
+    table.tableFooterView = [UIView new];
+}
+
+- (NSArray *)crashArray
+{
+    return @[@"数组越界", @"数组nil值", @"未定义方法"];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.crashArray.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
+    }
+    
+    NSString *test = self.crashArray[indexPath.row];
+    cell.textLabel.text = test;
+    
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    switch (indexPath.row) {
+        case 0:{
+            [self crashOutofSize];
+        } break;
+        case 1:{
+            [self crashNilValue];
+        } break;
+        case 2:{
+            [self crashSelector];
+        } break;
+        default:
+            break;
+    }
+}
+
+- (void)crashOutofSize
+{
+    NSInteger random = arc4random() % 100;
+    NSString *text = self.array[100];
+}
+
+- (void)crashNilValue
+{
+    NSString *text = nil;
+    NSArray *list = @[@"1",text];
+}
+
+- (void)crashSelector
+{
+    [self performSelector:@selector(pushClick)];
 }
 
 @end
