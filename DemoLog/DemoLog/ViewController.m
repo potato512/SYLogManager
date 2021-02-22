@@ -25,9 +25,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
-    UIBarButtonItem *sendItem = [[UIBarButtonItem alloc] initWithTitle:@"send" style:UIBarButtonItemStyleDone target:self action:@selector(sendClick)];
-    UIBarButtonItem *readItem = [[UIBarButtonItem alloc] initWithTitle:@"read" style:UIBarButtonItemStyleDone target:self action:@selector(readClick)];
-    self.navigationItem.leftBarButtonItems = @[sendItem, readItem];
     //
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
     [button setTitle:@"显示" forState:UIControlStateNormal];
@@ -47,24 +44,6 @@
 - (void)dealloc
 {
     NSLog(@"%@ 被释放了~", self.class);
-}
-
-- (void)sendClick
-{
-    //
-    [SYLogManager.shareLog logSend:^(BOOL success) {
-        NSLog(@"log上传 %@", success ? @"成功" : @"失败");
-    }];
-}
-- (void)readClick
-{
-    [SYLogManager.shareLog logReadWithPage:1 size:500 complete:^(NSArray * _Nonnull array, NSError * _Nonnull error) {
-        NSLog(@"log获取：%@-%@", (error ? @"失败" : @"成功"), error);
-        
-        for (id object in array) {
-            NSLog(@"object = %@", object);
-        }
-    }];
 }
 
 - (void)showClick:(UIButton *)button

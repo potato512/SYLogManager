@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5828844125E0BA040050F014 /* SYLogServe.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828844025E0BA040050F014 /* SYLogServe.m */; };
-		5882469A25E3890D00FCD913 /* BmobSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5882469525E388F800FCD913 /* BmobSDK.framework */; };
 		5882469F25E3895700FCD913 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5882469E25E3895700FCD913 /* CoreLocation.framework */; };
 		588246A125E3895D00FCD913 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A025E3895D00FCD913 /* Security.framework */; };
 		588246A325E3896400FCD913 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588246A225E3896400FCD913 /* CoreGraphics.framework */; };
@@ -60,10 +58,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5828843F25E0BA040050F014 /* SYLogServe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYLogServe.h; sourceTree = "<group>"; };
-		5828844025E0BA040050F014 /* SYLogServe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYLogServe.m; sourceTree = "<group>"; };
 		5882468F25E3868000FCD913 /* BmobSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BmobSDK.framework; path = ../SYLogManager/LogServe/BmobSDK.framework; sourceTree = "<group>"; };
-		5882469525E388F800FCD913 /* BmobSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BmobSDK.framework; sourceTree = "<group>"; };
 		5882469E25E3895700FCD913 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		588246A025E3895D00FCD913 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		588246A225E3896400FCD913 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -130,7 +125,6 @@
 				588246A325E3896400FCD913 /* CoreGraphics.framework in Frameworks */,
 				588246A125E3895D00FCD913 /* Security.framework in Frameworks */,
 				5882469F25E3895700FCD913 /* CoreLocation.framework in Frameworks */,
-				5882469A25E3890D00FCD913 /* BmobSDK.framework in Frameworks */,
 				80B73C52239B9EF000FEAC2A /* libsqlite3.tbd in Frameworks */,
 				80B73C50239B9EEA00FEAC2A /* Foundation.framework in Frameworks */,
 				80B73C4E239B9EE300FEAC2A /* UIKit.framework in Frameworks */,
@@ -154,27 +148,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5828843C25E0B9D30050F014 /* LogServe */ = {
-			isa = PBXGroup;
-			children = (
-				5828843F25E0BA040050F014 /* SYLogServe.h */,
-				5828844025E0BA040050F014 /* SYLogServe.m */,
-			);
-			path = LogServe;
-			sourceTree = "<group>";
-		};
-		5882469425E388F800FCD913 /* SDK */ = {
-			isa = PBXGroup;
-			children = (
-				5882469525E388F800FCD913 /* BmobSDK.framework */,
-			);
-			path = SDK;
-			sourceTree = "<group>";
-		};
 		80B73C33239B9C2A00FEAC2A /* SYLogManager */ = {
 			isa = PBXGroup;
 			children = (
-				5828843C25E0B9D30050F014 /* LogServe */,
 				80B73C34239B9C2A00FEAC2A /* SYLogPopoverView.h */,
 				80B73C35239B9C2A00FEAC2A /* NSArray+SYLogCategory.h */,
 				80B73C36239B9C2A00FEAC2A /* SYLogSQLite.h */,
@@ -248,7 +224,6 @@
 				A7BD85AD21709D2600C54BDB /* ViewController.m */,
 				A76CC3002266DEC100FD0A0F /* Person.h */,
 				A76CC3012266DEC100FD0A0F /* Person.m */,
-				5882469425E388F800FCD913 /* SDK */,
 				80B73C33239B9C2A00FEAC2A /* SYLogManager */,
 				A7BD85DB21709D3600C54BDB /* Supporting Files */,
 			);
@@ -417,7 +392,6 @@
 			files = (
 				80B73C47239B9C2A00FEAC2A /* SYLogSQLite.m in Sources */,
 				80B73C48239B9C2A00FEAC2A /* NSArray+SYLogCategory.m in Sources */,
-				5828844125E0BA040050F014 /* SYLogServe.m in Sources */,
 				A7BD85AE21709D2600C54BDB /* ViewController.m in Sources */,
 				80B73C45239B9C2A00FEAC2A /* SYLogPopoverView.m in Sources */,
 				A76CC3022266DEC100FD0A0F /* Person.m in Sources */,

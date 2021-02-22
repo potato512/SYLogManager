@@ -34,16 +34,7 @@
     config.logShow = YES;
     config.logEnable = YES;
     //
-    config.logSendEnable = YES;
-    //
     SYLogManager.shareLog.config = config;
-    //
-    SYLogManager.shareLog.logUser = @"devZhang";
-    SYLogManager.shareLog.logVin = @"123321123";
-    // 自动发送
-    [SYLogManager.shareLog logSend:^(BOOL success) {
-            
-    }];
     
     return YES;
 }

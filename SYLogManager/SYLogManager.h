@@ -11,7 +11,6 @@
 #import "NSArray+SYLogCategory.h"
 #import "NSDictionary+SYLogCategory.h"
 #import "NSObject+SYLogCategory.h"
-#import "SYLogServe.h"
 
 /// 中控打印及log记录
 #define SYLog(logEnable, logKey, format, ...) {SYLogSave(logEnable, logKey, [NSString stringWithFormat:(format), ##__VA_ARGS__]);}
@@ -32,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL logShow;
 /// 开关log日志
 @property (nonatomic, assign) BOOL logEnable;
-/// 上传log日志（记录日志）
-@property (nonatomic, assign, getter=isSendEnable) BOOL logSendEnable;
 
 @end
 
@@ -45,10 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) SYLogConfig *config;
 /// 显示或隐藏（warning:config初始化后设置才有效）
 @property (nonatomic, assign) BOOL show;
-/// 日志上传，用户标识（名称）
-@property (nonatomic, strong) NSString *logUser;
-/// 日志上传，用户标识（ID）
-@property (nonatomic, strong) NSString *logVin;
 
 /**
  *  记录log日志
@@ -64,11 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 打印及记录
 void SYLogSave(BOOL logEnable, NSString *key, NSString *text);
-
-/// 上传log日志
-- (void)logSend:(void (^)(BOOL success))handle;
-/// 获取上传log日志
-- (void)logReadWithPage:(NSInteger)page size:(NSInteger)size complete:(void (^)(NSArray <SYLogCrashModel *>*array, NSError *error))complete;
 
 @end
 

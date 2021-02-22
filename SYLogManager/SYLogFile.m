@@ -182,14 +182,6 @@ static NSString *const keyStyle = @"--";
     return array;
 }
 
-- (NSArray *)logsCrash
-{
-    NSArray *array = self.logs;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"attributeString.string CONTAINS %@", @"crash"];
-    array = [array filteredArrayUsingPredicate:predicate];
-    return array;
-}
-
 #pragma mark - 存储
 
 - (SYLogSQLite *)sqlite

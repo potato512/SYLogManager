@@ -59,8 +59,6 @@ static CGFloat const sizeButton = 60.0;
 //
 @property (nonatomic, assign) BOOL validLog;
 @property (nonatomic, assign) SYLogViewShowType showType;
-//
-@property (nonatomic, strong) SYLogServe *logServe;
 
 @end
 
@@ -82,7 +80,7 @@ static CGFloat const sizeButton = 60.0;
 {
     self = [super init];
     if (self) {
-        [self logInitialize];
+        
     }
     return self;
 }
@@ -558,8 +556,7 @@ void readException(NSException *exception)
     }
     
     BOOL logEnable = _config.logEnable;
-    BOOL logSend = _config.isSendEnable;
-    self.validLog = (logEnable || logSend);
+    self.validLog = (logEnable);
     if (!self.validLog) {
         return;
     }
@@ -588,84 +585,6 @@ void SYLogSave(BOOL logEnable, NSString *key, NSString *text)
 #ifdef DEBUG
     printf("\n< %s:(第 %d 行) > \n%s", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [text UTF8String]);
 #endif
-}
-
-#pragma mark - 日志服务
-
-- (SYLogServe *)logServe
-{
-    if (_logServe == nil) {
-        _logServe = [[SYLogServe alloc] init];
-    }
-    return _logServe;
-}
-
-/// 初始化
-- (void)logInitialize
-{
-    [self.logServe logCarashInitialize];
-}
-
-/// 上传log日志
-- (void)logSend:(void (^)(BOOL success))handle
-{
-    if (!self.config.logSendEnable) {
-        return;
-    }
-    
-    // 上传 应用名称
-    NSString *logAppName = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleDisplayName"];
-    // 上传 应用版本
-    NSString *logAppVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    // 上传 日志时间
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy年MM月dd日 HH:mm";
-    NSString *logTime = [formatter stringFromDate:NSDate.date];
-    // 上传 设备类型（1 iPhone，2 Android）
-    NSNumber *logDeviceType = @1;
-    // 上传 设备系统（iOS，Android）
-    NSString *logDeviceSystem = UIDevice.currentDevice.systemName;
-    // 上传 设备系统版本，如：iOS14
-    NSString *logDeviceSystemV = UIDevice.currentDevice.systemVersion;
-    // 上传 设备名称
-    NSString *logDeviceName = UIDevice.currentDevice.name;
-    // 上传 日志信息
-    NSArray *array = self.logFile.logsCrash;
-    NSLog(@"日志上传：%@", array.count <= 0 ? @"没有记录" : [NSString stringWithFormat:@"有 %ld 条记录", array.count]);
-    for (SYLogModel *modelCrash in array) {
-        NSString *string = modelCrash.logText;
-        //
-        SYLogCrashModel *model = [[SYLogCrashModel alloc] init];
-        model.logAppName = logAppName;
-        model.logAppVersion = logAppVersion;
-        model.logUploadTime = logTime;
-        model.logDeviceType = logDeviceType;
-        model.logDeviceSystem = logDeviceSystem;
-        model.logDeviceSystemV = logDeviceSystemV;
-        model.logDeviceName = logDeviceName;
-        model.logMessage = string;
-        model.logUserName = self.logUser;
-        model.logUserVin = self.logVin;
-        //
-        __weak SYLogManager *weak = self;
-        [self.logServe logCrashSaveWithModel:model complete:^(BOOL isSuccessful, NSError * _Nonnull error) {
-            if (isSuccessful) {
-                [weak.logFile clearWithKey:string];
-            } 
-            NSLog(@"crash日志上传：%@", (isSuccessful ? @"成功" : @"失败"));
-        }];
-    }
-}
-
-/// 获取上传log日志
-- (void)logReadWithPage:(NSInteger)page size:(NSInteger)size complete:(void (^)(NSArray <SYLogCrashModel *>*array, NSError *error))complete
-{
-    [self.logServe logCrashReadWithPage:page size:size complete:^(NSArray<SYLogCrashModel *> * _Nonnull array, NSError * _Nonnull error) {
-        NSLog(@"日志记录：%@", array.count <= 0 ? @"没有记录" : [NSString stringWithFormat:@"有 %ld 条记录", array.count]);
-        if (complete) {
-            complete(array, error);
-        }
-    }];
 }
 
 @end
